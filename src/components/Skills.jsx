@@ -9,33 +9,31 @@ const Skills = () => {
   const skillCategories = Object.keys(skills);
 
   return (
-    <section id="skills" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Technical Skills</h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section id="skills" className="section" style={{ backgroundColor: 'var(--background-color)' }}>
+      <div className="container">
+        <div className="text-center mb-8">
+          <h2 className="section-title">Technical Skills</h2>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
             Technologies and tools I work with:
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
           {skillCategories.map((category) => (
-            <div key={category} className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 capitalize">
+            <div key={category} className="card">
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '1rem', textTransform: 'capitalize' }}>
                 {category}
               </h3>
-              <div className="space-y-3">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {skills[category]?.map((skill) => (
                   <div key={skill.name}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-700">{skill.name}</span>
-                      <span className="text-gray-500">{skill.level}/5</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.25rem' }}>
+                      <span style={{ color: 'var(--text-color)' }}>{skill.name}</span>
+                      <span style={{ color: 'var(--text-light)' }}>{skill.level}/5</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div style={{ width: '100%', backgroundColor: 'var(--border-color)', borderRadius: '9999px', height: '0.5rem' }}>
                       <div
-                        className="bg-indigo-600 h-2 rounded-full"
-                        style={{ width: `${(skill.level / 5) * 100}%` }}
+                        style={{ backgroundColor: 'var(--primary-color)', height: '0.5rem', borderRadius: '9999px', width: `${(skill.level / 5) * 100}%` }}
                       ></div>
                     </div>
                   </div>

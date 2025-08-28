@@ -21,7 +21,7 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5174"]}})
+    CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5174", "http://localhost:5001", "http://localhost:5173", "http://localhost:5175"]}})
     
     # Register blueprints
     from app.routes.resume import resume_bp

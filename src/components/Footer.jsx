@@ -5,33 +5,33 @@ const Footer = () => {
   const { data: personalInfo } = usePersonalInfo();
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <p className="text-lg font-semibold mb-4">
+    <footer style={{ backgroundColor: '#111827', color: 'white', padding: '3rem 0' }}>
+      <div className="container">
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>
             {personalInfo?.name || 'Garrett Hawkins'}
           </p>
-          <div className="flex justify-center space-x-6 mb-4">
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginBottom: '1rem' }}>
             {personalInfo?.email && (
-              <a href={`mailto:${personalInfo.email}`} className="text-gray-300 hover:text-white">
+              <a href={`mailto:${personalInfo.email}`} style={{ color: '#d1d5db' }}>
                 {personalInfo.email}
             </a>
             )}
             {personalInfo?.phone && (
-              <span className="text-gray-300">{personalInfo.phone}</span>
+              <span style={{ color: '#d1d5db' }}>{personalInfo.phone}</span>
             )}
             {personalInfo?.linkedin && (
-              <a href={personalInfo.linkedin} className="text-gray-300 hover:text-white">
+              <a href={personalInfo.linkedin} style={{ color: '#d1d5db' }}>
                 LinkedIn
               </a>
             )}
             {personalInfo?.github && (
-              <a href={personalInfo.github} className="text-gray-300 hover:text-white">
+              <a href={personalInfo.github} style={{ color: '#d1d5db' }}>
                 GitHub
               </a>
             )}
           </div>
-          <p className="text-gray-400 text-sm">
+          <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
             © 2025 {personalInfo?.name || 'Garrett Hawkins'}. All rights reserved.
           </p>
         </div>

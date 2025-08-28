@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <main>
+      <main style={{ paddingTop: '4rem' }}>
         <Hero />
         <About />
         <Projects />

@@ -16,6 +16,7 @@ def get_skills():
                 {'name': 'JavaScript', 'level': 5, 'category': 'frontend'},
                 {'name': 'TypeScript', 'level': 4, 'category': 'frontend'},
                 {'name': 'HTML5', 'level': 5, 'category': 'frontend'},
+                {'name': 'HTML6', 'level': 5, 'category': 'frontend'},
                 {'name': 'CSS3', 'level': 5, 'category': 'frontend'},
                 {'name': 'Tailwind CSS', 'level': 4, 'category': 'frontend'}
             ],
@@ -36,7 +37,6 @@ def get_skills():
             ],
             'tools': [
                 {'name': 'Git', 'level': 5, 'category': 'tools'},
-                {'name': 'Docker', 'level': 4, 'category': 'tools'},
                 {'name': 'AWS', 'level': 3, 'category': 'tools'},
                 {'name': 'Linux', 'level': 4, 'category': 'tools'},
                 {'name': 'CI/CD', 'level': 4, 'category': 'tools'}

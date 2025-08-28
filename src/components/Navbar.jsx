@@ -33,7 +33,7 @@ const Navbar = () => {
       backdropFilter: 'blur(10px)',
       borderBottom: '1px solid var(--border-color)'
     }}>
-      <div className="container">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -60,14 +60,14 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     style={{
-                      color: 'var(--text-color)',
+                      color: 'var(--primary-color)', // Updated for better visibility
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
                       textDecoration: 'none',
                       transition: 'color 0.2s ease'
                     }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--primary-color)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--text-color)'}
+                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
+                    onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
                   >
                     {item.name}
                   </a>
@@ -107,15 +107,15 @@ const Navbar = () => {
                 key={item.name}
                 href={item.href}
                 style={{
-                  color: 'var(--text-color)',
+                  color: 'var(--primary-color)', // Updated for better visibility
                   display: 'block',
                   padding: '0.75rem 1rem',
                   textDecoration: 'none',
                   transition: 'color 0.2s ease'
                 }}
                 onClick={() => setIsOpen(false)}
-                onMouseEnter={(e) => e.target.style.color = 'var(--primary-color)'}
-                onMouseLeave={(e) => e.target.style.color = 'var(--text-color)'}
+                onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
+                onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
               >
                 {item.name}
               </a>

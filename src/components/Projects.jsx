@@ -1,42 +1,47 @@
-
 import React from 'react';
 import { useProjects } from '../hooks/useData';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 
 const Projects = () => {
   const { data: projects, loading } = useProjects();
+  
+  console.log("Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
+  const uniqueProjects = projects.filter((project, index, self) =>
+    index === self.findIndex((p) => p.id === project.id)
+  ); // Ensure unique projects
+  
+  console.log("Unique Projects data:", JSON.stringify(uniqueProjects, null, 2)); // Log the unique projects data in a readable format
 
   if (loading) return <div className="py-20 text-center">Loading projects...</div>;
 
   return (
-    <section id="projects" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section id="projects" className="section" style={{ backgroundColor: 'var(--card-bg)' }}>
+      <div className="container">
+        <div className="text-center mb-8">
+          <h2 className="section-title">Featured Projects</h2>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
             Here are some of my recent projects that showcase my skills and experience:
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <div key={project.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
-                <span className="text-white text-xl font-bold">{project.title}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+          {uniqueProjects.map((project) => (
+            <div key={project.id} className="card" style={{ overflow: 'hidden' }}>
+              <div style={{ height: '12rem', background: 'linear-gradient(135deg, var(--primary-color), #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ color: 'white', fontSize: '1.25rem', fontWeight: 'bold' }}>{project.title}</span>
               </div>
               
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{project.title}</h3>
-                <p className="text-gray-600 mb-4">{project.description}</p>
+              <div style={{ padding: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>{project.title}</h3>
+                <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>{project.description}</p>
                 
-                <div className="mb-4">
-                  <span className="text-sm font-medium text-gray-700">Technologies:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                <div style={{ marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-color)' }}>Technologies:</span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                     {project.technologies?.split(',').map((tech) => (
                       <span
                         key={tech}
-                        className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full"
+                        style={{ padding: '0.25rem 0.5rem', backgroundColor: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary-color)', fontSize: '0.75rem', borderRadius: '9999px' }}
                       >
                         {tech.trim()}
                       </span>
@@ -44,26 +49,26 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="flex space-x-4">
+                <div style={{ display: 'flex', gap: '1rem' }}>
                   {project.github_url && (
                     <a
                       href={project.github_url}
-                      className="flex items-center text-gray-600 hover:text-indigo-600"
+                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <GithubIcon className="h-5 w-5 mr-1" />
+                      <span style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }}>GitHub</span>
                       Code
                     </a>
                   )}
                   {project.live_url && (
                     <a
                       href={project.live_url}
-                      className="flex items-center text-gray-600 hover:text-indigo-600"
+                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <ArrowTopRightOnSquareIcon className="h-5 w-5 mr-1" />
+                      <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
                       Live Demo
                     </a>
                   )}

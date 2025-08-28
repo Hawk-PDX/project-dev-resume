@@ -7,22 +7,21 @@ const About = () => {
   if (loading) return <div className="py-20 text-center">Loading...</div>;
 
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">About Me</h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto"></div>
+    <section id="about" className="section" style={{ backgroundColor: 'var(--background-color)' }}>
+      <div className="container">
+        <div className="text-center mb-8">
+          <h2 className="section-title">About Me</h2>
         </div>
         
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-lg text-gray-600 leading-relaxed">
+        <div style={{ maxWidth: '48rem', margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', lineHeight: '1.75' }}>
             {personalInfo?.summary || 'Full-stack developer passionate about creating innovative solutions while streamlining production, cutting back on "clutter" and maintaining a responsive, well-rounded, product.'}
           </p>
           
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+          <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', textAlign: 'left' }}>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Information</h3>
-              <div className="space-y-2 text-gray-600">
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>Contact Information</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-light)' }}>
                 <p><strong>Email:</strong> {personalInfo?.email || 'hawkpdx@icloud.com'}</p>
                 <p><strong>Location:</strong> {personalInfo?.location || 'Portland, Oregon'}</p>
                 <p><strong>Phone:</strong> {personalInfo?.phone || '+1 (971) 438-6340'}</p>
@@ -30,20 +29,20 @@ const About = () => {
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Connect With Me</h3>
-              <div className="space-y-2">
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>Connect With Me</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {personalInfo?.github && (
-                  <a href={personalInfo.github} className="text-indigo-600 hover:text-indigo-800 block">
-                    GitHub Profile
-                  </a>
+                  <a href={personalInfo.github} style={{ color: 'var(--primary-color)', display: 'block' }}>
+                    GitHub  
+                  </a> 
                 )}
                 {personalInfo?.linkedin && (
-                  <a href={personalInfo.linkedin} className="text-indigo-600 hover:text-indigo-800 block">
-                    LinkedIn Profile
+                  <a href={personalInfo.linkedin} style={{ color: 'var(--primary-color)', display: 'block' }}>
+                    LinkedIn   
                   </a>
                 )}
                 {personalInfo?.website && (
-                  <a href={personalInfo.website} className="text-indigo-600 hover:text-indigo-800 block">
+                  <a href={personalInfo.website} style={{ color: 'var(--primary-color)', display: 'block' }}>
                     Personal Website
                   </a>
                 )}

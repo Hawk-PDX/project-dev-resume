@@ -11,25 +11,36 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --text-color: #646cff; /* Link color */
+  --primary-color: goldenrod; /* Color for hover effects */
+  --background-color: rgba(255, 255, 255, 0.87); /* Background color for nav */
+  --border-color: #ccc; /* Border color */
 }
+
+
 
 a {
   font-weight: 500;
   color: #646cff;
-  text-decoration: inherit;
+  margin: 3px;
+  padding: 3px;
 }
 a:hover {
-  color: #535bf2;
+  color: goldenrod;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  
 }
+
+nav a{
+  color: #646cff;
+  background-color: rgba(255, 255, 255, 0.87);
+}
+
 
 h1 {
   font-size: 3.2em;
@@ -48,7 +59,8 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: goldenrod;
+  color: goldenrod;
 }
 button:focus,
 button:focus-visible {
@@ -61,7 +73,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: goldenrod;
   }
   button {
     background-color: #f9f9f9;

@@ -10,13 +10,13 @@ def get_personal_info():
     if not personal_info:
         # Return default data
         return jsonify({
-            'name': 'Your Name',
+            'name': 'Garrett Hawkins',
             'title': 'Full Stack Developer',
-            'email': 'your.email@example.com',
-            'phone': '+1 (555) 123-4567',
-            'location': 'Your City, State',
-            'linkedin': 'https://linkedin.com/in/yourprofile',
-            'github': 'https://github.com/yourusername',
+            'email': 'hawkpdx@icloud.com',
+            'phone': '+1 (971) 438-6340',
+            'location': 'Portland, Oregon',
+            'linkedin': 'https://linkedin.com/in/hawkpdx',
+            'github': 'https://github.com/HawkPDX',
             'website': 'https://yourwebsite.com',
             'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
         })

@@ -6,6 +6,12 @@
   font-family: Monaco, monospace;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

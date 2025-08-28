@@ -4,44 +4,43 @@ import { useExperience } from '../hooks/useData';
 const Experience = () => {
   const { data: experiences, loading } = useExperience();
 
-  if (loading) return <div className="py-20 text-center">Loading experience...</div>;
+  if (loading) return <div style={{ padding: '5rem 0', textAlign: 'center' }}>Loading experience...</div>;
 
   return (
-    <section id="experience" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Experience</h2>
-          <div className="w-20 h-1 bg-indigo-600 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    <section id="experience" className="section" style={{ backgroundColor: 'var(--card-bg)' }}>
+      <div className="container">
+        <div className="text-center mb-8">
+          <h2 className="section-title">Experience</h2>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
             My professional journey and key achievements
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div style={{ maxWidth: '48rem', margin: '0 auto' }}>
           {experiences.map((exp) => (
-            <div key={exp.id} className="mb-8 bg-white rounded-lg shadow-md p-6">
-              <div className="flex justify-between items-start mb-4">
+            <div key={exp.id} className="card" style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{exp.position}</h3>
-                  <p className="text-indigo-600 font-medium">{exp.company}</p>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-color)' }}>{exp.position}</h3>
+                  <p style={{ color: 'var(--primary-color)', fontWeight: '500' }}>{exp.company}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-gray-600">
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ color: 'var(--text-light)' }}>
                     {exp.start_date} - {exp.current ? 'Present' : exp.end_date}
                   </p>
                 </div>
               </div>
               
-              <p className="text-gray-600 mb-4">{exp.description}</p>
+              <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>{exp.description}</p>
               
-              {exp.technologies && (
-                <div className="mb-4">
-                  <span className="text-sm font-medium text-gray-700">Technologies:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
+              {exp.极technologies && (
+                <div style={{ marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-color)' }}>Technologies:</span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5极rem' }}>
                     {exp.technologies.split(',').map((tech) => (
                       <span
                         key={tech}
-                        className="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full"
+                        style={{ padding: '0.25rem 0.75rem', backgroundColor: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary-color)', fontSize: '0.875rem', borderRadius: '9999px' }}
                       >
                         {tech.trim()}
                       </span>
@@ -52,8 +51,8 @@ const Experience = () => {
               
               {exp.achievements && (
                 <div>
-                  <span className="text-sm font-medium text-gray-700">Key Achievements:</span>
-                  <div className="mt-2 text-gray-600 whitespace-pre-line">
+                  <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-color)' }}>Key Achievements:</span>
+                  <div style={{ marginTop: '0.5rem', color: 'var(--text-light)', whiteSpace: 'pre-line' }}>
                     {exp.achievements}
                   </div>
                 </div>
