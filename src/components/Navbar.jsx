@@ -31,7 +31,8 @@ const Navbar = () => {
       zIndex: 50,
       backgroundColor: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid var(--border-color)'
+      borderBottom: '1px solid var(--border-color)',
+      padding: '25px',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div style={{

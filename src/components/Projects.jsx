@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProjects } from '../hooks/useData';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { CodeBracketIcon } from '@heroicons/react/24/outline';
 
 const Projects = () => {
   const { data: projects, loading } = useProjects();
@@ -57,8 +58,7 @@ const Projects = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <span style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }}>GitHub</span>
-                      Code
+                      <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
                     </a>
                   )}
                   {project.live_url && (
