@@ -58,7 +58,7 @@ const Projects = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                      <span style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }}>GitHub</span>
                     </a>
                   )}
                   {project.live_url && (
