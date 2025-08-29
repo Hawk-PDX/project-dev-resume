@@ -108,83 +108,34 @@ const Projects = forwardRef((props, ref) => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    {project.github_url && (
-                      <a
-                        href={project.github_url}
-                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
-                      </a>
-                    )}
-                    {project.live_url && (
-                      <a
-                        href={project.live_url}
-                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
-                        Live Demo
-                      </a>
-                    )}
-                  </div>
-                  
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      onClick={() => handleEdit(project)}
-                      style={{
-                        padding: '0.5rem',
-                        border: '1px solid #d1d5db',
-                        backgroundColor: 'transparent',
-                        color: 'var(--text-color)',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                      title="Edit Project"
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  {project.github_url && (
+                    <a
+                      href={project.github_url}
+                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <PencilIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                    
-                    <button
-                      onClick={() => handleDeleteClick(project)}
-                      style={{
-                        padding: '0.5rem',
-                        border: '1px solid #fecaca',
-                        backgroundColor: '#fef2f2',
-                        color: '#dc2626',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                      title="Delete Project"
+                      <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                    </a>
+                  )}
+                  {project.live_url && (
+                    <a
+                      href={project.live_url}
+                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      <TrashIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                  </div>
+                      <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                      Live Demo
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      <ConfirmationModal
-        isOpen={deleteModal.isOpen}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-        title="Delete Project"
-        message={`Are you sure you want to delete "${deleteModal.project?.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        isDanger={true}
-      />
     </section>
   );
 });

@@ -43,10 +43,7 @@ export const resumeService = {
 export const projectsService = {
     getProjects: () => api.get('/projects/'),
     getFeaturedProjects: () => api.get('/projects/featured'),
-    getProject: (id) => api.get(`/projects/${id}`),
     addProject: (data) => api.post('/projects/', data),
-    editProject: (id, data) => api.put(`/projects/${id}`, data),
-    deleteProject: (id) => api.delete(`/projects/${id}`),
 };
 
 export const skillsService = {

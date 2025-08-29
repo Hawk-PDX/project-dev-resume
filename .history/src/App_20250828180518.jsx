@@ -13,8 +13,8 @@ function App() {
   const [editProject, setEditProject] = useState(null);
 
   const handleProjectAdded = () => {
-    if (projectsRefreshRef.current && projectsRefreshRef.current.refresh) {
-      projectsRefreshRef.current.refresh();
+    if (projectsRefreshRef.current) {
+      projectsRefreshRef.current();
     }
     setEditProject(null); // Clear edit mode after successful operation
   };

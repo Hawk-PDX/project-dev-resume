@@ -174,17 +174,6 @@ const Projects = forwardRef((props, ref) => {
           ))}
         </div>
       </div>
-
-      <ConfirmationModal
-        isOpen={deleteModal.isOpen}
-        onClose={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-        title="Delete Project"
-        message={`Are you sure you want to delete "${deleteModal.project?.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        isDanger={true}
-      />
     </section>
   );
 });
