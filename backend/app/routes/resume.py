@@ -2,13 +2,18 @@ from flask import Blueprint, jsonify
 from app.models import PersonalInfo, Experience, Education
 from app import db
 
+# Blueprint for resume-related endpoints
 resume_bp = Blueprint('resume', __name__)
 
 @resume_bp.route('/personal', methods=['GET'])
 def get_personal_info():
+    """
+    Get personal information including name, contact details, and professional summary.
+    Returns default data if no database entries exist.
+    """
     personal_info = PersonalInfo.query.first()
     if not personal_info:
-        # Return default data
+        # Return default data when database is empty
         return jsonify({
             'name': 'Garrett Hawkins',
             'title': 'Full Stack Developer',
@@ -36,10 +41,14 @@ def get_personal_info():
 
 @resume_bp.route('/experience', methods=['GET'])
 def get_experience():
+    """
+    Get work experience history, ordered by most recent first.
+    Returns sample data if no experience entries exist in database.
+    """
     experiences = Experience.query.order_by(Experience.order.desc()).all()
     
     if not experiences:
-        # Return sample data
+        # Return sample experience data when database is empty
         return jsonify([{
             'id': 1,
             'company': 'Tech Solutions Inc.',
@@ -66,10 +75,14 @@ def get_experience():
 
 @resume_bp.route('/education', methods=['GET'])
 def get_education():
+    """
+    Get education history, ordered by most recent first.
+    Returns sample data if no education entries exist in database.
+    """
     education = Education.query.order_by(Education.order.desc()).all()
     
     if not education:
-        # Return sample data
+        # Return sample education data when database is empty
         return jsonify([{
             'id': 1,
             'institution': 'University of Technology',

@@ -15,4 +15,12 @@ export default {
         '!src/main.jsx',
         '!src/App.jsx',
     ],
+    coverageThreshold: {
+        global: {
+            statements: 5,
+            branches: 5,
+            functions: 3,
+            lines: 5
+        }
+    }
 };

@@ -2,16 +2,24 @@ from flask import Blueprint, jsonify, request
 from app.models import Project
 from app import db
 
+# Blueprint for project management endpoints
 projects_bp = Blueprint('projects', __name__)
 
 @projects_bp.route('/', methods=['GET', 'POST'])
 def projects():
+    """
+    Main projects endpoint - handles both GET (list projects) and POST (create project)
+    """
     if request.method == 'POST':
         return add_project()
     return get_projects()
 
 @projects_bp.route('/<int:project_id>', methods=['GET', 'PUT', 'DELETE'])
 def project(project_id):
+    """
+    Individual project endpoint - handles GET (get project), PUT (update project), 
+    and DELETE (remove project) operations for a specific project
+    """
     if request.method == 'GET':
         return get_project(project_id)
     elif request.method == 'PUT':
@@ -20,14 +28,18 @@ def project(project_id):
         return delete_project(project_id)
 
 def add_project():
+    """
+    Create a new project with data from the request body.
+    Requires title field, other fields are optional.
+    """
     try:
         data = request.get_json()
         
-        # Validate required fields
+        # Validate that title is provided
         if not data.get('title'):
             return jsonify({'error': 'Title is required'}), 400
         
-        # Create new project
+        # Create new project instance with provided data
         project = Project(
             title=data['title'],
             description=data.get('description', ''),
@@ -59,10 +71,14 @@ def add_project():
         return jsonify({'error': str(e)}), 500
 
 def get_projects():
+    """
+    Retrieve all projects ordered by custom order and creation date.
+    Returns sample projects if none exist in the database.
+    """
     projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
     
     if not projects:
-        # Return sample data
+        # Return sample project data when database is empty
         return jsonify([{
             'id': 1,
             'title': 'Full Stack Resume Portfolio',
@@ -98,6 +114,10 @@ def get_projects():
     } for project in projects])
 
 def get_project(project_id):
+    """
+    Retrieve a specific project by its ID.
+    Returns 404 error if project is not found.
+    """
     project = Project.query.get(project_id)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
@@ -116,6 +136,10 @@ def get_project(project_id):
     })
 
 def update_project(project_id):
+    """
+    Update an existing project with new data from the request body.
+    Only updates fields that are provided in the request.
+    """
     try:
         project = Project.query.get(project_id)
         if not project:
@@ -123,7 +147,7 @@ def update_project(project_id):
         
         data = request.get_json()
         
-        # Update project fields
+        # Update only the fields that are provided in the request
         if 'title' in data:
             project.title = data['title']
         if 'description' in data:
@@ -160,6 +184,10 @@ def update_project(project_id):
         return jsonify({'error': str(e)}), 500
 
 def delete_project(project_id):
+    """
+    Delete a project by its ID.
+    Returns success message or error if project not found.
+    """
     try:
         project = Project.query.get(project_id)
         if not project:
@@ -176,6 +204,10 @@ def delete_project(project_id):
 
 @projects_bp.route('/featured', methods=['GET'])
 def get_featured_projects():
+    """
+    Retrieve only featured projects, ordered by custom order.
+    Used to showcase highlighted projects on the portfolio.
+    """
     projects = Project.query.filter_by(featured=True).order_by(Project.order.desc()).all()
     
     return jsonify([{

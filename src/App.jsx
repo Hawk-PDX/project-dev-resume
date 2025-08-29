@@ -8,10 +8,20 @@ import Skills from './components/Skills';
 import Footer from './components/Footer';
 import './styles.css';
 
+/**
+ * Main application component that orchestrates the portfolio layout
+ * and manages state for project editing and refresh functionality
+ */
 function App() {
+  // Ref to access the Projects component's refresh method
   const projectsRefreshRef = useRef(null);
+  
+  // State to track which project is being edited (if any)
   const [editProject, setEditProject] = useState(null);
 
+  /**
+   * Handle project addition success - refresh projects list and clear edit mode
+   */
   const handleProjectAdded = () => {
     if (projectsRefreshRef.current && projectsRefreshRef.current.refresh) {
       projectsRefreshRef.current.refresh();
@@ -19,12 +29,19 @@ function App() {
     setEditProject(null); // Clear edit mode after successful operation
   };
 
+  /**
+   * Handle project edit initiation - set the project to edit and scroll to form
+   * @param {Object} project - The project object to edit
+   */
   const handleEditProject = (project) => {
     setEditProject(project);
-    // Scroll to the AddProject section
+    // Scroll to the AddProject section for better UX
     document.getElementById('add-project')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  /**
+   * Handle canceling project edit - clear the edit state
+   */
   const handleCancelEdit = () => {
     setEditProject(null);
   };

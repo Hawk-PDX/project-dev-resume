@@ -2,14 +2,19 @@ from flask import Blueprint, jsonify
 from app.models import Skill
 from app import db
 
+# Blueprint for skills-related endpoints
 skills_bp = Blueprint('skills', __name__)
 
 @skills_bp.route('/', methods=['GET'])
 def get_skills():
+    """
+    Get all skills categorized by type (frontend, backend, database, tools).
+    Returns sample data if no skills exist in the database.
+    """
     skills = Skill.query.order_by(Skill.category, Skill.order.desc()).all()
     
     if not skills:
-        # Return sample data
+        # Return sample skill data when database is empty
         return jsonify({
             'frontend': [
                 {'name': 'React', 'level': 5, 'category': 'frontend'},
@@ -43,7 +48,7 @@ def get_skills():
             ]
         })
     
-    # Group skills by category
+    # Group skills by their category for organized frontend display
     skills_by_category = {}
     for skill in skills:
         if skill.category not in skills_by_category:
