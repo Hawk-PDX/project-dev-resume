@@ -1,10 +1,55 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { useProjects } from '../hooks/useData';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { CodeBracketIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import ConfirmationModal from './ConfirmationModal';
+import { projectsService } from '../services/api';
 
-const Projects = () => {
-  const { data: projects, loading } = useProjects();
+const Projects = forwardRef((props, ref) => {
+  const { data: projects, loading, refresh } = useProjects();
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    project: null
+  });
+  const [message, setMessage] = useState('');
+  
+  useImperativeHandle(ref, () => ({
+    refresh: refresh
+  }));
+
+  const handleEdit = (project) => {
+    // This will be handled by the parent component (App.jsx)
+    if (props.onEditProject) {
+      props.onEditProject(project);
+    }
+  };
+
+  const handleDeleteClick = (project) => {
+    setDeleteModal({
+      isOpen: true,
+      project: project
+    });
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await projectsService.deleteProject(deleteModal.project.id);
+      setMessage('Project deleted successfully!');
+      refresh(); // Refresh the projects list
+      setDeleteModal({ isOpen: false, project: null });
+      
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Error deleting project: ' + (error.response?.data?.error || error.message));
+      setDeleteModal({ isOpen: false, project: null });
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal({ isOpen: false, project: null });
+  };
   
   console.log("Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
   const uniqueProjects = projects.filter((project, index, self) =>
@@ -24,6 +69,19 @@ const Projects = () => {
             Here are some of my recent projects that showcase my skills and experience:
           </p>
         </div>
+
+        {message && (
+          <div style={{ 
+            padding: '1rem', 
+            marginBottom: '2rem', 
+            backgroundColor: message.includes('Error') ? '#fee2e2' : '#d1fae5',
+            color: message.includes('Error') ? '#dc2626' : '#065f46',
+            borderRadius: '0.5rem',
+            textAlign: 'center'
+          }}>
+            {message}
+          </div>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {uniqueProjects.map((project) => (
@@ -50,36 +108,85 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  {project.github_url && (
-                    <a
-                      href={project.github_url}
-                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    {project.github_url && (
+                      <a
+                        href={project.github_url}
+                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                      </a>
+                    )}
+                    {project.live_url && (
+                      <a
+                        href={project.live_url}
+                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => handleEdit(project)}
+                      style={{
+                        padding: '0.5rem',
+                        border: '1px solid #d1d5db',
+                        backgroundColor: 'transparent',
+                        color: 'var(--text-color)',
+                        borderRadius: '0.375rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      title="Edit Project"
                     >
-                      <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
-                    </a>
-                  )}
-                  {project.live_url && (
-                    <a
-                      href={project.live_url}
-                      style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      <PencilIcon style={{ height: '1rem', width: '1rem' }} />
+                    </button>
+                    
+                    <button
+                      onClick={() => handleDeleteClick(project)}
+                      style={{
+                        padding: '0.5rem',
+                        border: '1px solid #fecaca',
+                        backgroundColor: '#fef2f2',
+                        color: '#dc2626',
+                        borderRadius: '0.375rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      title="Delete Project"
                     >
-                      <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
-                      Live Demo
-                    </a>
-                  )}
+                      <TrashIcon style={{ height: '1rem', width: '1rem' }} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${deleteModal.project?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDanger={true}
+      />
     </section>
   );
-};
+});
 
 export default Projects;

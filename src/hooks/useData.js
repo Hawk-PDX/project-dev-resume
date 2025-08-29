@@ -29,22 +29,23 @@ export const useProjects = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await projectsService.getProjects();
-                setData(response.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await projectsService.getProjects();
+            setData(response.data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
 
-    return { data, loading, error };
+    return { data, loading, error, refresh: fetchData };
 };
 
 export const useSkills = () => {
