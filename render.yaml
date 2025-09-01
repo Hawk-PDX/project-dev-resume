@@ -1,20 +1,17 @@
 # Portfolio Deployment Configuration for Render.com
 # Optimized for personal resume/portfolio use case
+
 services:
   # Backend Service (Flask API) - Primary service
   - type: web
     name: portfolio-api
     runtime: python
     plan: free
-    # Define a root directory for the service to simplify commands
-    rootDir: backend
-    # Combine the build steps into a single command
-    buildCommand: pip install -r requirements.txt
-    # Now that we're in the right directory, we can run gunicorn directly
-    startCommand: gunicorn run:app -b 0.0.0.0:$PORT --timeout 60 --workers 2
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && gunicorn run:app -b 0.0.0.0:$PORT --timeout 60 --workers 2
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.0 # Optional, can use a .python-version file instead
+        value: 3.11.0
       - key: FLASK_ENV
         value: production
       - key: DATABASE_URL
@@ -28,9 +25,8 @@ services:
   - type: web
     name: portfolio-site
     runtime: static
-    rootDir: frontend # Assuming your frontend code is in a `frontend` directory
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
         value: https://portfolio-api.onrender.com/api
@@ -39,7 +35,6 @@ services:
         source: /*
         destination: /index.html
 
-# The 'databases' section must be a top-level key, not nested under 'services'.
-databases: 
+databases:
   - name: portfolio-db
     plan: free
