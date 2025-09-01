@@ -36,7 +36,7 @@ services:
         source: /*
         destination: /index.html
 
-# Database Service (PostgreSQL) - Free tier for portfolio
-databases: # Change `services` to `databases` for the Postgres entry
+# The 'databases' section must be a top-level key, not nested under 'services'.
+databases: 
   - name: portfolio-db
     plan: free
