@@ -39,6 +39,6 @@ services:
         destination: /index.html
 
   # Database Service (PostgreSQL) - Free tier for portfolio
-  - type: pserv
+  - type: postgres
     name: portfolio-db
     plan: free
