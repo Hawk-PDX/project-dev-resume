@@ -1,6 +1,5 @@
 # Portfolio Deployment Configuration for Render.com
 # Optimized for personal resume/portfolio use case
-
 services:
   # Backend Service (Flask API) - Primary service
   - type: web
@@ -15,9 +14,8 @@ services:
       - key: FLASK_ENV
         value: production
       - key: DATABASE_URL
-        fromService:
+        fromDatabase:
           name: portfolio-db
-          type: postgres
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
@@ -38,7 +36,7 @@ services:
         source: /*
         destination: /index.html
 
-  # Database Service (PostgreSQL) - Free tier for portfolio
-  - type: postgres
-    name: portfolio-db
+# Database Service (PostgreSQL) - Free tier for portfolio
+databases: # Change `services` to `databases` for the Postgres entry
+  - name: portfolio-db
     plan: free
