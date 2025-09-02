@@ -1,0 +1,33 @@
+name: portfolio
+services:
+  - name: backend
+    source_dir: backend
+    build_command: pip install -r requirements.txt
+    run_command: gunicorn run:app -b 0.0.0.0:$PORT --timeout 60 --workers 2
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: ${SECRET_KEY}
+        type: SECRET
+      - key: DATABASE_URL
+        value: ${portfolio-db.DATABASE_URL}
+  - name: frontend
+    source_dir: .
+    build_command: npm install && npm run build
+    static_site:
+      output_dir: dist
+      catchall_document: index.html
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    envs:
+      - key: VITE_API_URL
+        value: https://backend-${APP_ID}.ondigitalocean.app/api
+databases:
+  - name: portfolio-db
+    engine: PG
+    version: "15"
+    size: basic
+    num_nodes: 1
