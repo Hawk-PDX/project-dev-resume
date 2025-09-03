@@ -3,11 +3,12 @@ FROM node:19-alpine as build
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with clean npm cache
+RUN npm ci && \
+    npm cache clean --force
 
 # Copy source files
 COPY . .
@@ -20,14 +21,18 @@ FROM node:19-alpine
 
 WORKDIR /app
 
-# Install serve to run the production build
+# Install serve for production hosting
 RUN npm install -g serve
 
 # Copy built files from build stage
 COPY --from=build /app/dist ./dist
 
-# Expose port
-EXPOSE 3000
+# Expose DigitalOcean's preferred port
+EXPOSE 8080
 
-# Start the application
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD wget -qO- http://localhost:8080/ || exit 1
+
+# Start the application on port 8080
+CMD ["serve", "-s", "dist", "-l", "8080"]
