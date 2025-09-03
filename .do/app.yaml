@@ -1,33 +1,48 @@
-name: portfolio
+name: project-dev-resume
 services:
   - name: backend
+    dockerfile_path: Dockerfile.backend
     source_dir: backend
-    build_command: pip install -r requirements.txt
-    run_command: gunicorn run:app -b 0.0.0.0:$PORT --timeout 60 --workers 2
-    instance_count: 1
-    instance_size_slug: basic-xxs
+    github:
+      branch: main
+      deploy_on_push: true
+    health_check:
+      http_path: /api/health
     envs:
       - key: FLASK_ENV
         value: production
+      - key: ALLOWED_ORIGINS
+        value: ${_self.VITE_API_URL}
       - key: SECRET_KEY
-        value: ${SECRET_KEY}
         type: SECRET
-      - key: DATABASE_URL
-        value: ${portfolio-db.DATABASE_URL}
+        value: ""  # Will be set in DigitalOcean dashboard
+
   - name: frontend
+    dockerfile_path: Dockerfile.frontend
     source_dir: .
-    build_command: npm install && npm run build
-    static_site:
-      output_dir: dist
-      catchall_document: index.html
-    instance_count: 1
-    instance_size_slug: basic-xxs
+    github:
+      branch: main
+      deploy_on_push: true
+    routes:
+      - path: /
     envs:
       - key: VITE_API_URL
-        value: https://backend-${APP_ID}.ondigitalocean.app/api
+        value: ${app.backend.PUBLIC_URL}
+
 databases:
-  - name: portfolio-db
-    engine: PG
-    version: "15"
-    size: basic
+  - engine: PG
+    name: portfolio-db
     num_nodes: 1
+    size: basic-xs
+
+jobs:
+  - name: migrate
+    kind: POST_DEPLOY
+    git:
+      repo_clone_url: ${_self.PUBLIC_URL}
+      branch: main
+    dockerfile_path: Dockerfile.backend
+    envs:
+      - key: DATABASE_URL
+        value: ${portfolio-db.DATABASE_URL}
+    command: flask db upgrade
