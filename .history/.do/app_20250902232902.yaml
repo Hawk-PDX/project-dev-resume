@@ -1,0 +1,51 @@
+name: portfolio-app
+services:
+  - name: frontend
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: Hawk-PDX/project-dev-resume
+    build_command: npm install && npm run build
+    run_command: npm run preview
+    envs:
+      - key: VITE_API_URL
+        value: ${backend.HOSTNAME}/api
+    source_dir: /
+
+databases:
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: Hawk-PDX/project-dev-resume
+    build_command: pip install -r backend/requirements.txt
+    run_command: cd backend && python run.py
+    envs:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: 278fb99f382e21935ea2f01f2f422099ce2b0da50bb62c8bfb7aaf65c228aebe
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+    source_dir: /
+    routes:
+      - path: /api
+        preserve_path_prefix: true
+
+databases:
+  - engine: PG
+    name: portfolio-db
+    num_nodes: 1
+    size: basic-xs
+
+ingress:
+  rules:
+    - component:
+        name: frontend
+      match:
+        path:
+          prefix: /
+    - component:
+        name: backend
+      match:
+        path:
+          prefix: /api

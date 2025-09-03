@@ -1,0 +1,53 @@
+name: portfolio-app
+project_id: 4330c89e-13d9-4a71-942e-9921b843c039
+services:
+  - name: frontend
+    github:
+      branch: main
+      repo: Hawk-PDX/project-dev-resume
+    build_command: npm install && npm run build
+    run_command: npm run preview
+    envs:
+      - key: VITE_API_URL
+        value: ${backend.HOSTNAME}/api
+      - key: NODE_ENV
+        value: production
+    source_dir: /
+    http_port: 4173
+
+  - name: backend
+    github:
+      branch: main
+      repo: Hawk-PDX/project-dev-resume
+    build_command: pip install -r backend/requirements.txt
+    run_command: cd backend && python run.py
+    envs:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        value: 278fb99f382e21935ea2f01f2f422099ce2b0da50bb62c8bfb7aaf65c228aebe
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+      - key: PYTHON_VERSION
+        value: "3.8"
+    source_dir: /backend
+    http_port: 5000
+
+databases:
+  - engine: PG
+    name: portfolio-db
+    num_nodes: 1
+    size: basic-xs
+
+ingress:
+  rules:
+    - component:
+        name: frontend
+      match:
+        path:
+          prefix: /
+    - component:
+        name: backend
+      match:
+        path:
+          prefix: /api
