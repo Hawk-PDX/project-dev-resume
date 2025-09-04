@@ -11,6 +11,11 @@ export default defineConfig({
   preview: {
     port: parseInt(process.env.PORT) || 5173,
     host: '0.0.0.0', // Required for DigitalOcean App Platform
+    allowedHosts: [
+      'localhost',
+      '.ondigitalocean.app', // Allow all DigitalOcean app domains
+      'dev-portfolio-app-22jim.ondigitalocean.app' // Specific domain
+    ]
   },
   build: {
     outDir: 'dist',
