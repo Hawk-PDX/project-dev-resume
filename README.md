@@ -1,5 +1,7 @@
 # Developer Portfolio
 
+[View Live Demo](https://dev-portfolio-app-22jim.ondigitalocean.app)   
+
 A modern, responsive full-stack developer portfolio built with React and Flask. Features a clean design, project showcase, and skills display.
 
 ## 🚀 Features
