@@ -1,109 +1,39 @@
-# 🚀 Quick Start Deployment Checklist
+# Quick Start Deployment and Personalization Guide
 
-## Before You Begin
-- [ ] GitHub account ready
-- [ ] Code committed to GitHub repository
-- [ ] Render.com account created
+## Personalizing Your Resume Template
 
-## Step 1: Local Setup Verification
+This project uses a backend database to store your personal information. If the database is empty, the app shows default placeholder data as a template. This allows you to personalize your resume without affecting the template for other users.
+
+### Adding Your Personal Information
+
+1. Ensure your backend environment is set up and the database is initialized.
+
+2. Use the provided script to add your personal information to the database:
+
 ```bash
-# Run the test script to verify everything is ready
-python test-deployment-setup.py
+python backend/scripts/add_personal_info.py
 ```
 
-## Step 2: Generate Production Secret
-```bash
-# Generate a secure secret key
-python generate-secret.py
-# Copy the output SECRET_KEY value
-```
+3. Edit the script `backend/scripts/add_personal_info.py` to replace the placeholder values with your actual personal details before running.
 
-## Step 3: Commit and Push
-```bash
-# Add all deployment files
-git add render-fullstack.yaml .env.production DEPLOYMENT_GUIDE.md generate-secret.py test-deployment-setup.py
+4. Once added, the frontend will fetch and display your personal information instead of the placeholder template.
 
-# Commit changes
-git commit -m "Add deployment configuration and scripts"
+### Updating Your Information
 
-# Push to GitHub
-git push origin main
-```
+- To update your personal info, you can either:
+  - Modify the database directly (e.g., via a database client).
+  - Extend the backend with API endpoints or an admin interface (not included by default).
 
-## Step 4: Deploy on Render.com
+### Keeping the Template Ideal for Others
 
-### 4.1 Connect GitHub to Render
-1. Go to [render.com](https://render.com)
-2. Sign up/Sign in with GitHub
-3. Authorize Render access to your repositories
+- If other developers clone this project and do not add personal info to their database, they will see the default placeholder template.
+- This approach keeps the project reusable as a template while allowing personal customization.
 
-### 4.2 Create Web Service
-1. Click "New +" → "Web Service"
-2. Select your repository
-3. Choose "Other" for service type
-4. Set Name: `portfolio-deployment`
-5. Scroll to "Advanced" → Enable "Define using Render.yaml"
-6. Set path: `render-fullstack.yaml`
-7. Click "Create Web Service"
+## Running the Project
 
-### 4.3 Set Environment Variables
-After deployment starts:
-1. Go to your service → Environment tab
-2. Add these variables:
-   - `SECRET_KEY`: (paste the value from step 2)
-   - `VITE_API_URL`: `https://portfolio-api.onrender.com/api`
-   - `FLASK_ENV`: `production`
+- Follow the main README.md for instructions on running the backend and frontend servers.
+- Make sure environment variables like `VITE_API_URL` are set correctly to point to your backend API.
 
-## Step 5: Verify Deployment
+## Support
 
-### 5.1 Check Build Logs
-- Monitor the build process in Render logs
-- Wait for "Deploy successful" message
-
-### 5.2 Test Your Application
-1. Open your frontend URL (e.g., `https://portfolio-site.onrender.com`)
-2. Test API health: `https://portfolio-api.onrender.com/api/health`
-3. Verify all features work correctly
-
-## Common Issues & Solutions
-
-### ❌ Build Fails
-- Check Render logs for specific errors
-- Verify all files are committed to GitHub
-- Ensure requirements.txt and package.json are correct
-
-### ❌ Database Issues
-- Wait for PostgreSQL service to initialize
-- Check `DATABASE_URL` is set automatically
-
-### ❌ CORS Errors
-- Verify `VITE_API_URL` matches your backend URL
-- Check browser console for specific errors
-
-### ❌ Environment Variables
-- Double-check all variables in Render dashboard
-- Ensure no typos in variable names
-
-## Support Resources
-- **Render Documentation**: https://render.com/docs
-- **Render Status**: https://status.render.com
-- **Deployment Guide**: See DEPLOYMENT_GUIDE.md for detailed instructions
-
-## Expected Timeline
-- **Initial deployment**: 5-10 minutes
-- **Database setup**: 2-3 minutes
-- **First build**: 5-8 minutes
-- **Subsequent deployments**: 2-3 minutes
-
-## Cost Information
-- **Free tier**: All services available on free plan
-- **Usage limits**: 750 hours/month (enough for personal portfolio)
-- **No credit card required** for free tier
-
-## Success Indicators
-- ✅ Frontend loads without errors
-- ✅ API health endpoint returns "healthy"
-- ✅ Projects and skills display correctly
-- ✅ Contact form works (check Render logs for submissions)
-
-You've got this! Your portfolio will be live and accessible to potential employers. 🎉
+For any questions or issues, please refer to the project documentation or contact the maintainer.

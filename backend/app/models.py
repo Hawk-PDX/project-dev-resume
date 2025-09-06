@@ -55,3 +55,16 @@ class Skill(db.Model):
     category = db.Column(db.String(50), nullable=False)
     level = db.Column(db.Integer, default=3)  # 1-5 scale
     order = db.Column(db.Integer, default=0)
+
+class Certificate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    entity = db.Column(db.String(100), nullable=False)
+    course = db.Column(db.String(100), nullable=False)
+    topics = db.Column(db.String(500))
+    description = db.Column(db.Text)
+    credit_hrs = db.Column(db.Integer)
+    issue_date = db.Column(db.Date)
+    expiry_date = db.Column(db.Date)
+    credential_id = db.Column(db.String(100))
+    credential_url = db.Column(db.String(200))
+    order = db.Column(db.Integer, default=0)

@@ -109,3 +109,31 @@ export const useExperience = () => {
 
     return { data, loading, error };
 };
+
+/**
+ * Custom hook for fetching certificates
+ * @returns {Object} Contains certificates data, loading state, error state, and refresh function
+ */
+export const useCertificates = () => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await resumeService.getCertificates();
+            setData(response.data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    return { data, loading, error, refresh: fetchData };
+};
