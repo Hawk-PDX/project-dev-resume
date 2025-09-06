@@ -49,9 +49,6 @@ export const resumeService = {
 
     // Get certificates
     getCertificates: () => api.get('/resume/certificates'),
-
-    // Create a new certificate
-    createCertificate: (data) => api.post('/resume/certificates', data),
 };
 
 // Service for project management operations

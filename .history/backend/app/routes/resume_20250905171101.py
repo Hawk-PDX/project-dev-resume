@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models import PersonalInfo, Experience, Education, Certificate
 from app import db
-from datetime import datetime
 
 # Blueprint for resume-related endpoints
 resume_bp = Blueprint('resume', __name__)
@@ -123,22 +122,14 @@ def get_certificates():
                 return jsonify({'error': f'{field} is required'}), 400
 
         try:
-            # Convert date strings to date objects
-            issue_date = None
-            expiry_date = None
-            if data.get('issue_date'):
-                issue_date = datetime.strptime(data['issue_date'], '%Y-%m-%d').date()
-            if data.get('expiry_date'):
-                expiry_date = datetime.strptime(data['expiry_date'], '%Y-%m-%d').date()
-
             new_certificate = Certificate(
                 entity=data['entity'],
                 course=data['course'],
                 topics=data.get('topics'),
                 description=data.get('description'),
                 credit_hrs=data.get('credit_hrs'),
-                issue_date=issue_date,
-                expiry_date=expiry_date,
+                issue_date=data.get('issue_date'),
+                expiry_date=data.get('expiry_date'),
                 credential_id=data.get('credential_id'),
                 credential_url=data.get('credential_url'),
                 order=data.get('order', 0)
