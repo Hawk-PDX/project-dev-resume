@@ -5,6 +5,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import AddProject from './components/AddProject';
 import Skills from './components/Skills';
+import Certificates from './components/Certificates';
 import Footer from './components/Footer';
 import './styles.css';
 
@@ -61,6 +62,7 @@ function App() {
           />
         </div>
         <Skills />
+        <Certificates />
       </main>
       <Footer />
     </div>

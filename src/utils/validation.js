@@ -28,3 +28,36 @@ export const validateForm = (formData) => {
         errors
     };
 };
+
+export const validateCertificateForm = (formData) => {
+    const errors = {};
+
+    if (!formData.entity || formData.entity.trim().length < 2) {
+        errors.entity = 'Issuing entity must be at least 2 characters';
+    }
+
+    if (!formData.course || formData.course.trim().length < 2) {
+        errors.course = 'Course name must be at least 2 characters';
+    }
+
+    if (formData.credential_url && formData.credential_url.trim() !== '') {
+        try {
+            new URL(formData.credential_url);
+        } catch {
+            errors.credential_url = 'Please enter a valid URL';
+        }
+    }
+
+    if (formData.issue_date && formData.expiry_date) {
+        const issueDate = new Date(formData.issue_date);
+        const expiryDate = new Date(formData.expiry_date);
+        if (issueDate >= expiryDate) {
+            errors.expiry_date = 'Expiry date must be after issue date';
+        }
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    };
+};
