@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { resumeService } from '../services/api';
-import { validateForm } from '../utils/validation';
+import { validateCertificateForm } from '../utils/validation';
 
 const AddCertificate = ({ onCertificateAdded }) => {
   const [formData, setFormData] = useState({
@@ -21,9 +21,12 @@ const AddCertificate = ({ onCertificateAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validation = validateForm({
+    const validation = validateCertificateForm({
       entity: formData.entity,
-      course: formData.course
+      course: formData.course,
+      credential_url: formData.credential_url,
+      issue_date: formData.issue_date,
+      expiry_date: formData.expiry_date
     });
 
     if (!validation.isValid) {

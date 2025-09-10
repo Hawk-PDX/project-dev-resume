@@ -1,21 +1,15 @@
-# Certificates Implementation Plan
+# Certificates Implementation Fixes
 
 ## Overview
-Implement a certificates section that displays certificates in cards, consistent with the existing project style.
+Fix remaining issues to make certificate logic fully functional for users to add and display certificates.
 
 ## Tasks
-- [x] Create Certificate database model
-- [x] Add certificates backend route
-- [x] Add certificates API service
-- [x] Add useCertificates hook
-- [x] Complete CertificateCard component
-- [x] Create Certificates section component
-- [x] Add POST endpoint for creating certificates
-- [x] Create AddCertificate form component
-- [x] Integrate form into Certificates section
+- [x] Add certificate-specific validation to validation.js
+- [x] Fix AddCertificate to use correct validation
+- [x] Add Certificates component to App.jsx
+- [x] Test certificate functionality
 - [x] Update TODO.md
 
 ## Current Status
-- CertificateCard.jsx exists but is mostly empty
-- No backend support for certificates
-- Need to follow existing section patterns (About, Skills, etc.)
+- Certificate logic is now integrated and validation fixed
+- Ready for testing
