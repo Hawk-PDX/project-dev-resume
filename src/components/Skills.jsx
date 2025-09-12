@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { useSkills } from '../hooks/useData';
 
-const Skills = () => {
-  const { data: skills, loading } = useSkills();
+const Skills = forwardRef((props, ref) => {
+  const { data: skills, loading, refresh } = useSkills();
+  
+  useImperativeHandle(ref, () => ({
+    refresh: refresh
+  }));
 
   if (loading) return <div className="py-20 text-center">Loading skills...</div>;
 
@@ -45,6 +49,6 @@ const Skills = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Skills;

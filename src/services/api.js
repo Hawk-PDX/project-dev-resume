@@ -80,6 +80,24 @@ export const projectsService = {
 export const skillsService = {
     // Get all skills categorized by type (frontend, backend, etc.)
     getSkills: () => api.get('/skills/'),
+
+    // Auto-calculate skills from projects
+    calculateSkills: (options = {}) => api.post('/skills/calculate', options),
+
+    // Get insights about skills and project alignment
+    getInsights: () => api.get('/skills/insights'),
+
+    // Get a specific skill by ID
+    getSkill: (id) => api.get(`/skills/${id}`),
+
+    // Update an existing skill
+    updateSkill: (id, data) => api.put(`/skills/${id}`, data),
+
+    // Delete a skill
+    deleteSkill: (id) => api.delete(`/skills/${id}`),
+
+    // Add a new skill manually
+    addSkill: (data) => api.post('/skills/add', data),
 };
 
 // Service for contact form submissions

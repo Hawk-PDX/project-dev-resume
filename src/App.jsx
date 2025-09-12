@@ -5,8 +5,10 @@ import About from './components/About';
 import Projects from './components/Projects';
 import AddProject from './components/AddProject';
 import Skills from './components/Skills';
+import SkillsAdmin from './components/SkillsAdmin';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
+import { skillsService } from './services/api';
 import './styles.css';
 
 /**
@@ -18,6 +20,8 @@ import { useEffect } from 'react';
 function App() {
   // Ref to access the Projects component's refresh method
   const projectsRefreshRef = useRef(null);
+  // Ref to access the Skills component's refresh method
+  const skillsRefreshRef = useRef(null);
   
   // State to track which project is being edited (if any)
   const [editProject, setEditProject] = useState(null);
@@ -27,12 +31,23 @@ function App() {
   }, []);
 
   /**
-   * Handle project addition success - refresh projects list and clear edit mode
+   * Handle project addition success - refresh projects list, sync skills, and clear edit mode
    */
-  const handleProjectAdded = () => {
+  const handleProjectAdded = async () => {
     if (projectsRefreshRef.current && projectsRefreshRef.current.refresh) {
       projectsRefreshRef.current.refresh();
     }
+    
+    // Auto-sync skills when projects change
+    try {
+      await skillsService.calculateSkills({ preserve_manual_overrides: true });
+      if (skillsRefreshRef.current && skillsRefreshRef.current.refresh) {
+        skillsRefreshRef.current.refresh();
+      }
+    } catch (error) {
+      console.error('Error syncing skills:', error);
+    }
+    
     setEditProject(null); // Clear edit mode after successful operation
   };
 
@@ -53,6 +68,15 @@ function App() {
     setEditProject(null);
   };
 
+  /**
+   * Handle skills refresh - used by SkillsAdmin component
+   */
+  const handleSkillsUpdated = () => {
+    if (skillsRefreshRef.current && skillsRefreshRef.current.refresh) {
+      skillsRefreshRef.current.refresh();
+    }
+  };
+
   return (
     <div className="App">
       <Navbar />
@@ -67,7 +91,8 @@ function App() {
             onCancelEdit={handleCancelEdit}
           />
         </div>
-        <Skills />
+        <Skills ref={skillsRefreshRef} />
+        <SkillsAdmin onSkillsUpdated={handleSkillsUpdated} />
         <Certificates />
       </main>
       <Footer />
