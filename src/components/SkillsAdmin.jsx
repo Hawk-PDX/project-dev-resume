@@ -171,7 +171,12 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
               Automatically generate skills based on technologies used in your projects.
             </p>
             
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: '1rem', 
+              marginBottom: '1rem',
+              flexWrap: 'wrap'
+            }} className="skills-admin-buttons">
               <button
                 onClick={handleAutoCalculate}
                 disabled={loading}
@@ -218,7 +223,12 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
         <div className="card" style={{ marginBottom: '2rem' }}>
           <div style={{ padding: '1.5rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>Add New Skill</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '1rem', alignItems: 'end' }}>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', 
+              gap: '1rem', 
+              alignItems: 'end'
+            }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Name</label>
                 <input

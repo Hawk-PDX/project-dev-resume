@@ -21,6 +21,13 @@ const Navbar = () => {
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  
+  // Close mobile menu when clicking a link
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <nav style={{
@@ -32,7 +39,7 @@ const Navbar = () => {
       backgroundColor: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(10px)',
       borderBottom: '1px solid var(--border-color)',
-      padding: '25px',
+      padding: isMobile ? '1rem 0.5rem' : '1.5rem 1rem',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div style={{
@@ -114,7 +121,7 @@ const Navbar = () => {
                   textDecoration: 'none',
                   transition: 'color 0.2s ease'
                 }}
-                onClick={() => setIsOpen(false)}
+                onClick={handleLinkClick}
                 onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
                 onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
               >
