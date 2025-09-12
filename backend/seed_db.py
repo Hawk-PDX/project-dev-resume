@@ -113,34 +113,34 @@ def seed_database():
             )
             db.session.add(certificate)
             
-            # Seed Skills
+            # Seed Skills (matching your local database exactly)
             print("Seeding skills...")
             skills_data = [
-                # Frontend
-                {'name': 'React', 'level': 5, 'category': 'frontend', 'order': 10},
-                {'name': 'JavaScript', 'level': 5, 'category': 'frontend', 'order': 9},
+                # Backend (matching your local data)
+                {'name': 'Python', 'level': 4, 'category': 'backend', 'order': 100},
+                {'name': 'Flask', 'level': 2, 'category': 'backend', 'order': 99},
+                {'name': 'Django', 'level': 3, 'category': 'backend', 'order': 8},
+                {'name': 'Node.js', 'level': 4, 'category': 'backend', 'order': 7},
+                {'name': 'Express', 'level': 4, 'category': 'backend', 'order': 6},
+                {'name': 'RESTful APIs', 'level': 5, 'category': 'backend', 'order': 5},
+                
+                # Database (matching your local data)
+                {'name': 'PostgreSQL', 'level': 2, 'category': 'database', 'order': 100},
+                {'name': 'MySQL', 'level': 4, 'category': 'database', 'order': 9},
+                {'name': 'SQLite', 'level': 5, 'category': 'database', 'order': 8},
+                {'name': 'MongoDB', 'level': 3, 'category': 'database', 'order': 7},
+                {'name': 'Redis', 'level': 3, 'category': 'database', 'order': 6},
+                
+                # Frontend (matching your local data)
+                {'name': 'JavaScript', 'level': 2, 'category': 'frontend', 'order': 100},
+                {'name': 'React', 'level': 2, 'category': 'frontend', 'order': 99},
                 {'name': 'TypeScript', 'level': 4, 'category': 'frontend', 'order': 8},
                 {'name': 'HTML5', 'level': 5, 'category': 'frontend', 'order': 7},
                 {'name': 'CSS3', 'level': 5, 'category': 'frontend', 'order': 6},
                 {'name': 'Tailwind CSS', 'level': 4, 'category': 'frontend', 'order': 5},
                 {'name': 'Vue.js', 'level': 3, 'category': 'frontend', 'order': 4},
                 
-                # Backend  
-                {'name': 'Python', 'level': 5, 'category': 'backend', 'order': 10},
-                {'name': 'Flask', 'level': 5, 'category': 'backend', 'order': 9},
-                {'name': 'Django', 'level': 3, 'category': 'backend', 'order': 8},
-                {'name': 'Node.js', 'level': 4, 'category': 'backend', 'order': 7},
-                {'name': 'Express', 'level': 4, 'category': 'backend', 'order': 6},
-                {'name': 'RESTful APIs', 'level': 5, 'category': 'backend', 'order': 5},
-                
-                # Database
-                {'name': 'PostgreSQL', 'level': 4, 'category': 'database', 'order': 10},
-                {'name': 'MySQL', 'level': 4, 'category': 'database', 'order': 9},
-                {'name': 'SQLite', 'level': 5, 'category': 'database', 'order': 8},
-                {'name': 'MongoDB', 'level': 3, 'category': 'database', 'order': 7},
-                {'name': 'Redis', 'level': 3, 'category': 'database', 'order': 6},
-                
-                # Tools
+                # Tools (matching your local data)
                 {'name': 'Git', 'level': 5, 'category': 'tools', 'order': 10},
                 {'name': 'Linux', 'level': 4, 'category': 'tools', 'order': 9},
                 {'name': 'CI/CD', 'level': 4, 'category': 'tools', 'order': 8},
