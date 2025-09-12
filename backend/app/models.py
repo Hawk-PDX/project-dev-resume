@@ -55,6 +55,11 @@ class Skill(db.Model):
     category = db.Column(db.String(50), nullable=False)
     level = db.Column(db.Integer, default=3)  # 1-5 scale
     order = db.Column(db.Integer, default=0)
+    manual_override = db.Column(db.Boolean, default=False)  # True if manually set
+    auto_calculated_level = db.Column(db.Integer)  # Store calculated level for reference
+    project_count = db.Column(db.Integer, default=0)  # Number of projects using this skill
+    last_calculated = db.Column(db.DateTime)  # When it was last auto-calculated
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Certificate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
