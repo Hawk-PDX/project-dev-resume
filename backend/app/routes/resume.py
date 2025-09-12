@@ -23,7 +23,7 @@ def get_personal_info():
             'location': 'Portland, Oregon',
             'linkedin': 'https://linkedin.com/in/hawkpdx',
             'github': 'https://github.com/HawkPDX',
-            'website': 'https://yourwebsite.com',
+            'website': 'https://github.com/HawkPDX',
             'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
         })
     

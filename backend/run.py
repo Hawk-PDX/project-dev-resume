@@ -12,8 +12,13 @@ def make_shell_context():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run the Flask application')
     parser.add_argument('--port', type=int, default=5001, help='Port to run the application on')
+    parser.add_argument('--host', type=str, default='127.0.0.1', help='Host to run the application on')
     args = parser.parse_args()
     
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, port=args.port)
+    try:
+        with app.app_context():
+            db.create_all()
+            print(f"Starting Flask server on {args.host}:{args.port}")
+        app.run(debug=True, host=args.host, port=args.port, threaded=True)
+    except Exception as e:
+        print(f"Error starting server: {e}")
