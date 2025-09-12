@@ -2,7 +2,7 @@ name: project-dev-resume
 services:
   - name: backend
     dockerfile_path: Dockerfile.backend
-    source_dir: backend
+    source_dir: .
     github:
       branch: main
       deploy_on_push: true
