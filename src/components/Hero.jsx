@@ -67,7 +67,7 @@ const Hero = () => {
             gap: '1.5rem'
           }}>
             <a 
-              href="https://github.com" 
+              href="https://github.com/HawkPDX" 
               target="_blank" 
               rel="noopener noreferrer"
               style={{
@@ -82,7 +82,7 @@ const Hero = () => {
               </svg>
             </a>
             <a 
-              href="https://linkedin.com" 
+              href="https://linkedin.com/in/hawkpdx" 
               target="_blank" 
               rel="noopener noreferrer"
               style={{

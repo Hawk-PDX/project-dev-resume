@@ -21,7 +21,7 @@ def get_skills():
                 {'name': 'JavaScript', 'level': 5, 'category': 'frontend'},
                 {'name': 'TypeScript', 'level': 4, 'category': 'frontend'},
                 {'name': 'HTML5', 'level': 5, 'category': 'frontend'},
-                {'name': 'HTML6', 'level': 5, 'category': 'frontend'},
+                {'name': 'Vue.js', 'level': 3, 'category': 'frontend'},
                 {'name': 'CSS3', 'level': 5, 'category': 'frontend'},
                 {'name': 'Tailwind CSS', 'level': 4, 'category': 'frontend'}
             ],

@@ -63,12 +63,13 @@ function App() {
         <div id="add-project">
           <AddProject 
             onProjectAdded={handleProjectAdded} 
-            editProject={editProject}
+            e
+            ditProject={editProject}
             onCancelEdit={handleCancelEdit}
           />
         </div>
         <Skills />
-        <Certificates />
+        <Certificates />s
       </main>
       <Footer />
     </div>
