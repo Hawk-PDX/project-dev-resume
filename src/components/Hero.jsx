@@ -52,11 +52,11 @@ const Hero = () => {
               View Projects
             </a>
             <a
-              href="#contact"
+              href="#certificates"
               className="btn btn-secondary"
               style={{ minWidth: '200px' }}
             >
-              Get In Touch
+              View Certificates
             </a>
           </div>
 
