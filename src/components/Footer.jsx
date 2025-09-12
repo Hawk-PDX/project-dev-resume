@@ -5,7 +5,7 @@ const Footer = () => {
   const { data: personalInfo } = usePersonalInfo();
 
   return (
-    <footer style={{ backgroundColor: '#111827', color: 'white', padding: '3rem 0' }}>
+    <footer id="contact" style={{ backgroundColor: '#111827', color: 'white', padding: '3rem 0' }}>
       <div className="container">
         <div style={{ textAlign: 'center' }}>
           <p style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>
