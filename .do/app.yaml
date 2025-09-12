@@ -59,3 +59,16 @@ jobs:
       - key: FLASK_APP
         value: run.py
     command: flask db upgrade
+  
+  - name: seed
+    kind: POST_DEPLOY
+    git:
+      repo_clone_url: ${_self.PUBLIC_URL}
+      branch: main
+    dockerfile_path: Dockerfile.backend
+    envs:
+      - key: DATABASE_URL
+        value: ${portfolio-db.DATABASE_URL}
+      - key: FLASK_APP
+        value: run.py
+    command: python seed_db.py
