@@ -1,8 +1,27 @@
 from app import create_app, db
 from app.models import PersonalInfo, Experience, Education, Project, Skill
 import argparse
+import os
 
 app = create_app()
+
+# Initialize database on startup for production
+if os.environ.get('FLASK_ENV') == 'production':
+    with app.app_context():
+        try:
+            # Try to create tables if they don't exist
+            db.create_all()
+            
+            # Check if we need to seed the database
+            if not Project.query.first():
+                print('🌱 Database is empty, seeding with data...')
+                from seed_db import seed_database
+                seed_database()
+                print('✅ Database seeded successfully!')
+            else:
+                print('📊 Database already contains data')
+        except Exception as e:
+            print(f'⚠️  Database initialization warning: {e}')
 
 @app.shell_context_processor
 def make_shell_context():
