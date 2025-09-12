@@ -13,12 +13,18 @@ import './styles.css';
  * Main application component that orchestrates the portfolio layout
  * and manages state for project editing and refresh functionality
  */
+import { useEffect } from 'react';
+
 function App() {
   // Ref to access the Projects component's refresh method
   const projectsRefreshRef = useRef(null);
   
   // State to track which project is being edited (if any)
   const [editProject, setEditProject] = useState(null);
+
+  useEffect(() => {
+    document.title = 'FS Dev Portfolio';
+  }, []);
 
   /**
    * Handle project addition success - refresh projects list and clear edit mode
