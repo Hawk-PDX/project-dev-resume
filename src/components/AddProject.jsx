@@ -257,7 +257,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '1rem' }} className="button-group">
             {editProject && (
               <button
                 type="button"

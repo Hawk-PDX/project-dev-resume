@@ -108,8 +108,8 @@ const Projects = forwardRef((props, ref) => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }} className="project-actions">
+                  <div style={{ display: 'flex', gap: '1rem' }} className="project-links">
                     {project.github_url && (
                       <a
                         href={project.github_url}
@@ -133,9 +133,10 @@ const Projects = forwardRef((props, ref) => {
                     )}
                   </div>
                   
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }} className="project-admin-buttons">
                     <button
                       onClick={() => handleEdit(project)}
+                      className="icon-button"
                       style={{
                         padding: '0.5rem',
                         border: '1px solid #d1d5db',
@@ -144,7 +145,8 @@ const Projects = forwardRef((props, ref) => {
                         borderRadius: '0.375rem',
                         cursor: 'pointer',
                         display: 'flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                       title="Edit Project"
                     >
@@ -153,6 +155,7 @@ const Projects = forwardRef((props, ref) => {
                     
                     <button
                       onClick={() => handleDeleteClick(project)}
+                      className="icon-button"
                       style={{
                         padding: '0.5rem',
                         border: '1px solid #fecaca',
@@ -161,7 +164,8 @@ const Projects = forwardRef((props, ref) => {
                         borderRadius: '0.375rem',
                         cursor: 'pointer',
                         display: 'flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                       title="Delete Project"
                     >

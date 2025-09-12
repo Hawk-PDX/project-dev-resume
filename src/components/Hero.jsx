@@ -13,26 +13,29 @@ const Hero = () => {
       <div className="container">
         <div className="text-center">
           <h1 style={{
-            fontSize: '3.5rem',
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             fontWeight: 'bold',
             color: 'goldenrod',
-            marginBottom: '1.5rem'
+            marginBottom: '1.5rem',
+            lineHeight: '1.1'
           }}>
             Garrett Hawkins
           </h1>
           <h2 style={{
-            fontSize: '2rem',
+            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
             color: 'var(--primary-color)',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            lineHeight: '1.2'
           }}>
             Full Stack Developer
           </h2>
           <p style={{
-            fontSize: '1.25rem',
+            fontSize: 'clamp(1rem, 3vw, 1.25rem)',
             color: 'var(--text-light)',
             maxWidth: '600px',
             margin: '0 auto 2rem auto',
-            lineHeight: '1.6'
+            lineHeight: '1.6',
+            padding: '0 1rem'
           }}>
             Passionate full-stack developer creating modern, responsive web applications with React and Python.
           </p>
@@ -42,19 +45,29 @@ const Hero = () => {
             flexDirection: 'column',
             gap: '1rem',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            maxWidth: '400px',
+            margin: '0 auto'
           }}>
             <a
               href="#projects"
               className="btn btn-primary"
-              style={{ minWidth: '200px' }}
+              style={{ 
+                minWidth: '200px',
+                width: '100%',
+                textAlign: 'center'
+              }}
             >
               View Projects
             </a>
             <a
               href="#certificates"
               className="btn btn-secondary"
-              style={{ minWidth: '200px' }}
+              style={{ 
+                minWidth: '200px',
+                width: '100%',
+                textAlign: 'center'
+              }}
             >
               View Certificates
             </a>
@@ -64,7 +77,8 @@ const Hero = () => {
             marginTop: '3rem',
             display: 'flex',
             justifyContent: 'center',
-            gap: '1.5rem'
+            gap: '2rem',
+            flexWrap: 'wrap'
           }}>
             <a 
               href="https://github.com/HawkPDX" 

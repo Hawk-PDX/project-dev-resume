@@ -18,7 +18,7 @@ const About = () => {
             {personalInfo?.summary || 'Full-stack developer passionate about creating innovative solutions while streamlining production, cutting back on "clutter" and maintaining a responsive, well-rounded, product.'}
           </p>
           
-          <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', textAlign: 'left' }}>
+          <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', textAlign: 'left' }} className="auto-grid">
             <div>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>Contact Information</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-light)' }}>
