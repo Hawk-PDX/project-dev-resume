@@ -6,16 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: parseInt(process.env.PORT) || 5173,
-    host: '0.0.0.0', // Required for DigitalOcean App Platform
+    host: '0.0.0.0',
   },
   preview: {
     port: parseInt(process.env.PORT) || 5173,
-    host: '0.0.0.0', // Required for DigitalOcean App Platform
-    allowedHosts: [
-      'localhost',
-      '.ondigitalocean.app', // Allow all DigitalOcean app domains
-      'dev-portfolio-app-22jim.ondigitalocean.app' // Specific domain
-    ]
+    host: '0.0.0.0',
   },
   build: {
     outDir: 'dist',
@@ -30,7 +25,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+          vendor: ['react', 'react-dom'],
           // Split large dependencies into separate chunks
           ui: ['@heroicons/react', 'framer-motion'],
         },
