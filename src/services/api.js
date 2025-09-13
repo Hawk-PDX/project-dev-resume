@@ -7,7 +7,7 @@ console.log('API_BASE_URL:', API_BASE_URL);
 // Configure axios instance with base settings
 const api = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 10000, // 10 second timeout for requests
+    timeout: 30000, // 30 second timeout for requests (increased for Render cold starts)
 });
 
 // Intercept requests to handle any pre-request logic
