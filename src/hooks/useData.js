@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { resumeService, projectsService, skillsService } from '../services/api';
+import { fallbackPersonalInfo, fallbackProjects, fallbackSkills } from '../data/fallbackData';
 
 /**
  * Custom hook for fetching personal information
@@ -16,6 +17,8 @@ export const usePersonalInfo = () => {
                 const response = await resumeService.getPersonalInfo();
                 setData(response.data);
             } catch (err) {
+                console.warn('API failed, using fallback personal info:', err.message);
+                setData(fallbackPersonalInfo);
                 setError(err.message);
             } finally {
                 setLoading(false);
@@ -43,6 +46,8 @@ export const useProjects = () => {
             const response = await projectsService.getProjects();
             setData(response.data);
         } catch (err) {
+            console.warn('API failed, using fallback projects:', err.message);
+            setData(fallbackProjects);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -71,6 +76,8 @@ export const useSkills = () => {
                 const response = await skillsService.getSkills();
                 setData(response.data);
             } catch (err) {
+                console.warn('API failed, using fallback skills:', err.message);
+                setData(fallbackSkills);
                 setError(err.message);
             } finally {
                 setLoading(false);
