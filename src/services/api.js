@@ -74,6 +74,9 @@ export const projectsService = {
 
     // Delete a project
     deleteProject: (id) => api.delete(`/projects/${id}`),
+
+    // Fetch project data from GitHub URL
+    fetchFromGitHub: (githubUrl) => api.post('/projects/fetch-github', { github_url: githubUrl }),
 };
 
 // Service for skills data
