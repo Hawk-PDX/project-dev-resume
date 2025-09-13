@@ -44,10 +44,16 @@ def create_app():
             "http://localhost:5001",
             "http://localhost:5173",
             "http://localhost:5175",
-            "https://portfolio-frontend-zhcd.onrender.com"
+            "https://portfolio-frontend-zhcd.onrender.com",
+            "https://*.onrender.com"  # Allow any Render subdomain
         ]
         
-        CORS(app, resources={r"/api/*": {"origins": origins}})
+        CORS(app, 
+             resources={r"/api/*": {
+                 "origins": origins,
+                 "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                 "allow_headers": ["Content-Type", "Authorization"]
+             }})
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
         app.logger.error(f"Error initializing CORS: {e}")
