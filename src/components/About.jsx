@@ -24,7 +24,7 @@ const About = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-light)' }}>
                 <p><strong>Email:</strong> {personalInfo?.email || 'hawkpdx@icloud.com'}</p>
                 <p><strong>Location:</strong> {personalInfo?.location || 'Portland, Oregon'}</p>
-                <p><strong>Phone:</strong> {personalInfo?.phone || '+1 (971) 438-6340'}</p>
+                {personalInfo?.phone && <p><strong>Phone:</strong> {personalInfo.phone}</p>}
               </div>
             </div>
             
