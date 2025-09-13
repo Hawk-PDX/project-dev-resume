@@ -109,4 +109,6 @@ Your portfolio is fully deployed and working! You can:
 
 ---
 
-**Congratulations! Your portfolio is live and ready to impress! 🚀**
+**Congratulations! Your portfolio is live and ready to impress! 🚀**# Trigger Render redeploy with correct API URL
+Date: Sat Sep 13 12:42:54 PDT 2025
+Frontend should connect to: https://portfolio-backend-skva.onrender.com/api
