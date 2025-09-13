@@ -206,34 +206,48 @@ class SkillCalculator:
                 
                 # Check if it's manually overridden (has different level than calculated)
                 if preserve_manual_overrides and hasattr(existing_skill, 'manual_override'):
-                    if existing_skill.manual_override:
+                    if getattr(existing_skill, 'manual_override', False):
                         preserved += 1
                         continue
                 
                 # Update non-manual skills
                 existing_skill.category = skill_data['category']
                 existing_skill.order = skill_data['order']
-                existing_skill.auto_calculated_level = skill_data['level']
-                existing_skill.project_count = skill_data['project_count']
-                existing_skill.last_calculated = datetime.utcnow()
+                
+                # Safely update optional columns that might not exist in older databases
+                if hasattr(existing_skill, 'auto_calculated_level'):
+                    existing_skill.auto_calculated_level = skill_data['level']
+                if hasattr(existing_skill, 'project_count'):
+                    existing_skill.project_count = skill_data['project_count']
+                if hasattr(existing_skill, 'last_calculated'):
+                    existing_skill.last_calculated = datetime.utcnow()
                 
                 # Only update level if preserve_manual_overrides is False or skill is not manually overridden
-                if not preserve_manual_overrides or not existing_skill.manual_override:
+                manual_override = getattr(existing_skill, 'manual_override', False)
+                if not preserve_manual_overrides or not manual_override:
                     existing_skill.level = skill_data['level']
                 
                 updated += 1
             else:
-                # Add new skill
-                new_skill = Skill(
-                    name=skill_data['name'],
-                    category=skill_data['category'],
-                    level=skill_data['level'],
-                    order=skill_data['order'],
-                    auto_calculated_level=skill_data['level'],
-                    project_count=skill_data['project_count'],
-                    manual_override=False,
-                    last_calculated=datetime.utcnow()
-                )
+                # Add new skill with safe column handling
+                skill_kwargs = {
+                    'name': skill_data['name'],
+                    'category': skill_data['category'],
+                    'level': skill_data['level'],
+                    'order': skill_data['order']
+                }
+                
+                # Add optional columns if they exist in the model
+                if hasattr(Skill, 'auto_calculated_level'):
+                    skill_kwargs['auto_calculated_level'] = skill_data['level']
+                if hasattr(Skill, 'project_count'):
+                    skill_kwargs['project_count'] = skill_data['project_count']
+                if hasattr(Skill, 'manual_override'):
+                    skill_kwargs['manual_override'] = False
+                if hasattr(Skill, 'last_calculated'):
+                    skill_kwargs['last_calculated'] = datetime.utcnow()
+                
+                new_skill = Skill(**skill_kwargs)
                 db.session.add(new_skill)
                 added += 1
         

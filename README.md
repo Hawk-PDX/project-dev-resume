@@ -1,16 +1,18 @@
-# Developer Portfolio
+# Full-Stack Developer Portfolio Application
 
-A modern, responsive full-stack developer portfolio built with React and Flask. Features a clean design, project showcase, and skills display.
+A modern, responsive portfolio web application built with React 19 and Flask, designed to showcase developer projects, skills, and professional experience. Features a complete content management system with CRUD operations, allowing dynamic updates to projects, skills, and certifications without code changes.
 
-⚡⚡⚡ Live Demo URL: `https://portfolio-backend-skva.onrender.com/api`
+🌟 **Live Demo**: [https://portfolio-frontend-zhcd.onrender.com](https://portfolio-frontend-zhcd.onrender.com)  
+🔗 **Backend API**: [https://portfolio-backend-skva.onrender.com/api](https://portfolio-backend-skva.onrender.com/api)
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Modern Tech Stack**: React 19, Vite, Flask, SQLAlchemy
-- **Project Showcase**: Display your projects with descriptions and links
-- **Skills Section**: Highlight your technical skills and expertise
-- **Simple Setup**: Easy to customize with your personal information
+- **Dynamic Content Management**: Full CRUD functionality for projects, skills, and certifications with real-time data synchronization
+- **Intelligent Skills System**: Auto-calculation of skill levels based on project technologies with manual override capabilities  
+- **Modern Tech Stack**: React 19, Vite, Flask, SQLAlchemy, PostgreSQL with production deployment on Render
+- **Responsive Design**: Mobile-first approach with Tailwind CSS and custom animations
+- **Production-Ready**: Environment-specific configurations, CORS handling, error boundaries, and comprehensive testing
+- **Professional UI/UX**: Clean design with smooth animations, confirmation modals, and intuitive navigation
 
 ## 🛠️ Tech Stack
 
@@ -24,16 +26,20 @@ A modern, responsive full-stack developer portfolio built with React and Flask. 
 - Axios (API calls)
 
 ### Backend
-- Flask
+- Flask (Python web framework)
 - SQLAlchemy (ORM)
-- SQLite/PostgreSQL
-- Email integration (SMTP/SendGrid)
+- PostgreSQL (Production database)
+- SQLite (Development database)
+- Gunicorn (Production WSGI server)
+- Flask-CORS (Cross-origin resource sharing)
 
-### Testing
-- Jest (frontend)
+### Testing & Deployment
+- Jest (frontend testing)
 - React Testing Library
-- pytest (backend)
+- pytest (backend testing)
 - pytest-flask
+- Render (Cloud deployment platform)
+- GitHub Actions (CI/CD ready)
 
 ## 📦 Installation & Setup Guide
 

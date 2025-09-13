@@ -13,7 +13,12 @@ def get_skills():
     Get all skills categorized by type (frontend, backend, database, tools).
     Returns sample data if no skills exist in the database.
     """
-    skills = Skill.query.order_by(Skill.category, Skill.order.desc()).all()
+    try:
+        skills = Skill.query.order_by(Skill.category, Skill.order.desc()).all()
+    except Exception as e:
+        # If there's a database error, return sample data
+        print(f"Database error in get_skills: {e}")
+        skills = []
     
     if not skills:
         # Return sample skill data when database is empty
