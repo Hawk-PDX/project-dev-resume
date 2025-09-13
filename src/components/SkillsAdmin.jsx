@@ -149,22 +149,23 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
             Manage your technical skills with hybrid auto-calculation from projects
           </p>
         </div>
+        
+        <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+          {message && (
+            <div style={{
+              padding: '1rem',
+              marginBottom: '2rem',
+              backgroundColor: message.includes('Error') || message.includes('❌') ? '#fee2e2' : '#d1fae5',
+              color: message.includes('Error') || message.includes('❌') ? '#dc2626' : '#065f46',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              {message}
+            </div>
+          )}
 
-        {message && (
-          <div style={{
-            padding: '1rem',
-            marginBottom: '2rem',
-            backgroundColor: message.includes('Error') || message.includes('❌') ? '#fee2e2' : '#d1fae5',
-            color: message.includes('Error') || message.includes('❌') ? '#dc2626' : '#065f46',
-            borderRadius: '0.5rem',
-            textAlign: 'center'
-          }}>
-            {message}
-          </div>
-        )}
-
-        {/* Auto-Calculation Controls */}
-        <div className="card" style={{ marginBottom: '2rem' }}>
+          {/* Auto-Calculation Controls */}
+          <div className="card" style={{ marginBottom: '2rem' }}>
           <div style={{ padding: '1.5rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>Auto-Calculate Skills from Projects</h3>
             <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>
@@ -332,6 +333,7 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </section>
