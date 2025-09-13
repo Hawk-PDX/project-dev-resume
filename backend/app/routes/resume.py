@@ -19,7 +19,7 @@ def get_personal_info():
             'name': 'Garrett Hawkins',
             'title': 'Full Stack Developer',
             'email': 'hawkpdx@icloud.com',
-            'phone': '+1 (971) 438-6340',
+            'phone': None,
             'location': 'Portland, Oregon',
             'linkedin': 'https://linkedin.com/in/hawkpdx',
             'github': 'https://github.com/HawkPDX',
