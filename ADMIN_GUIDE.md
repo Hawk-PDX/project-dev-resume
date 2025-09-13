@@ -1,11 +1,10 @@
 # Portfolio Admin Interface Guide
 
-This guide explains how to use your portfolio's built-in admin interface to manage content after deployment.
+This guide explains how to use your portfolio's built-in admin interface to manage content during local development.
 
 ## 🔗 Accessing Your Portfolio
 
-- **Development**: http://localhost:5173 (frontend) + http://localhost:5001 (backend)
-- **Production**: Your DigitalOcean App Platform domain
+- **Local Development**: http://localhost:5173 (frontend) + http://localhost:5001 (backend)
 
 ## 📋 Available Admin Features
 
@@ -152,8 +151,8 @@ Order Priority: 3
 - Ensure your backend API is running and accessible
 
 ### Database Connection Issues
-- In production, check DigitalOcean App Platform logs
-- In development, ensure your backend server is running on port 5001
+- Ensure your backend server is running on port 5001
+- Check that your SQLite database file exists in backend/instance/portfolio.db
 
 ---
 
@@ -198,11 +197,6 @@ python seed_db.py
 # Reset database (clears all data)
 # Navigate to: backend/portfolio.db and delete file, then restart backend
 ```
-
-### Deployment
-- **Automatic deployment** via GitHub push to main branch
-- **Database migrations** run automatically on DigitalOcean
-- **Health checks** available at `/api/health` endpoint
 
 ---
 
