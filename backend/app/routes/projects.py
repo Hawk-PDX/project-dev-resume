@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from app.models import Project
 from app import db
+from app.services.github_service import GitHubService
+import os
 
 # Blueprint for project management endpoints
 projects_bp = Blueprint('projects', __name__)
@@ -112,6 +114,33 @@ def get_projects():
         'featured': project.featured,
         'order': project.order
     } for project in projects])
+
+@projects_bp.route('/fetch-github', methods=['POST'])
+def fetch_github_project():
+    """
+    Fetch project information from GitHub repository.
+    Accepts a GitHub URL and returns structured project data.
+    """
+    try:
+        data = request.get_json()
+        github_url = data.get('github_url')
+        
+        if not github_url:
+            return jsonify({'error': 'GitHub URL is required'}), 400
+        
+        # Initialize GitHub service with optional token from environment
+        github_token = os.getenv('GITHUB_TOKEN')
+        github_service = GitHubService(github_token)
+        
+        # Fetch project information from GitHub
+        project_info = github_service.fetch_repository_info(github_url)
+        
+        return jsonify(project_info), 200
+        
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch GitHub data: {str(e)}'}), 500
 
 def get_project(project_id):
     """
