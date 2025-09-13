@@ -70,3 +70,18 @@ export const fallbackSkills = {
         { name: 'CI/CD', level: 4, category: 'tools' }
     ]
 };
+
+export const fallbackCertificates = [
+    {
+        id: 1,
+        entity: 'Udemy',
+        course: 'React Development',
+        topics: 'React, JavaScript',
+        description: 'Advanced React development course covering modern React patterns and best practices.',
+        credit_hrs: null,
+        issue_date: '2024-01-15',
+        expiry_date: null,
+        credential_id: 'XYZ789',
+        credential_url: null
+    }
+];

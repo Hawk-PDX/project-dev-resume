@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { resumeService, projectsService, skillsService } from '../services/api';
-import { fallbackPersonalInfo, fallbackProjects, fallbackSkills } from '../data/fallbackData';
+import { fallbackPersonalInfo, fallbackProjects, fallbackSkills, fallbackCertificates } from '../data/fallbackData';
 
 /**
  * Custom hook for fetching personal information
@@ -132,6 +132,8 @@ export const useCertificates = () => {
             const response = await resumeService.getCertificates();
             setData(response.data);
         } catch (err) {
+            console.warn('API failed, using fallback certificates:', err.message);
+            setData(fallbackCertificates);
             setError(err.message);
         } finally {
             setLoading(false);

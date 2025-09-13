@@ -8,23 +8,6 @@ const Certificates = () => {
 
   if (loading) return <div className="py-20 text-center">Loading certificates...</div>;
 
-  if (!certificates || certificates.length === 0) {
-    return (
-      <section id="certificates" className="section" style={{ backgroundColor: 'var(--background-color)' }}>
-        <div className="container">
-          <div className="text-center mb-8">
-            <h2 className="section-title">Certificates</h2>
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
-              Professional certifications and credentials.
-            </p>
-          </div>
-          <div className="text-center py-12">
-            <p style={{ color: 'var(--text-light)' }}>No certificates to display.</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="certificates" className="section" style={{ backgroundColor: 'var(--background-color)' }}>
@@ -38,11 +21,17 @@ const Certificates = () => {
 
         <AddCertificate onCertificateAdded={refresh} />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
-          {certificates.map((certificate) => (
-            <CertificateCard key={certificate.id} certificate={certificate} />
-          ))}
-        </div>
+        {certificates && certificates.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+            {certificates.map((certificate) => (
+              <CertificateCard key={certificate.id} certificate={certificate} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p style={{ color: 'var(--text-light)' }}>No certificates to display yet. Add your first certificate above!</p>
+          </div>
+        )}
       </div>
     </section>
   );
