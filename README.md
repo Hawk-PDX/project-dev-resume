@@ -1,7 +1,5 @@
 # Developer Portfolio
 
-[View Live Demo](https://portfolio-frontend-zhcd.onrender.com)   
-
 A modern, responsive full-stack developer portfolio built with React and Flask. Features a clean design, project showcase, and skills display.
 
 ## 🚀 Features
@@ -65,7 +63,7 @@ Create a `.env` file in the backend directory:
 ```bash
 FLASK_DEBUG=True
 DATABASE_URL=sqlite:///portfolio.db
-SECRET_KEY=your-secret-key-change-this-in-production
+SECRET_KEY=your-secret-key-for-development
 ```
 
 ### Step 4: Initialize Database

@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-This is a full-stack developer portfolio application built with React 19 frontend and Flask backend. The architecture is designed as a modern web application with separate API and client services, optimized for deployment on DigitalOcean App Platform.
+This is a full-stack developer portfolio application built with React 19 frontend and Flask backend. The architecture is designed as a modern web application with separate API and client services for local development.
 
 ## Development Commands
 
@@ -87,9 +87,9 @@ The application requires both frontend and backend running simultaneously:
 ## Architecture Overview
 
 ### Full-Stack Separation
-- **Frontend**: React SPA served by Vite dev server (dev) or static files (prod)
+- **Frontend**: React SPA served by Vite dev server
 - **Backend**: Flask REST API with SQLAlchemy ORM
-- **Database**: SQLite (dev) or PostgreSQL (prod)
+- **Database**: SQLite for local development
 - **Communication**: RESTful API calls between frontend and backend
 
 ### Backend Architecture (Flask)
@@ -114,8 +114,8 @@ The application requires both frontend and backend running simultaneously:
 - **Factory Pattern**: `create_app()` function initializes Flask app with all extensions
 - **Blueprint Pattern**: Feature-based route organization
 - **Environment-based Configuration**: Uses python-dotenv for environment variables
-- **Health Check Pattern**: `/api/health` endpoint for deployment monitoring
-- **CORS Handling**: Configured for both development and production origins
+- **Health Check Pattern**: `/api/health` endpoint for monitoring
+- **CORS Handling**: Configured for local development origins
 
 #### Frontend Patterns
 - **Ref-based Communication**: Projects component exposes refresh method via ref
@@ -133,10 +133,10 @@ Key entities with relationships:
 
 All models include ordering fields (`order`) for custom sorting and timestamps where relevant.
 
-### Development vs Production
-- **Database**: SQLite (dev) → PostgreSQL (prod)
-- **CORS**: Localhost origins (dev) → Production domains (prod)
-- **Build**: Vite dev server (dev) → Static files served by DigitalOcean (prod)
+### Local Development
+- **Database**: SQLite for simple local development
+- **CORS**: Localhost origins for frontend/backend communication
+- **Build**: Vite dev server for hot reload during development
 - **Environment**: `.env` files for both frontend and backend configurations
 
 ## Environment Configuration
@@ -167,14 +167,6 @@ SECRET_KEY=your-secret-key-change-this-in-production
 - **Test Location**: `backend/tests/` directory
 - **Database**: Separate test database configuration
 
-## Deployment Architecture
-
-The application is configured for DigitalOcean App Platform deployment:
-- **Multi-service Setup**: Separate frontend and backend services
-- **Database**: Managed PostgreSQL database
-- **Health Checks**: Backend health endpoint for monitoring
-- **Environment Variables**: Service-to-service communication via App Platform variables
-- **Build Process**: Dockerfile-based builds for both services
 
 ## Code Customization Patterns
 

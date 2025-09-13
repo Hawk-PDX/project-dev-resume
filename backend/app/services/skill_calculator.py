@@ -38,7 +38,7 @@ class SkillCalculator:
         ],
         'tools': [
             'git', 'github', 'gitlab', 'bitbucket', 'docker', 'kubernetes', 'aws', 'azure',
-            'gcp', 'google cloud', 'heroku', 'vercel', 'netlify', 'digitalocean', 'linux',
+            'gcp', 'google cloud', 'heroku', 'vercel', 'netlify', 'linux',
             'ubuntu', 'nginx', 'apache', 'ci/cd', 'jenkins', 'github actions', 'gitlab ci',
             'terraform', 'ansible', 'vagrant', 'vim', 'vscode', 'intellij', 'postman',
             'figma', 'adobe', 'jira', 'confluence', 'slack', 'notion'
