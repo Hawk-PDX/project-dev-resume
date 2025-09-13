@@ -20,6 +20,8 @@ services:
         generateValue: true
       - key: ALLOWED_ORIGINS
         sync: false # Will be set manually to frontend URL
+      - key: GITHUB_TOKEN
+        sync: false # Optional: Add GitHub personal access token for higher API rate limits
     healthCheckPath: /api/health
 
   # Frontend React App
