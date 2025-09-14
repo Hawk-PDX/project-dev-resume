@@ -2,12 +2,12 @@ import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { useProjects } from '../hooks/useData';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { CodeBracketIcon } from '@heroicons/react/24/outline';
-import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import { projectsService } from '../services/api';
 
-const Projects = forwardRef((props, ref) => {
+const AllProjects = forwardRef((props, ref) => {
   const { data: projects, loading, refresh } = useProjects();
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -52,56 +52,46 @@ const Projects = forwardRef((props, ref) => {
     setDeleteModal({ isOpen: false, project: null });
   };
   
-  console.log("Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
+  console.log("All Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
   const uniqueProjects = projects.filter((project, index, self) =>
     index === self.findIndex((p) => p.id === project.id)
   ); // Ensure unique projects
+
+  // Sort projects: featured first (by order desc), then non-featured (by creation date desc)
+  const sortedProjects = uniqueProjects.sort((a, b) => {
+    // Featured projects first
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    
+    // Among featured projects, sort by order (desc)
+    if (a.featured && b.featured) {
+      return b.order - a.order;
+    }
+    
+    // Among non-featured projects, sort by ID (desc, assuming newer projects have higher IDs)
+    return b.id - a.id;
+  });
   
-  // Filter and sort featured projects, then take top 5
-  const featuredProjects = uniqueProjects
-    .filter(project => project.featured)
-    .sort((a, b) => b.order - a.order) // Sort by order descending
-    .slice(0, 5); // Take top 5
-  
-  console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
+  console.log("Sorted All Projects data:", JSON.stringify(sortedProjects, null, 2)); // Log the sorted projects data
 
   if (loading) return <div className="py-20 text-center">Loading projects...</div>;
 
   return (
-    <section id="projects" className="section" style={{ backgroundColor: 'var(--card-bg)' }}>
+    <section id="all-projects" className="section" style={{ backgroundColor: 'var(--card-bg)', minHeight: '100vh' }}>
       <div className="container">
         <div className="text-center mb-8">
-          <h2 className="section-title">Featured Projects</h2>
-          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto 1.5rem auto' }}>
-            Here are some of my recent projects that showcase my skills and experience:
-          </p>
-          
-          {/* View All Projects Link */}
           <Link 
-            to="/projects"
-            className="inline-flex items-center gap-2 text-primary-color hover:text-blue-700 transition-colors"
-            style={{ 
-              color: 'var(--primary-color)', 
-              textDecoration: 'none', 
-              fontSize: '1rem', 
-              fontWeight: '500',
-              padding: '0.5rem 1rem',
-              border: '1px solid var(--primary-color)',
-              borderRadius: '0.5rem',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = 'var(--primary-color)';
-              e.target.style.color = 'white';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = 'var(--primary-color)';
-            }}
+            to="/"
+            className="inline-flex items-center gap-2 mb-4 text-primary-color hover:text-blue-700 transition-colors"
+            style={{ color: 'var(--primary-color)', textDecoration: 'none', fontSize: '1rem', fontWeight: '500' }}
           >
-            <EyeIcon style={{ height: '1.25rem', width: '1.25rem' }} />
-            View All {uniqueProjects.length} Projects
+            <ArrowLeftIcon style={{ height: '1.25rem', width: '1.25rem' }} />
+            Back to Portfolio
           </Link>
+          <h2 className="section-title">All Projects ({sortedProjects.length})</h2>
+          <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
+            Complete collection of my projects, showcasing my skills and experience across various technologies and domains.
+          </p>
         </div>
 
         {message && (
@@ -117,26 +107,28 @@ const Projects = forwardRef((props, ref) => {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-          {featuredProjects.map((project) => (
+        {/* Projects Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+          {sortedProjects.map((project) => (
             <div key={project.id} className="card" style={{ overflow: 'hidden', position: 'relative' }}>
               {/* Featured Badge */}
-              <div style={{
-                position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                backgroundColor: 'rgba(255, 215, 0, 0.9)',
-                color: '#b45309',
-                padding: '0.25rem 0.75rem',
-                borderRadius: '9999px',
-                fontSize: '0.75rem',
-                fontWeight: '600',
-                zIndex: 2,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                border: '1px solid rgba(255, 215, 0, 0.3)'
-              }}>
-                ⭐ Featured
-              </div>
+              {project.featured && (
+                <div style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  backgroundColor: 'var(--primary-color)',
+                  color: 'white',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  zIndex: 2,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                }}>
+                  ⭐ Featured
+                </div>
+              )}
 
               <div style={{ height: '12rem', background: 'linear-gradient(135deg, var(--primary-color), #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ color: 'white', fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center', padding: '1rem' }}>{project.title}</span>
@@ -144,7 +136,7 @@ const Projects = forwardRef((props, ref) => {
               
               <div style={{ padding: '1.5rem' }}>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>{project.title}</h3>
-                <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>{project.description}</p>
+                <p style={{ color: 'var(--text-light)', marginBottom: '1rem', lineHeight: '1.5' }}>{project.description}</p>
                 
                 <div style={{ marginBottom: '1rem' }}>
                   <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-color)' }}>Technologies:</span>
@@ -165,17 +157,18 @@ const Projects = forwardRef((props, ref) => {
                     {project.github_url && (
                       <a
                         href={project.github_url}
-                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)', textDecoration: 'none' }}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
+                        Code
                       </a>
                     )}
                     {project.live_url && (
                       <a
                         href={project.live_url}
-                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
+                        style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)', textDecoration: 'none' }}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -229,6 +222,34 @@ const Projects = forwardRef((props, ref) => {
             </div>
           ))}
         </div>
+
+        {/* Empty state */}
+        {sortedProjects.length === 0 && (
+          <div className="text-center py-16">
+            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📁</div>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>
+              No Projects Yet
+            </h3>
+            <p style={{ color: 'var(--text-light)', marginBottom: '2rem' }}>
+              Start building your portfolio by adding your first project.
+            </p>
+            <Link 
+              to="/#add-project"
+              style={{
+                display: 'inline-block',
+                padding: '0.75rem 1.5rem',
+                backgroundColor: 'var(--primary-color)',
+                color: 'white',
+                textDecoration: 'none',
+                borderRadius: '0.5rem',
+                fontWeight: '500',
+                transition: 'all 0.2s'
+              }}
+            >
+              Add Your First Project
+            </Link>
+          </div>
+        )}
       </div>
 
       <ConfirmationModal
@@ -245,4 +266,4 @@ const Projects = forwardRef((props, ref) => {
   );
 });
 
-export default Projects;
+export default AllProjects;
