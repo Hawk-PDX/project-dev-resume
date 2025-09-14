@@ -15,7 +15,8 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
 
   useEffect(() => {
     loadSkills();
-    loadInsights();
+    // Load insights in background - don't block the UI if it fails
+    setTimeout(loadInsights, 100);
   }, []);
 
   const loadSkills = async () => {
@@ -32,7 +33,16 @@ const SkillsAdmin = ({ onSkillsUpdated }) => {
       const response = await skillsService.getInsights();
       setInsights(response.data);
     } catch (error) {
-      console.error('Error loading insights:', error);
+      console.warn('Skills insights temporarily unavailable:', error.message);
+      // Set default insights to prevent UI errors
+      setInsights({
+        total_projects: 0,
+        total_technologies: 0,
+        total_skills: 0,
+        missing_skills: [],
+        unused_skills: [],
+        project_tech_distribution: {}
+      });
     }
   };
 
