@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
+import AllProjects from './components/AllProjects';
 import AddProject from './components/AddProject';
 import Skills from './components/Skills';
 import SkillsAdmin from './components/SkillsAdmin';
@@ -78,25 +80,46 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <Navbar />
-      <main style={{ paddingTop: '4rem' }}>
-        <Hero />
-        <About />
-        <Projects ref={projectsRefreshRef} onEditProject={handleEditProject} />
-        <div id="add-project">
-          <AddProject 
-            onProjectAdded={handleProjectAdded} 
-            editProject={editProject}
-            onCancelEdit={handleCancelEdit}
-          />
-        </div>
-        <Skills ref={skillsRefreshRef} />
-        <SkillsAdmin onSkillsUpdated={handleSkillsUpdated} />
-        <Certificates />
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          {/* Main portfolio page */}
+          <Route path="/" element={
+            <main style={{ paddingTop: '4rem' }}>
+              <Hero />
+              <About />
+              <Projects ref={projectsRefreshRef} onEditProject={handleEditProject} />
+              <div id="add-project">
+                <AddProject 
+                  onProjectAdded={handleProjectAdded} 
+                  editProject={editProject}
+                  onCancelEdit={handleCancelEdit}
+                />
+              </div>
+              <Skills ref={skillsRefreshRef} />
+              <SkillsAdmin onSkillsUpdated={handleSkillsUpdated} />
+              <Certificates />
+            </main>
+          } />
+          
+          {/* All projects page */}
+          <Route path="/projects" element={
+            <main style={{ paddingTop: '4rem' }}>
+              <AllProjects onEditProject={handleEditProject} />
+              <div id="add-project">
+                <AddProject 
+                  onProjectAdded={handleProjectAdded} 
+                  editProject={editProject}
+                  onCancelEdit={handleCancelEdit}
+                />
+              </div>
+            </main>
+          } />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

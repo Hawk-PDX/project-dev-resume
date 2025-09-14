@@ -289,6 +289,9 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                       fontSize: '0.875rem'
                     }}
                   />
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                    Higher numbers appear first in featured projects (max 5 shown)
+                  </p>
                 </div>
               </div>
             </div>
