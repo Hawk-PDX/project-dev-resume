@@ -69,6 +69,9 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       let response;
       if (editCertificate) {
         // Update existing certificate
+        if (!editCertificate.id) {
+          throw new Error('Invalid certificate: missing ID');
+        }
         response = await resumeService.updateCertificate(editCertificate.id, submitData);
       } else {
         // Create new certificate
