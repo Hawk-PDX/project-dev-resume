@@ -19,13 +19,43 @@ api.interceptors.request.use(
     }
 );
 
+// Add retry functionality for temporary server errors
+const retryRequest = async (config, retryCount = 0) => {
+    const maxRetries = 2;
+    const retryDelay = Math.min(1000 * Math.pow(2, retryCount), 5000); // Exponential backoff, max 5s
+    
+    try {
+        return await api(config);
+    } catch (error) {
+        if (retryCount < maxRetries && error.response?.status >= 500) {
+            console.warn(`API request failed (${error.response?.status}), retrying in ${retryDelay}ms... (${retryCount + 1}/${maxRetries})`);
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
+            return retryRequest(config, retryCount + 1);
+        }
+        throw error;
+    }
+};
+
 // Intercept responses to handle errors consistently across the app
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
+        const originalRequest = error.config;
+        
+        // Retry logic for 500 errors if not already retried
+        if (error.response?.status >= 500 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                return await retryRequest(originalRequest, 0);
+            } catch (retryError) {
+                // If retry fails, continue with original error handling
+                error = retryError;
+            }
+        }
+        
         if (error.response) {
             // Server responded with an error status (4xx, 5xx)
-            console.error('API Error:', error.response.data);
+            console.error('API Error:', error.response.status, error.response.data);
         } else if (error.request) {
             // Request was made but no response received (network issues)
             console.error('Network Error:', error.message);
