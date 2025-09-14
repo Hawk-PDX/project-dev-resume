@@ -58,10 +58,20 @@ export const resumeService = {
     createCertificate: (data) => api.post('/resume/certificates', data),
 
     // Update an existing certificate
-    updateCertificate: (id, data) => api.put(`/resume/certificates/${id}`, data),
+    updateCertificate: (id, data) => {
+        if (!id || id <= 0) {
+            return Promise.reject(new Error('Invalid certificate ID for update'));
+        }
+        return api.put(`/resume/certificates/${id}`, data);
+    },
 
     // Delete a certificate
-    deleteCertificate: (id) => api.delete(`/resume/certificates/${id}`),
+    deleteCertificate: (id) => {
+        if (!id || id <= 0) {
+            return Promise.reject(new Error('Invalid certificate ID for deletion'));
+        }
+        return api.delete(`/resume/certificates/${id}`);
+    },
 };
 
 // Service for project management operations

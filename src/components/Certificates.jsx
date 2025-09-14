@@ -12,6 +12,10 @@ const Certificates = () => {
   const [message, setMessage] = useState('');
 
   const handleEdit = (certificate) => {
+    if (!certificate?.id) {
+      setMessage('Error: Invalid certificate data');
+      return;
+    }
     setEditCertificate(certificate);
     // Scroll to the form
     document.getElementById('add-certificate')?.scrollIntoView({ behavior: 'smooth' });
@@ -27,6 +31,10 @@ const Certificates = () => {
 
   const handleDeleteConfirm = async () => {
     try {
+      if (!deleteModal.certificate?.id) {
+        throw new Error('Invalid certificate: missing ID');
+      }
+      
       await resumeService.deleteCertificate(deleteModal.certificate.id);
       setMessage('Certificate deleted successfully!');
       refresh();
@@ -35,6 +43,7 @@ const Certificates = () => {
       // Clear message after 3 seconds
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
+      console.error('Certificate delete error:', error);
       setMessage('Error deleting certificate: ' + (error.response?.data?.error || error.message));
       setDeleteModal({ isOpen: false, certificate: null });
     }
@@ -82,14 +91,16 @@ const Certificates = () => {
 
         {certificates && certificates.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
-            {certificates.map((certificate) => (
-              <CertificateCard 
-                key={certificate.id} 
-                certificate={certificate} 
-                onEdit={handleEdit}
-                onDelete={handleDeleteClick}
-              />
-            ))}
+            {certificates
+              .filter(certificate => certificate && certificate.id) // Filter out invalid certificates
+              .map((certificate) => (
+                <CertificateCard 
+                  key={certificate.id} 
+                  certificate={certificate} 
+                  onEdit={handleEdit}
+                  onDelete={handleDeleteClick}
+                />
+              ))}
           </div>
         ) : (
           <div className="text-center py-12">
