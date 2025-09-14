@@ -194,3 +194,99 @@ def get_certificates():
         'credential_id': cert.credential_id,
         'credential_url': cert.credential_url
     } for cert in certificates])
+
+@resume_bp.route('/certificates/<int:certificate_id>', methods=['GET', 'PUT', 'DELETE'])
+def certificate_by_id(certificate_id):
+    """
+    Handle individual certificate operations:
+    GET: Retrieve a specific certificate
+    PUT: Update an existing certificate
+    DELETE: Delete a certificate
+    """
+    certificate = Certificate.query.get(certificate_id)
+    if not certificate:
+        return jsonify({'error': 'Certificate not found'}), 404
+    
+    if request.method == 'GET':
+        return jsonify({
+            'id': certificate.id,
+            'entity': certificate.entity,
+            'course': certificate.course,
+            'topics': certificate.topics,
+            'description': certificate.description,
+            'credit_hrs': certificate.credit_hrs,
+            'issue_date': certificate.issue_date.isoformat() if certificate.issue_date else None,
+            'expiry_date': certificate.expiry_date.isoformat() if certificate.expiry_date else None,
+            'credential_id': certificate.credential_id,
+            'credential_url': certificate.credential_url,
+            'order': certificate.order
+        })
+    
+    elif request.method == 'PUT':
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['entity', 'course']
+        for field in required_fields:
+            if field in data and not data[field]:
+                return jsonify({'error': f'{field} cannot be empty'}), 400
+        
+        try:
+            # Update certificate fields
+            if 'entity' in data:
+                certificate.entity = data['entity']
+            if 'course' in data:
+                certificate.course = data['course']
+            if 'topics' in data:
+                certificate.topics = data.get('topics')
+            if 'description' in data:
+                certificate.description = data.get('description')
+            if 'credit_hrs' in data:
+                certificate.credit_hrs = data.get('credit_hrs')
+            if 'credential_id' in data:
+                certificate.credential_id = data.get('credential_id')
+            if 'credential_url' in data:
+                certificate.credential_url = data.get('credential_url')
+            if 'order' in data:
+                certificate.order = data.get('order', 0)
+            
+            # Handle date fields
+            if 'issue_date' in data:
+                if data['issue_date']:
+                    certificate.issue_date = datetime.strptime(data['issue_date'], '%Y-%m-%d').date()
+                else:
+                    certificate.issue_date = None
+            if 'expiry_date' in data:
+                if data['expiry_date']:
+                    certificate.expiry_date = datetime.strptime(data['expiry_date'], '%Y-%m-%d').date()
+                else:
+                    certificate.expiry_date = None
+            
+            db.session.commit()
+            
+            return jsonify({
+                'id': certificate.id,
+                'entity': certificate.entity,
+                'course': certificate.course,
+                'topics': certificate.topics,
+                'description': certificate.description,
+                'credit_hrs': certificate.credit_hrs,
+                'issue_date': certificate.issue_date.isoformat() if certificate.issue_date else None,
+                'expiry_date': certificate.expiry_date.isoformat() if certificate.expiry_date else None,
+                'credential_id': certificate.credential_id,
+                'credential_url': certificate.credential_url,
+                'order': certificate.order
+            })
+        
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Failed to update certificate', 'details': str(e)}), 500
+    
+    elif request.method == 'DELETE':
+        try:
+            db.session.delete(certificate)
+            db.session.commit()
+            return jsonify({'message': 'Certificate deleted successfully'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Failed to delete certificate', 'details': str(e)}), 500

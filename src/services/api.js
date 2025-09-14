@@ -51,8 +51,17 @@ export const resumeService = {
     // Get certificates
     getCertificates: () => api.get('/resume/certificates'),
 
+    // Get a specific certificate by ID
+    getCertificate: (id) => api.get(`/resume/certificates/${id}`),
+
     // Create a new certificate
     createCertificate: (data) => api.post('/resume/certificates', data),
+
+    // Update an existing certificate
+    updateCertificate: (id, data) => api.put(`/resume/certificates/${id}`, data),
+
+    // Delete a certificate
+    deleteCertificate: (id) => api.delete(`/resume/certificates/${id}`),
 };
 
 // Service for project management operations

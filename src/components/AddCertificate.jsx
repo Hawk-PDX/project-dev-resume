@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { resumeService } from '../services/api';
 import { validateCertificateForm } from '../utils/validation';
 
-const AddCertificate = ({ onCertificateAdded }) => {
+const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
   const [formData, setFormData] = useState({
     entity: '',
     course: '',
@@ -17,6 +17,27 @@ const AddCertificate = ({ onCertificateAdded }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Auto-expand when editing
+  React.useEffect(() => {
+    if (editCertificate) {
+      setFormData({
+        entity: editCertificate.entity || '',
+        course: editCertificate.course || '',
+        topics: editCertificate.topics || '',
+        description: editCertificate.description || '',
+        credit_hrs: editCertificate.credit_hrs || '',
+        issue_date: editCertificate.issue_date || '',
+        expiry_date: editCertificate.expiry_date || '',
+        credential_id: editCertificate.credential_id || '',
+        credential_url: editCertificate.credential_url || ''
+      });
+      setIsExpanded(true);
+    } else if (!editCertificate && isExpanded) {
+      // Reset form when not editing
+      resetForm();
+    }
+  }, [editCertificate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,9 +66,16 @@ const AddCertificate = ({ onCertificateAdded }) => {
         expiry_date: formData.expiry_date || null
       };
 
-      const response = await resumeService.createCertificate(submitData);
+      let response;
+      if (editCertificate) {
+        // Update existing certificate
+        response = await resumeService.updateCertificate(editCertificate.id, submitData);
+      } else {
+        // Create new certificate
+        response = await resumeService.createCertificate(submitData);
+      }
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         // Reset form
         setFormData({
           entity: '',
@@ -62,11 +90,17 @@ const AddCertificate = ({ onCertificateAdded }) => {
         });
         setIsExpanded(false);
         onCertificateAdded();
-        alert('Certificate added successfully!');
+        alert(editCertificate ? 'Certificate updated successfully!' : 'Certificate added successfully!');
+        
+        // Clear edit mode
+        if (editCertificate && onCancelEdit) {
+          onCancelEdit();
+        }
       }
     } catch (error) {
-      console.error('Error adding certificate:', error);
-      alert(error.response?.data?.error || 'Failed to add certificate. Please try again.');
+      console.error('Error saving certificate:', error);
+      const action = editCertificate ? 'updating' : 'adding';
+      alert(error.response?.data?.error || `Failed to ${action.replace('ing', '')} certificate. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -84,24 +118,26 @@ const AddCertificate = ({ onCertificateAdded }) => {
       <div style={{ padding: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', margin: 0 }}>
-            Add New Certificate
+            {editCertificate ? 'Edit Certificate' : 'Add New Certificate'}
           </h3>
-          <button
-            type="button"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="btn btn-primary"
-            style={{
-              padding: '0.5rem 1rem',
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}
-          >
-            {isExpanded ? 'Cancel' : 'Add Certificate'}
-          </button>
+          {!editCertificate && (
+            <button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="btn btn-primary"
+              style={{
+                padding: '0.5rem 1rem',
+                fontSize: '0.875rem',
+                fontWeight: '500'
+              }}
+            >
+              {isExpanded ? 'Cancel' : 'Add Certificate'}
+            </button>
+          )}
         </div>
 
-      {isExpanded && (
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+        {(isExpanded || editCertificate) && (
+          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
               Issuing Entity *
@@ -288,7 +324,13 @@ const AddCertificate = ({ onCertificateAdded }) => {
           <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
             <button
               type="button"
-              onClick={() => setIsExpanded(false)}
+              onClick={() => {
+                if (editCertificate && onCancelEdit) {
+                  onCancelEdit();
+                } else {
+                  setIsExpanded(false);
+                }
+              }}
               style={{
                 flex: 1,
                 padding: '0.75rem',
@@ -318,11 +360,14 @@ const AddCertificate = ({ onCertificateAdded }) => {
                 cursor: isSubmitting ? 'not-allowed' : 'pointer'
               }}
             >
-              {isSubmitting ? 'Adding Certificate...' : 'Add Certificate'}
+              {isSubmitting 
+                ? (editCertificate ? 'Updating Certificate...' : 'Adding Certificate...')
+                : (editCertificate ? 'Update Certificate' : 'Add Certificate')
+              }
             </button>
           </div>
-        </form>
-      )}
+          </form>
+        )}
       </div>
     </div>
   );
