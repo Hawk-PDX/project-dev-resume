@@ -52,7 +52,7 @@ const Projects = forwardRef((props, ref) => {
     setDeleteModal({ isOpen: false, project: null });
   };
   
-  console.log("Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
+  // console.log("Projects data:", JSON.stringify(projects, null, 2)); // Log the projects data in a readable format
   const uniqueProjects = projects.filter((project, index, self) =>
     index === self.findIndex((p) => p.id === project.id)
   ); // Ensure unique projects
@@ -63,7 +63,7 @@ const Projects = forwardRef((props, ref) => {
     .sort((a, b) => b.order - a.order) // Sort by order descending
     .slice(0, 5); // Take top 5
   
-  console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
+  // console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
 
   if (loading) return <div className="py-20 text-center">Loading projects...</div>;
 
