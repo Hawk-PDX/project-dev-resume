@@ -59,6 +59,20 @@ def create_app():
         app.logger.error(f"Error initializing CORS: {e}")
         raise
 
+    # Root API endpoint - provides API info
+    @app.route('/api')
+    def api_root():
+        return jsonify({
+            "message": "Portfolio API",
+            "version": "1.0",
+            "endpoints": {
+                "health": "/api/health",
+                "resume": "/api/resume",
+                "projects": "/api/projects",
+                "skills": "/api/skills"
+            }
+        })
+
     # Health check endpoint
     @app.route('/api/health')
     def health_check():
