@@ -52,7 +52,8 @@ def create_app():
              resources={r"/api/*": {
                  "origins": origins,
                  "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                 "allow_headers": ["Content-Type", "Authorization"]
+                 "allow_headers": ["Content-Type", "Authorization"],
+                 "supports_credentials": True
              }})
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
