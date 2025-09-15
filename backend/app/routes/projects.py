@@ -42,16 +42,22 @@ def add_project():
             return jsonify({'error': 'Title is required'}), 400
         
         # Create new project instance with provided data
-        project = Project(
-            title=data['title'],
-            description=data.get('description', ''),
-            technologies=data.get('technologies', ''),
-            github_url=data.get('github_url', ''),
-            live_url=data.get('live_url', ''),
-            image_url=data.get('image_url', ''),
-            featured=data.get('featured', False),
-            order=data.get('order', 0)
-        )
+        project_data = {
+            'title': data['title'],
+            'description': data.get('description', ''),
+            'technologies': data.get('technologies', ''),
+            'github_url': data.get('github_url', ''),
+            'live_url': data.get('live_url', ''),
+            'image_url': data.get('image_url', ''),
+            'featured': data.get('featured', False),
+            'order': data.get('order', 0)
+        }
+        
+        # Include github_account field if available
+        if hasattr(Project, 'github_account'):
+            project_data['github_account'] = data.get('github_account', '')
+        
+        project = Project(**project_data)
         
         db.session.add(project)
         db.session.commit()
@@ -62,6 +68,7 @@ def add_project():
             'description': project.description,
             'technologies': project.technologies,
             'github_url': project.github_url,
+            'github_account': getattr(project, 'github_account', None),
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
@@ -87,6 +94,7 @@ def get_projects():
             'description': 'A modern, responsive portfolio website built with React and Flask to showcase my skills and projects.',
             'technologies': 'React, Flask, Python, PostgreSQL, Docker, AWS',
             'github_url': 'https://github.com/yourusername/portfolio',
+            'github_account': 'yourusername',
             'live_url': 'https://yourportfolio.com',
             'image_url': '/api/static/images/portfolio.jpg',
             'featured': True,
@@ -97,6 +105,7 @@ def get_projects():
             'description': 'Complete e-commerce solution with user authentication, payment processing, and admin dashboard.',
             'technologies': 'React, Flask, Stripe, PostgreSQL, Redis',
             'github_url': 'https://github.com/yourusername/ecommerce',
+            'github_account': 'yourusername',
             'live_url': 'https://your-ecommerce-demo.com',
             'image_url': '/api/static/images/ecommerce.jpg',
             'featured': True,
@@ -109,6 +118,7 @@ def get_projects():
         'description': project.description,
         'technologies': project.technologies,
         'github_url': project.github_url,
+        'github_account': getattr(project, 'github_account', None),
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,
@@ -157,6 +167,7 @@ def get_project(project_id):
         'description': project.description,
         'technologies': project.technologies,
         'github_url': project.github_url,
+        'github_account': getattr(project, 'github_account', None),
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,
@@ -185,6 +196,8 @@ def update_project(project_id):
             project.technologies = data.get('technologies', '')
         if 'github_url' in data:
             project.github_url = data.get('github_url', '')
+        if 'github_account' in data and hasattr(project, 'github_account'):
+            project.github_account = data.get('github_account', '')
         if 'live_url' in data:
             project.live_url = data.get('live_url', '')
         if 'image_url' in data:
@@ -202,6 +215,7 @@ def update_project(project_id):
             'description': project.description,
             'technologies': project.technologies,
             'github_url': project.github_url,
+            'github_account': getattr(project, 'github_account', None),
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
@@ -245,6 +259,7 @@ def get_featured_projects():
         'description': project.description,
         'technologies': project.technologies,
         'github_url': project.github_url,
+        'github_account': getattr(project, 'github_account', None),
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,

@@ -73,6 +73,7 @@ class GitHubService:
             'description': repo_data.get('description', '') or self._extract_description_from_readme(readme_data),
             'technologies': self._extract_technologies(package_data, languages, readme_data),
             'github_url': github_url,
+            'github_account': owner,  # Extract the account name from the URL
             'live_url': self._extract_live_url(repo_data, readme_data),
             'image_url': self._extract_cover_image(readme_data, owner, repo),
             'featured': False,  # Let user decide
