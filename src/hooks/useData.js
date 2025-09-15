@@ -43,10 +43,14 @@ export const useProjects = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
+            console.log('🔄 Fetching projects from API...');
             const response = await projectsService.getProjects();
+            console.log('✅ Projects fetched:', response.data.length, 'projects');
+            console.log('📊 Featured projects:', response.data.filter(p => p.featured).length);
             setData(response.data);
+            setError(null); // Clear any previous errors
         } catch (err) {
-            console.warn('API failed, using fallback projects:', err.message);
+            console.warn('❌ API failed, using fallback projects:', err.message);
             setData(fallbackProjects);
             setError(err.message);
         } finally {
