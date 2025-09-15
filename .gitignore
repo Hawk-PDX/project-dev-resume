@@ -102,3 +102,11 @@ ai-conversation*
 .anthropic/
 .openai/
 .copilot/
+
+# AI debugging/testing files created during development
+test_github_account.py
+migrate_github_account.py
+*test*github*account*
+*migrate*github*
+*ai*debug*
+*assistant*test*
