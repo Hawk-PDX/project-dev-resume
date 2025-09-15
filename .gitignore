@@ -77,3 +77,28 @@ coverage/
 .DS_Store?
 ehthumbs.db
 Thumbs.db
+
+# AI assistance and artifacts
+.cursor/
+.aider*
+.claude*
+.ai-*
+ai-session*
+claude-*
+cursor-*
+.warp/
+WARP.md
+*.ai.md
+*.claude.md
+*.cursor.md
+*-ai-generated*
+*-claude-*
+*-cursor-*
+# Common AI chat export filenames
+chat-export*
+conversation-*
+ai-conversation*
+# AI project files
+.anthropic/
+.openai/
+.copilot/
