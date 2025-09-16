@@ -5,7 +5,7 @@ import { CodeBracketIcon } from '@heroicons/react/24/outline';
 import { PencilIcon, TrashIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
-import { projectsService } from '../services/api';
+import { projectsService } from '../services/productionApi';
 
 const AllProjects = forwardRef((props, ref) => {
   const { data: projects, loading, refresh } = useProjects();
