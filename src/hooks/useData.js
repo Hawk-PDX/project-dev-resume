@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { resumeService, projectsService, skillsService } from '../services/api';
+import { resumeService, projectsService, skillsService } from '../services/productionApi';
 import { fallbackPersonalInfo, fallbackProjects, fallbackSkills, fallbackCertificates } from '../data/fallbackData';
 
 /**

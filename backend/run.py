@@ -9,17 +9,24 @@ app = create_app()
 if os.environ.get('FLASK_ENV') == 'production':
     with app.app_context():
         try:
+            print('🚀 Starting production database initialization...')
             # Try to create tables if they don't exist
             db.create_all()
             
             # Check if we need to seed the database
-            if not Project.query.first():
+            project_count = Project.query.count()
+            if project_count == 0:
                 print('🌱 Database is empty, seeding with data...')
                 from seed_db import seed_database
                 seed_database()
                 print('✅ Database seeded successfully!')
             else:
-                print('📊 Database already contains data')
+                print(f'📊 Database already contains {project_count} projects')
+                
+            # Warm up the database connection
+            from sqlalchemy import text
+            db.session.execute(text('SELECT 1'))
+            print('🔥 Database connection warmed up')
         except Exception as e:
             print(f'⚠️  Database initialization warning: {e}')
 

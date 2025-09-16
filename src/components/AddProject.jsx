@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { projectsService } from '../services/api';
+import { projectsService } from '../services/productionApi';
 
 const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
   const [mode, setMode] = useState('manual'); // 'manual' or 'github'

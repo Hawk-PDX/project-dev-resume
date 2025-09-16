@@ -10,7 +10,7 @@ import Skills from './components/Skills';
 import SkillsAdmin from './components/SkillsAdmin';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
-import { skillsService } from './services/api';
+import { skillsService } from './services/productionApi';
 import './styles.css';
 
 /**
