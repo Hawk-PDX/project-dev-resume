@@ -256,6 +256,51 @@ def delete_project(project_id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@projects_bp.route('/fetch-github-repos', methods=['POST'])
+def fetch_github_repositories():
+    """
+    Fetch repositories from multiple GitHub accounts.
+    Accepts a list of GitHub usernames and returns their public repositories.
+    """
+    try:
+        if not request.is_json:
+            return jsonify({'error': 'Request must contain JSON data'}), 400
+            
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+        
+        github_accounts = data.get('github_accounts', [])
+        if not github_accounts or not isinstance(github_accounts, list):
+            return jsonify({'error': 'github_accounts array is required'}), 400
+        
+        # Initialize GitHub service with optional token from environment
+        github_token = os.getenv('GITHUB_TOKEN')
+        github_service = GitHubService(github_token)
+        
+        all_repos = []
+        
+        for account in github_accounts:
+            if not isinstance(account, str) or not account.strip():
+                continue
+                
+            try:
+                # Fetch repositories for this account
+                repos = github_service.fetch_user_repositories(account.strip())
+                all_repos.extend(repos)
+            except Exception as e:
+                # Log the error but continue with other accounts
+                print(f"Error fetching repos for {account}: {str(e)}")
+                continue
+        
+        return jsonify({
+            'repositories': all_repos,
+            'total_count': len(all_repos)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({'error': f'Failed to fetch GitHub repositories: {str(e)}'}), 500
+
 @projects_bp.route('/featured', methods=['GET'])
 def get_featured_projects():
     """
