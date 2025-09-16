@@ -22,6 +22,8 @@ import { useEffect } from 'react';
 function App() {
   // Ref to access the Projects component's refresh method
   const projectsRefreshRef = useRef(null);
+  // Ref to access the AllProjects component's refresh method
+  const allProjectsRefreshRef = useRef(null);
   // Ref to access the Skills component's refresh method
   const skillsRefreshRef = useRef(null);
   
@@ -36,8 +38,14 @@ function App() {
    * Handle project addition success - refresh projects list, sync skills, and clear edit mode
    */
   const handleProjectAdded = async () => {
+    // Refresh the main Projects component (featured projects on homepage)
     if (projectsRefreshRef.current && projectsRefreshRef.current.refresh) {
       projectsRefreshRef.current.refresh();
+    }
+    
+    // Refresh the AllProjects component (all projects page)
+    if (allProjectsRefreshRef.current && allProjectsRefreshRef.current.refresh) {
+      allProjectsRefreshRef.current.refresh();
     }
     
     // Auto-sync skills when projects change
@@ -106,7 +114,7 @@ function App() {
           {/* All projects page */}
           <Route path="/projects" element={
             <main style={{ paddingTop: '4rem' }}>
-              <AllProjects onEditProject={handleEditProject} />
+              <AllProjects ref={allProjectsRefreshRef} onEditProject={handleEditProject} />
               <div id="add-project">
                 <AddProject 
                   onProjectAdded={handleProjectAdded} 

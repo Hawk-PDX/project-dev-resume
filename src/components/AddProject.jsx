@@ -100,17 +100,26 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
       if (editProject) {
         // Edit existing project
         response = await projectsService.editProject(editProject.id, formData);
-        setMessage('✅ Project updated successfully!');
+        setMessage('✅ Project updated successfully! Changes will be visible immediately.');
       } else {
         // Add new project
         response = await projectsService.addProject(formData);
-        setMessage('✅ Project added successfully!');
+        setMessage('✅ Project added successfully! The page will automatically refresh to show your new project.');
         resetForm();
       }
       
       if (onProjectAdded) {
         onProjectAdded(response.data);
       }
+      
+      // Provide immediate visual feedback that project was added
+      setTimeout(() => {
+        // Scroll to projects section to show the newly added project
+        const projectsSection = document.getElementById('projects') || document.getElementById('all-projects');
+        if (projectsSection) {
+          projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500); // Small delay to allow refresh to complete
     } catch (error) {
       const action = editProject ? 'updating' : 'adding';
       setMessage(`Error ${action} project: ` + (error.response?.data?.error || error.message));
