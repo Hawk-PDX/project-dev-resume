@@ -44,17 +44,28 @@ def create_app():
             "http://localhost:5001",
             "http://localhost:5173",
             "http://localhost:5175",
-            "https://portfolio-frontend-zhcd.onrender.com",
-            "https://*.onrender.com"  # Allow any Render subdomain
+            "https://portfolio-frontend-zhcd.onrender.com"
         ]
         
-        CORS(app, 
-             resources={r"/api/*": {
-                 "origins": origins,
-                 "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                 "allow_headers": ["Content-Type", "Authorization"],
-                 "supports_credentials": True
-             }})
+        # Additional CORS setup for production
+        if os.getenv('FLASK_ENV') == 'production':
+            # More permissive CORS for production deployment
+            CORS(app, 
+                 origins=["https://portfolio-frontend-zhcd.onrender.com"],
+                 methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                 allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+                 supports_credentials=True,
+                 expose_headers=["Content-Type", "Authorization"]
+            )
+        else:
+            # Development CORS
+            CORS(app, 
+                 resources={r"/api/*": {
+                     "origins": origins,
+                     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                     "allow_headers": ["Content-Type", "Authorization"],
+                     "supports_credentials": True
+                 }})
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
         app.logger.error(f"Error initializing CORS: {e}")
