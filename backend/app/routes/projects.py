@@ -132,18 +132,29 @@ def fetch_github_project():
     Accepts a GitHub URL and returns structured project data.
     """
     try:
+        # Check if request has JSON data
+        if not request.is_json:
+            return jsonify({'error': 'Request must contain JSON data'}), 400
+            
         data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+            
         github_url = data.get('github_url')
         
-        if not github_url:
+        if not github_url or not github_url.strip():
             return jsonify({'error': 'GitHub URL is required'}), 400
+        
+        # Validate URL format
+        if 'github.com' not in github_url.lower():
+            return jsonify({'error': 'Please provide a valid GitHub URL'}), 400
         
         # Initialize GitHub service with optional token from environment
         github_token = os.getenv('GITHUB_TOKEN')
         github_service = GitHubService(github_token)
         
         # Fetch project information from GitHub
-        project_info = github_service.fetch_repository_info(github_url)
+        project_info = github_service.fetch_repository_info(github_url.strip())
         
         return jsonify(project_info), 200
         
