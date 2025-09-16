@@ -152,6 +152,44 @@ const AllProjects = forwardRef((props, ref) => {
                   </div>
                 </div>
 
+                {/* GitHub Account Badge */}
+                {project.github_account && (
+                  <div style={{
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-color)' }}>GitHub:</span>
+                    <a
+                      href={`https://github.com/${project.github_account}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        padding: '0.25rem 0.5rem',
+                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                        color: 'var(--text-color)',
+                        fontSize: '0.75rem',
+                        borderRadius: '0.375rem',
+                        textDecoration: 'none',
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+                      }}
+                    >
+                      @{project.github_account}
+                    </a>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }} className="project-actions">
                   <div style={{ display: 'flex', gap: '1rem' }} className="project-links">
                     {project.github_url && (

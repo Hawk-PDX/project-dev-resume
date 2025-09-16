@@ -7,6 +7,7 @@ A modern, responsive portfolio application that showcases my journey as a full-s
 ## ✨ What Makes This Special
 
 - **Dynamic Content Management**: Full CRUD operations for projects and skills—no code changes needed to update content
+- **Multi-Account GitHub Integration**: Showcase projects from multiple GitHub accounts with bulk import capabilities
 - **Smart Skills System**: Automatically calculates skill proficiency based on project technologies
 - **Responsive Design**: Looks great on every device with mobile-first approach
 - **Production Ready**: Deployed with environment-specific configurations and comprehensive error handling
@@ -63,6 +64,7 @@ Create `backend/.env`:
 FLASK_DEBUG=True
 DATABASE_URL=sqlite:///portfolio.db
 SECRET_KEY=your-secret-key-for-development
+GITHUB_TOKEN=your_github_token_here  # Optional: for higher GitHub API rate limits
 ```
 
 **3. Initialize Database**
@@ -82,6 +84,28 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) and you're ready to go!
 
+## 🚀 GitHub Integration Features
+
+The portfolio includes powerful GitHub integration capabilities to streamline project management:
+
+### Bulk Import from Multiple Accounts
+1. Navigate to the "Add New Project" section
+2. Click "Bulk Import" to open the multi-account import dialog
+3. Enter your GitHub usernames (one per line or comma-separated)
+4. Review and select repositories from the fetched list
+5. Import selected projects with full metadata extraction
+
+### Benefits for Multiple GitHub Accounts
+- **Professional Presentation**: Clear attribution shows which account each project belongs to
+- **Complete Portfolio**: Showcase work from different phases of your development journey
+- **Time Efficient**: Import multiple projects at once rather than adding them individually
+- **Smart Filtering**: Repositories are sorted by popularity and recent activity
+
+### GitHub Account Display
+- Projects show GitHub account badges (e.g., `@username1`, `@username2`)
+- Clickable badges link directly to GitHub profiles
+- Clear visual distinction between projects from different accounts
+
 ## 🎨 Making It Your Own
 
 This portfolio comes with sample data to help you get started quickly. Here's how to make it yours:
@@ -90,7 +114,12 @@ This portfolio comes with sample data to help you get started quickly. Here's ho
 Update your details in `backend/app/routes/resume.py` - name, experience, education, and contact info.
 
 **Projects Showcase** 💼  
-Replace the sample projects in `backend/app/routes/projects.py` with your own work. Include GitHub links, live demos, and the technologies you used.
+Replace the sample projects in `backend/app/routes/projects.py` with your own work, or use the GitHub import features:
+
+- **Single Import**: Import individual repositories by pasting GitHub URLs
+- **Bulk Import**: Import multiple repositories from multiple GitHub accounts at once
+- **Account Attribution**: Projects display which GitHub account they belong to
+- **Smart Data Extraction**: Automatically pulls project descriptions, technologies, and live URLs
 
 **Skills & Expertise** ⚙️  
 Customize your skill set in `backend/app/routes/skills.py`. The smart system will auto-calculate proficiency based on your project technologies.

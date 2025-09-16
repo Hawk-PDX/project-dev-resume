@@ -43,6 +43,7 @@ class Project(db.Model):
     description = db.Column(db.Text)
     technologies = db.Column(db.String(500))
     github_url = db.Column(db.String(200))
+    github_account = db.Column(db.String(100))  # GitHub username/organization name
     live_url = db.Column(db.String(200))
     image_url = db.Column(db.String(200))
     featured = db.Column(db.Boolean, default=False)

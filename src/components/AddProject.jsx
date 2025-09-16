@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { projectsService } from '../services/productionApi';
+import BulkImportRepos from './BulkImportRepos';
 
 const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
-  const [mode, setMode] = useState('manual'); // 'manual' or 'github'
+  const [mode, setMode] = useState('manual'); // 'manual', 'github', or 'bulk'
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -17,6 +18,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
   const [fetchingGithub, setFetchingGithub] = useState(false);
   const [message, setMessage] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
+  const [showBulkImport, setShowBulkImport] = useState(false);
 
   useEffect(() => {
     if (editProject) {
@@ -125,6 +127,21 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
       setMessage(`Error ${action} project: ` + (error.response?.data?.error || error.message));
     } finally {
       setLoading(false);
+    };
+  };
+
+  const handleBulkImportClick = () => {
+    setShowBulkImport(true);
+  };
+
+  const handleBulkImportClose = () => {
+    setShowBulkImport(false);
+  };
+
+  const handleBulkImportSuccess = () => {
+    setShowBulkImport(false);
+    if (onProjectAdded) {
+      onProjectAdded();
     }
   };
 
@@ -138,12 +155,12 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
         {/* Mode Selection */}
         {!editProject && (
           <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-            <div style={{ display: 'inline-flex', backgroundColor: '#f3f4f6', borderRadius: '0.5rem', padding: '0.25rem' }}>
+            <div style={{ display: 'inline-flex', backgroundColor: '#f3f4f6', borderRadius: '0.5rem', padding: '0.25rem', flexWrap: 'wrap', gap: '0.25rem' }}>
               <button
                 type="button"
                 onClick={() => setMode('github')}
                 style={{
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.75rem 1.25rem',
                   backgroundColor: mode === 'github' ? 'var(--primary-color)' : 'transparent',
                   color: mode === 'github' ? 'white' : 'var(--text-color)',
                   border: 'none',
@@ -154,13 +171,30 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   transition: 'all 0.2s'
                 }}
               >
-                🚀 Quick Add from GitHub
+                🚀 Single Import
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkImportClick}
+                style={{
+                  padding: '0.75rem 1.25rem',
+                  backgroundColor: 'transparent',
+                  color: 'var(--text-color)',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                📦 Bulk Import
               </button>
               <button
                 type="button"
                 onClick={() => setMode('manual')}
                 style={{
-                  padding: '0.75rem 1.5rem',
+                  padding: '0.75rem 1.25rem',
                   backgroundColor: mode === 'manual' ? 'var(--primary-color)' : 'transparent',
                   color: mode === 'manual' ? 'white' : 'var(--text-color)',
                   border: 'none',
@@ -174,6 +208,17 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                 ✏️ Manual Entry
               </button>
             </div>
+            
+            {/* Description for bulk import */}
+            <p style={{ 
+              fontSize: '0.75rem', 
+              color: 'var(--text-light)', 
+              marginTop: '0.75rem',
+              maxWidth: '600px',
+              margin: '0.75rem auto 0'
+            }}>
+              📦 <strong>Bulk Import:</strong> Import multiple repositories from your GitHub accounts at once - perfect for showcasing projects from multiple profiles!
+            </p>
           </div>
         )}
 
@@ -492,6 +537,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
           </form>
         )}
       </div>
+      
+      {/* Bulk Import Modal */}
+      {showBulkImport && (
+        <BulkImportRepos
+          onProjectsImported={handleBulkImportSuccess}
+          onClose={handleBulkImportClose}
+        />
+      )}
     </div>
   );
 };

@@ -87,6 +87,77 @@ class GitHubService:
         
         return project_info
     
+    def fetch_user_repositories(self, username: str, per_page: int = 30) -> List[Dict]:
+        """
+        Fetch all public repositories for a given GitHub user.
+        
+        Args:
+            username: GitHub username to fetch repositories for
+            per_page: Number of repositories per page (max 100)
+            
+        Returns:
+            List of repository information dictionaries
+        """
+        repositories = []
+        page = 1
+        
+        while True:
+            url = f"{self.BASE_API_URL}/users/{username}/repos"
+            params = {
+                'type': 'owner',  # Only repos owned by the user
+                'sort': 'updated',  # Sort by last updated
+                'direction': 'desc',  # Most recently updated first
+                'per_page': min(per_page, 100),  # GitHub max is 100
+                'page': page
+            }
+            
+            try:
+                response = requests.get(url, headers=self.headers, params=params, timeout=10)
+                if response.status_code != 200:
+                    break
+                
+                repos_data = response.json()
+                if not repos_data:  # No more repositories
+                    break
+                
+                for repo_data in repos_data:
+                    if repo_data.get('private', True):  # Skip private repos
+                        continue
+                    
+                    # Create simplified repo info for portfolio use
+                    repo_info = {
+                        'title': repo_data.get('name', '').replace('-', ' ').replace('_', ' ').title(),
+                        'description': repo_data.get('description', ''),
+                        'github_url': repo_data.get('html_url', ''),
+                        'github_account': username,
+                        'live_url': repo_data.get('homepage', '') if repo_data.get('homepage') and repo_data.get('homepage').startswith('http') else '',
+                        'languages': repo_data.get('language', ''),
+                        'stars': repo_data.get('stargazers_count', 0),
+                        'forks': repo_data.get('forks_count', 0),
+                        'updated_at': repo_data.get('updated_at', ''),
+                        'created_at': repo_data.get('created_at', ''),
+                        'topics': repo_data.get('topics', []),
+                        'is_fork': repo_data.get('fork', False)
+                    }
+                    
+                    repositories.append(repo_info)
+                
+                # If we got less than requested per_page, we're done
+                if len(repos_data) < per_page:
+                    break
+                    
+                page += 1
+                
+                # Safety limit to prevent infinite loops
+                if page > 10:  # Max 1000 repos (100 * 10)
+                    break
+                    
+            except requests.RequestException as e:
+                print(f"Error fetching repositories for {username}: {str(e)}")
+                break
+        
+        return repositories
+    
     def _get_repo_data(self, owner: str, repo: str) -> Dict:
         """Fetch basic repository data from GitHub API."""
         url = f"{self.BASE_API_URL}/repos/{owner}/{repo}"

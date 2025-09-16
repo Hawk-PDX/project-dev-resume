@@ -136,6 +136,42 @@ export const projectsService = {
       console.error('❌ Failed to fetch from GitHub:', error.message);
       throw error;
     }
+  },
+
+  fetchGitHubRepositories: async (githubAccounts) => {
+    try {
+      console.log('🔗 Fetching repositories from GitHub accounts:', githubAccounts);
+      const response = await api.post('/projects/fetch-github-repos', { github_accounts: githubAccounts });
+      console.log(`✅ Fetched ${response.data.total_count} repositories from ${githubAccounts.length} account(s)`);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch GitHub repositories:', error.message);
+      throw error;
+    }
+  },
+
+  fetchGitHubProject: async (githubUrl) => {
+    try {
+      console.log('🔍 Fetching detailed GitHub project info:', githubUrl);
+      const response = await api.post('/projects/fetch-github', { github_url: githubUrl });
+      console.log('✅ GitHub project details fetched successfully');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to fetch GitHub project details:', error.message);
+      throw error;
+    }
+  },
+
+  createProject: async (projectData) => {
+    try {
+      console.log('➕ Creating project:', projectData.title);
+      const response = await api.post('/projects/', projectData);
+      console.log('✅ Project created successfully:', response.data.id);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Failed to create project:', error.message);
+      throw error;
+    }
   }
 };
 
