@@ -21,8 +21,12 @@ class GitHubService:
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': 'Portfolio-App/1.0'
         }
-        if github_token:
+        # Only add authorization if token is provided and not a placeholder
+        if github_token and github_token.strip() and 'your_github_token_here' not in github_token.lower():
             self.headers['Authorization'] = f'token {github_token}'
+            self.authenticated = True
+        else:
+            self.authenticated = False
     
     def parse_github_url(self, github_url: str) -> Optional[tuple]:
         """
@@ -65,13 +69,14 @@ class GitHubService:
         repo_data = self._get_repo_data(owner, repo)
         readme_data = self._get_readme_data(owner, repo)
         package_data = self._get_package_json_data(owner, repo)
+        manifest_data = self._get_manifest_json_data(owner, repo)
         languages = self._get_languages(owner, repo)
         
         # Extract project information
         project_info = {
             'title': repo_data.get('name', '').replace('-', ' ').replace('_', ' ').title(),
             'description': repo_data.get('description', '') or self._extract_description_from_readme(readme_data),
-            'technologies': self._extract_technologies(package_data, languages, readme_data),
+            'technologies': self._extract_technologies(package_data, languages, readme_data, manifest_data),
             'github_url': github_url,
             'github_account': owner,  # Extract the account name from the URL
             'live_url': self._extract_live_url(repo_data, readme_data),
@@ -117,6 +122,19 @@ class GitHubService:
         except Exception:
             return {}
     
+    def _get_manifest_json_data(self, owner: str, repo: str) -> Dict:
+        """Fetch manifest.json content if it exists (for Chrome extensions)."""
+        url = f"{self.BASE_API_URL}/repos/{owner}/{repo}/contents/manifest.json"
+        try:
+            response = requests.get(url, headers=self.headers, timeout=10)
+            if response.status_code == 200:
+                content = response.json().get('content', '')
+                decoded_content = base64.b64decode(content).decode('utf-8')
+                return json.loads(decoded_content)
+            return {}
+        except Exception:
+            return {}
+    
     def _get_languages(self, owner: str, repo: str) -> Dict:
         """Fetch repository languages from GitHub API."""
         url = f"{self.BASE_API_URL}/repos/{owner}/{repo}/languages"
@@ -141,9 +159,19 @@ class GitHubService:
                     return line[:200] + "..." if len(line) > 200 else line
         return ""
     
-    def _extract_technologies(self, package_data: Dict, languages: Dict, readme_content: str) -> str:
+    def _extract_technologies(self, package_data: Dict, languages: Dict, readme_content: str, manifest_data: Dict = None) -> str:
         """Extract technologies from various sources."""
         technologies = set()
+        
+        # From manifest.json (Chrome extensions)
+        if manifest_data:
+            technologies.add('Chrome Extension')
+            # Check manifest version to determine Chrome extension technology level
+            manifest_version = manifest_data.get('manifest_version', 2)
+            if manifest_version == 3:
+                technologies.add('Manifest V3')
+            elif manifest_version == 2:
+                technologies.add('Manifest V2')
         
         # From package.json dependencies
         if package_data:
@@ -204,6 +232,8 @@ class GitHubService:
         # From README badges and mentions
         if readme_content:
             readme_lower = readme_content.lower()
+            
+            # Enhanced keywords including Chrome extension specific terms
             tech_keywords = [
                 'react', 'vue', 'angular', 'svelte', 'express', 'flask',
                 'django', 'fastapi', 'postgresql', 'mysql', 'mongodb',
@@ -211,9 +241,27 @@ class GitHubService:
                 'nodejs', 'python', 'java', 'golang', 'rust'
             ]
             
+            # Chrome extension specific keywords
+            chrome_keywords = {
+                'chrome extension': 'Chrome Extension',
+                'browser extension': 'Browser Extension', 
+                'chrome web store': 'Chrome Extension',
+                'manifest.json': 'Chrome Extension',
+                'content script': 'Chrome Extension',
+                'background script': 'Chrome Extension',
+                'popup.html': 'Chrome Extension',
+                'chrome api': 'Chrome Extension'
+            }
+            
+            # Check for standard tech keywords
             for keyword in tech_keywords:
                 if keyword in readme_lower:
                     technologies.add(keyword.title())
+            
+            # Check for Chrome extension specific terms
+            for keyword, tech_name in chrome_keywords.items():
+                if keyword in readme_lower:
+                    technologies.add(tech_name)
         
         return ', '.join(sorted(technologies)) if technologies else ""
     
