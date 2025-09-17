@@ -53,9 +53,8 @@ def add_project():
             'order': data.get('order', 0)
         }
         
-        # Include github_account field if available
-        if hasattr(Project, 'github_account'):
-            project_data['github_account'] = data.get('github_account', '')
+        # Skip github_account field for now to avoid database errors
+        # project_data['github_account'] = data.get('github_account', '')
         
         project = Project(**project_data)
         
@@ -68,7 +67,6 @@ def add_project():
             'description': project.description,
             'technologies': project.technologies,
             'github_url': project.github_url,
-            'github_account': getattr(project, 'github_account', None),
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
@@ -118,7 +116,6 @@ def get_projects():
         'description': project.description,
         'technologies': project.technologies,
         'github_url': project.github_url,
-        'github_account': getattr(project, 'github_account', None),
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,
