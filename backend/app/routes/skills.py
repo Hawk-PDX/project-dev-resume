@@ -3,6 +3,7 @@ from app.models import Skill
 from app import db
 from app.services.skill_calculator import SkillCalculator
 from datetime import datetime
+import os
 
 # Blueprint for skills-related endpoints
 skills_bp = Blueprint('skills', __name__)
@@ -75,6 +76,16 @@ def calculate_skills():
     Supports preserving manual overrides.
     """
     try:
+        # Check if we have projects to work with
+        from app.models import Project
+        project_count = Project.query.count()
+        
+        if project_count == 0:
+            return jsonify({
+                'status': 'no_projects',
+                'message': 'No projects found. Please add some projects first.'
+            })
+        
         data = request.get_json() or {}
         preserve_overrides = data.get('preserve_manual_overrides', True)
         
@@ -82,7 +93,13 @@ def calculate_skills():
         return jsonify(result)
         
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        # Log the full error for debugging
+        print(f"Skills calculation error: {str(e)}")
+        return jsonify({
+            'status': 'error', 
+            'message': 'Unable to calculate skills. Please check your project data.',
+            'debug_info': str(e) if os.getenv('FLASK_ENV') != 'production' else None
+        }), 500
 
 @skills_bp.route('/insights', methods=['GET'])
 def get_skill_insights():
@@ -90,11 +107,30 @@ def get_skill_insights():
     Get insights about skills and project alignment.
     """
     try:
+        # Check if we have projects to analyze
+        from app.models import Project
+        project_count = Project.query.count()
+        
+        if project_count == 0:
+            return jsonify({
+                'total_projects': 0,
+                'total_technologies': 0,
+                'total_skills': 0,
+                'missing_skills': [],
+                'unused_skills': [],
+                'project_tech_distribution': {},
+                'message': 'No projects found to analyze'
+            })
+        
         insights = SkillCalculator.get_skill_insights()
         return jsonify(insights)
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Skills insights error: {str(e)}")
+        return jsonify({
+            'error': 'Unable to generate skill insights',
+            'debug_info': str(e) if os.getenv('FLASK_ENV') != 'production' else None
+        }), 500
 
 @skills_bp.route('/<int:skill_id>', methods=['GET', 'PUT', 'DELETE'])
 def skill_detail(skill_id):

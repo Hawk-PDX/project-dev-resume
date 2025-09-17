@@ -52,7 +52,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: GITHUB_TOKEN
-        value: ""  # Your GitHub personal access token for higher API rate limits
+        sync: false  # Set this in Render dashboard - Your GitHub personal access token
 
   # Database - PostgreSQL
   - type: pserv

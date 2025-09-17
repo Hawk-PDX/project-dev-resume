@@ -321,3 +321,98 @@ def get_featured_projects():
         'featured': project.featured,
         'order': project.order
     } for project in projects])
+
+@projects_bp.route('/github-accounts', methods=['GET'])
+def get_github_accounts():
+    """
+    Get all unique GitHub accounts from projects.
+    Returns list of GitHub usernames/organizations used in projects.
+    """
+    try:
+        # Get distinct GitHub accounts from projects
+        accounts_query = db.session.query(Project.github_account).distinct().filter(
+            Project.github_account.isnot(None),
+            Project.github_account != ''
+        ).all()
+        
+        accounts = [account[0] for account in accounts_query if account[0]]
+        
+        # If no accounts in projects, return default accounts
+        if not accounts:
+            default_accounts = ['Hawk-PDX']  # Add your GitHub usernames here
+            return jsonify({
+                'github_accounts': default_accounts,
+                'source': 'default',
+                'message': 'No GitHub accounts found in projects. Using default accounts.'
+            })
+        
+        return jsonify({
+            'github_accounts': sorted(accounts),
+            'source': 'projects',
+            'total_count': len(accounts)
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch GitHub accounts',
+            'debug_info': str(e) if os.getenv('FLASK_ENV') != 'production' else None
+        }), 500
+
+@projects_bp.route('/populate-sample', methods=['POST'])
+def populate_sample_projects():
+    """
+    Populate database with sample projects including proper GitHub accounts.
+    Only works if no projects exist.
+    """
+    try:
+        # Check if projects already exist
+        existing_count = Project.query.count()
+        if existing_count > 0:
+            return jsonify({
+                'message': f'Database already has {existing_count} projects. Sample data not added.',
+                'status': 'skipped'
+            })
+        
+        sample_projects = [
+            {
+                'title': 'NEO Tracker',
+                'description': 'A Next.js application for tracking Near Earth Objects using NASA\'s API with real-time data visualization.',
+                'technologies': 'Next.js, TypeScript, Tailwind CSS, NASA API, Render.com',
+                'github_url': 'https://github.com/Hawk-PDX/neo-tracker',
+                'github_account': 'Hawk-PDX',
+                'live_url': 'https://neo-tracker.onrender.com',
+                'featured': True,
+                'order': 1
+            },
+            {
+                'title': 'Portfolio Resume Application',
+                'description': 'Full-stack portfolio website built with React frontend and Flask backend, featuring project management and skill tracking.',
+                'technologies': 'React, Flask, Python, PostgreSQL, Docker, Render.com',
+                'github_url': 'https://github.com/Hawk-PDX/project-dev-resume',
+                'github_account': 'Hawk-PDX',
+                'live_url': 'https://portfolio-frontend-zhcd.onrender.com',
+                'featured': True,
+                'order': 2
+            }
+        ]
+        
+        created_projects = []
+        for project_data in sample_projects:
+            project = Project(**project_data)
+            db.session.add(project)
+            created_projects.append(project_data['title'])
+        
+        db.session.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'Created {len(created_projects)} sample projects',
+            'projects': created_projects
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'error': 'Failed to create sample projects',
+            'debug_info': str(e) if os.getenv('FLASK_ENV') != 'production' else None
+        }), 500

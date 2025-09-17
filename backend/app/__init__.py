@@ -53,7 +53,7 @@ def create_app():
             CORS(app, 
                  origins=["https://portfolio-frontend-zhcd.onrender.com"],
                  methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                 allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+                 allow_headers=["Content-Type", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"],
                  supports_credentials=True,
                  expose_headers=["Content-Type", "Authorization"]
             )
