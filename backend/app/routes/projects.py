@@ -53,15 +53,21 @@ def add_project():
             'order': data.get('order', 0)
         }
         
-        # Skip github_account field for now to avoid database errors
-        # project_data['github_account'] = data.get('github_account', '')
+        # Only include github_account if the column exists in database
+        try:
+            # Test if github_account column exists by doing a safe query
+            db.session.execute("SELECT github_account FROM project LIMIT 1")
+            project_data['github_account'] = data.get('github_account', '')
+        except Exception:
+            # Column doesn't exist, skip it
+            pass
         
         project = Project(**project_data)
         
         db.session.add(project)
         db.session.commit()
         
-        return jsonify({
+        response_data = {
             'id': project.id,
             'title': project.title,
             'description': project.description,
@@ -71,7 +77,13 @@ def add_project():
             'image_url': project.image_url,
             'featured': project.featured,
             'order': project.order
-        }), 201
+        }
+        
+        # Add github_account if it exists in the database
+        if hasattr(project, 'github_account'):
+            response_data['github_account'] = getattr(project, 'github_account', None)
+        
+        return jsonify(response_data), 201
         
     except Exception as e:
         db.session.rollback()
@@ -110,17 +122,25 @@ def get_projects():
             'order': 2
         }])
     
-    return jsonify([{
-        'id': project.id,
-        'title': project.title,
-        'description': project.description,
-        'technologies': project.technologies,
-        'github_url': project.github_url,
-        'live_url': project.live_url,
-        'image_url': project.image_url,
-        'featured': project.featured,
-        'order': project.order
-    } for project in projects])
+    project_list = []
+    for project in projects:
+        project_data = {
+            'id': project.id,
+            'title': project.title,
+            'description': project.description,
+            'technologies': project.technologies,
+            'github_url': project.github_url,
+            'live_url': project.live_url,
+            'image_url': project.image_url,
+            'featured': project.featured,
+            'order': project.order
+        }
+        # Add github_account if it exists in the database
+        if hasattr(project, 'github_account'):
+            project_data['github_account'] = getattr(project, 'github_account', None)
+        project_list.append(project_data)
+    
+    return jsonify(project_list)
 
 @projects_bp.route('/fetch-github', methods=['POST'])
 def fetch_github_project():
