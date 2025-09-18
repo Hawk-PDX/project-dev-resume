@@ -15,10 +15,30 @@ if os.environ.get('FLASK_ENV') == 'production':
             db.create_all()
             print('✅ Database tables created successfully')
             
-            # Warm up the database connection first
-            from sqlalchemy import text
+            # Warm up the database connection and verify tables
+            from sqlalchemy import text, inspect
             db.session.execute(text('SELECT 1'))
             print('🔥 Database connection warmed up')
+            
+            # Verify tables exist
+            inspector = inspect(db.engine)
+            tables = inspector.get_table_names()
+            expected_tables = ['personal_info', 'experience', 'education', 'project', 'skill', 'certificate']
+            missing_tables = [table for table in expected_tables if table not in tables]
+            
+            if missing_tables:
+                print(f'⚠️ Missing tables: {missing_tables}. Attempting to recreate...')
+                # Force create all tables again
+                db.create_all()
+                # Verify again
+                tables = inspector.get_table_names()
+                still_missing = [table for table in expected_tables if table not in tables]
+                if still_missing:
+                    print(f'❌ Still missing tables after recreation: {still_missing}')
+                else:
+                    print('✅ All tables created successfully on retry')
+            else:
+                print(f'✅ All expected tables exist: {tables}')
             
             # Check if we need to seed the database
             project_count = Project.query.count()
