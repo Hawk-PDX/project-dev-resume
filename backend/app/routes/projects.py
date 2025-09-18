@@ -94,7 +94,8 @@ def get_projects():
     Retrieve all projects ordered by custom order and creation date.
     Returns sample projects if none exist in the database.
     """
-    projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
+    try:
+        projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
     
     if not projects:
         # Return sample project data when database is empty
@@ -140,7 +141,16 @@ def get_projects():
             project_data['github_account'] = getattr(project, 'github_account', None)
         project_list.append(project_data)
     
-    return jsonify(project_list)
+        return jsonify(project_list)
+    except Exception as e:
+        # Log the error and return a 500 response with details
+        print(f"Error in get_projects: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to retrieve projects',
+            'details': str(e)
+        }), 500
 
 @projects_bp.route('/fetch-github', methods=['POST'])
 def fetch_github_project():

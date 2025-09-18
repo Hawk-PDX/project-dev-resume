@@ -12,7 +12,8 @@ def get_personal_info():
     Get personal information including name, contact details, and professional summary.
     Returns default data if no database entries exist.
     """
-    personal_info = PersonalInfo.query.first()
+    try:
+        personal_info = PersonalInfo.query.first()
     if not personal_info:
         # Return default data when database is empty
         return jsonify({
@@ -27,18 +28,27 @@ def get_personal_info():
             'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
         })
     
-    return jsonify({
-        'id': personal_info.id,
-        'name': personal_info.name,
-        'title': personal_info.title,
-        'email': personal_info.email,
-        'phone': personal_info.phone,
-        'location': personal_info.location,
-        'linkedin': personal_info.linkedin,
-        'github': personal_info.github,
-        'website': personal_info.website,
-        'summary': personal_info.summary
-    })
+        return jsonify({
+            'id': personal_info.id,
+            'name': personal_info.name,
+            'title': personal_info.title,
+            'email': personal_info.email,
+            'phone': personal_info.phone,
+            'location': personal_info.location,
+            'linkedin': personal_info.linkedin,
+            'github': personal_info.github,
+            'website': personal_info.website,
+            'summary': personal_info.summary
+        })
+    except Exception as e:
+        # Log the error and return a 500 response with details
+        print(f"Error in get_personal_info: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to retrieve personal information',
+            'details': str(e)
+        }), 500
 
 @resume_bp.route('/experience', methods=['GET'])
 def get_experience():
@@ -46,7 +56,8 @@ def get_experience():
     Get work experience history, ordered by most recent first.
     Returns sample data if no experience entries exist in database.
     """
-    experiences = Experience.query.order_by(Experience.order.desc()).all()
+    try:
+        experiences = Experience.query.order_by(Experience.order.desc()).all()
     
     if not experiences:
         # Return sample experience data when database is empty
@@ -62,17 +73,26 @@ def get_experience():
             'achievements': '• Increased application performance by 40%\n• Led team of 3 developers\n• Implemented CI/CD pipeline reducing deployment time by 60%'
         }])
     
-    return jsonify([{
-        'id': exp.id,
-        'company': exp.company,
-        'position': exp.position,
-        'start_date': exp.start_date.isoformat() if exp.start_date else None,
-        'end_date': exp.end_date.isoformat() if exp.end_date else None,
-        'current': exp.current,
-        'description': exp.description,
-        'technologies': exp.technologies,
-        'achievements': exp.achievements
-    } for exp in experiences])
+        return jsonify([{
+            'id': exp.id,
+            'company': exp.company,
+            'position': exp.position,
+            'start_date': exp.start_date.isoformat() if exp.start_date else None,
+            'end_date': exp.end_date.isoformat() if exp.end_date else None,
+            'current': exp.current,
+            'description': exp.description,
+            'technologies': exp.technologies,
+            'achievements': exp.achievements
+        } for exp in experiences])
+    except Exception as e:
+        # Log the error and return a 500 response with details
+        print(f"Error in get_experience: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': 'Failed to retrieve experience data',
+            'details': str(e)
+        }), 500
 
 @resume_bp.route('/education', methods=['GET'])
 def get_education():
