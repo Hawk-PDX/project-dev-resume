@@ -35,7 +35,8 @@ def create_app():
         app.logger.info("Database and migrate initialized successfully")
     except Exception as e:
         app.logger.error(f"Error initializing database: {e}")
-        raise
+        # Don't raise - let the app continue without database for now
+        app.logger.warning("Continuing without database initialization - some features may not work")
 
     try:
         # CORS Configuration for local development and production
@@ -96,7 +97,11 @@ def create_app():
         app.logger.info("Blueprints registered successfully")
     except Exception as e:
         app.logger.error(f"Error registering blueprints: {e}")
-        raise
+        # Don't raise - create a basic error response blueprint instead
+        @app.route('/api/<path:path>')
+        def api_error(path):
+            return jsonify({"error": "Service temporarily unavailable", "status": "initializing"}), 503
+        app.logger.warning("Using fallback error routes due to blueprint registration failure")
 
     app.logger.info("Flask app created successfully")
     return app

@@ -17,12 +17,22 @@ def seed_database():
         try:
             # Clear existing data (optional - comment out if you want to preserve existing data)
             print("Clearing existing data...")
-            db.session.query(PersonalInfo).delete()
-            db.session.query(Experience).delete() 
-            db.session.query(Education).delete()
-            db.session.query(Certificate).delete()
-            db.session.query(Project).delete()
-            db.session.query(Skill).delete()
+            try:
+                db.session.query(PersonalInfo).delete()
+                db.session.query(Experience).delete() 
+                db.session.query(Education).delete()
+                db.session.query(Project).delete()
+                db.session.query(Skill).delete()
+                # Only delete certificates if the table exists
+                try:
+                    db.session.query(Certificate).delete()
+                except Exception as cert_error:
+                    print(f"Note: Certificate table not available: {cert_error}")
+                db.session.commit()
+                print("✅ Existing data cleared")
+            except Exception as clear_error:
+                print(f"⚠️ Error clearing data: {clear_error}")
+                db.session.rollback()
             
             # Seed Personal Information
             print("Seeding personal information...")
@@ -47,6 +57,7 @@ def seed_database():
                     'description': 'Resume template for aspiring full-stack software developers',
                     'technologies': 'JavaScript, React, Python, Flask, PostgreSQL',
                     'github_url': 'https://github.com/Hawk-PDX/project-dev-resume.git',
+                    'github_account': 'Hawk-PDX',
                     'live_url': '',
                     'image_url': '',
                     'featured': True,
@@ -57,6 +68,7 @@ def seed_database():
                     'description': 'Python CLI-based RPG',
                     'technologies': 'Python',
                     'github_url': 'https://github.com/Hawk-PDX/python_final_project.git',
+                    'github_account': 'Hawk-PDX',
                     'live_url': '',
                     'image_url': '',
                     'featured': True,
@@ -99,19 +111,24 @@ def seed_database():
             
             # Seed Certificate (your real certificate)
             print("Seeding certificates...")
-            certificate = Certificate(
-                entity='Udemy',
-                course='React Development',
-                topics='React JavaScript',
-                description='Advanced React development course',
-                credit_hrs=None,
-                issue_date=date(2024, 1, 15),
-                expiry_date=None,
-                credential_id='XYZ789',
-                credential_url=None,
-                order=1
-            )
-            db.session.add(certificate)
+            try:
+                certificate = Certificate(
+                    entity='Udemy',
+                    course='React Development',
+                    topics='React JavaScript',
+                    description='Advanced React development course',
+                    credit_hrs=None,
+                    issue_date=date(2024, 1, 15),
+                    expiry_date=None,
+                    credential_id='XYZ789',
+                    credential_url=None,
+                    order=1
+                )
+                db.session.add(certificate)
+                print("✅ Certificates seeded successfully")
+            except Exception as cert_error:
+                print(f"⚠️ Certificate seeding failed: {cert_error}")
+                print("Continuing without certificates...")
             
             # Seed Skills (matching your local database exactly)
             print("Seeding skills...")
