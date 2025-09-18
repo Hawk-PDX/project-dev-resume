@@ -96,50 +96,50 @@ def get_projects():
     """
     try:
         projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
+        
+        if not projects:
+            # Return sample project data when database is empty
+            return jsonify([{
+                'id': 1,
+                'title': 'Full Stack Resume Portfolio',
+                'description': 'A modern, responsive portfolio website built with React and Flask to showcase my skills and projects.',
+                'technologies': 'React, Flask, Python, PostgreSQL, Docker, AWS',
+                'github_url': 'https://github.com/yourusername/portfolio',
+                'github_account': 'yourusername',
+                'live_url': 'https://yourportfolio.com',
+                'image_url': '/api/static/images/portfolio.jpg',
+                'featured': True,
+                'order': 1
+            }, {
+                'id': 2,
+                'title': 'E-commerce Platform',
+                'description': 'Complete e-commerce solution with user authentication, payment processing, and admin dashboard.',
+                'technologies': 'React, Flask, Stripe, PostgreSQL, Redis',
+                'github_url': 'https://github.com/yourusername/ecommerce',
+                'github_account': 'yourusername',
+                'live_url': 'https://your-ecommerce-demo.com',
+                'image_url': '/api/static/images/ecommerce.jpg',
+                'featured': True,
+                'order': 2
+            }])
     
-    if not projects:
-        # Return sample project data when database is empty
-        return jsonify([{
-            'id': 1,
-            'title': 'Full Stack Resume Portfolio',
-            'description': 'A modern, responsive portfolio website built with React and Flask to showcase my skills and projects.',
-            'technologies': 'React, Flask, Python, PostgreSQL, Docker, AWS',
-            'github_url': 'https://github.com/yourusername/portfolio',
-            'github_account': 'yourusername',
-            'live_url': 'https://yourportfolio.com',
-            'image_url': '/api/static/images/portfolio.jpg',
-            'featured': True,
-            'order': 1
-        }, {
-            'id': 2,
-            'title': 'E-commerce Platform',
-            'description': 'Complete e-commerce solution with user authentication, payment processing, and admin dashboard.',
-            'technologies': 'React, Flask, Stripe, PostgreSQL, Redis',
-            'github_url': 'https://github.com/yourusername/ecommerce',
-            'github_account': 'yourusername',
-            'live_url': 'https://your-ecommerce-demo.com',
-            'image_url': '/api/static/images/ecommerce.jpg',
-            'featured': True,
-            'order': 2
-        }])
-    
-    project_list = []
-    for project in projects:
-        project_data = {
-            'id': project.id,
-            'title': project.title,
-            'description': project.description,
-            'technologies': project.technologies,
-            'github_url': project.github_url,
-            'live_url': project.live_url,
-            'image_url': project.image_url,
-            'featured': project.featured,
-            'order': project.order
-        }
-        # Add github_account if it exists in the database
-        if hasattr(project, 'github_account'):
-            project_data['github_account'] = getattr(project, 'github_account', None)
-        project_list.append(project_data)
+        project_list = []
+        for project in projects:
+            project_data = {
+                'id': project.id,
+                'title': project.title,
+                'description': project.description,
+                'technologies': project.technologies,
+                'github_url': project.github_url,
+                'live_url': project.live_url,
+                'image_url': project.image_url,
+                'featured': project.featured,
+                'order': project.order
+            }
+            # Add github_account if it exists in the database
+            if hasattr(project, 'github_account'):
+                project_data['github_account'] = getattr(project, 'github_account', None)
+            project_list.append(project_data)
     
         return jsonify(project_list)
     except Exception as e:

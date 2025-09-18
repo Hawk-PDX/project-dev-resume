@@ -14,19 +14,19 @@ def get_personal_info():
     """
     try:
         personal_info = PersonalInfo.query.first()
-    if not personal_info:
-        # Return default data when database is empty
-        return jsonify({
-            'name': 'Garrett Hawkins',
-            'title': 'Full Stack Developer',
-            'email': 'hawkpdx@icloud.com',
-            'phone': None,
-            'location': 'Portland, Oregon',
-            'linkedin': 'https://linkedin.com/in/hawkpdx',
-            'github': 'https://github.com/HawkPDX',
-            'website': 'https://github.com/HawkPDX',
-            'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
-        })
+        if not personal_info:
+            # Return default data when database is empty
+            return jsonify({
+                'name': 'Garrett Hawkins',
+                'title': 'Full Stack Developer',
+                'email': 'hawkpdx@icloud.com',
+                'phone': None,
+                'location': 'Portland, Oregon',
+                'linkedin': 'https://linkedin.com/in/hawkpdx',
+                'github': 'https://github.com/HawkPDX',
+                'website': 'https://github.com/HawkPDX',
+                'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
+            })
     
         return jsonify({
             'id': personal_info.id,
@@ -58,20 +58,20 @@ def get_experience():
     """
     try:
         experiences = Experience.query.order_by(Experience.order.desc()).all()
-    
-    if not experiences:
-        # Return sample experience data when database is empty
-        return jsonify([{
-            'id': 1,
-            'company': 'Tech Solutions Inc.',
-            'position': 'Full Stack Developer',
-            'start_date': '2023-01-01',
-            'end_date': None,
-            'current': True,
-            'description': 'Developed and maintained full-stack web applications using React and Flask. Led the migration of legacy systems to modern cloud infrastructure.',
-            'technologies': 'React, Python, Flask, PostgreSQL, Docker',
-            'achievements': '• Increased application performance by 40%\n• Led team of 3 developers\n• Implemented CI/CD pipeline reducing deployment time by 60%'
-        }])
+        
+        if not experiences:
+            # Return sample experience data when database is empty
+            return jsonify([{
+                'id': 1,
+                'company': 'Tech Solutions Inc.',
+                'position': 'Full Stack Developer',
+                'start_date': '2023-01-01',
+                'end_date': None,
+                'current': True,
+                'description': 'Developed and maintained full-stack web applications using React and Flask. Led the migration of legacy systems to modern cloud infrastructure.',
+                'technologies': 'React, Python, Flask, PostgreSQL, Docker',
+                'achievements': '• Increased application performance by 40%\n• Led team of 3 developers\n• Implemented CI/CD pipeline reducing deployment time by 60%'
+            }])
     
         return jsonify([{
             'id': exp.id,
