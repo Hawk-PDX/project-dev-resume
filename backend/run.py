@@ -11,6 +11,18 @@ if os.environ.get('FLASK_ENV') == 'production':
     with app.app_context():
         try:
             print('🚀 Starting production database initialization...')
+            
+            # Run database migration first
+            print('🔄 Running database migration...')
+            try:
+                from migrate_db import migrate_database
+                if migrate_database():
+                    print('✅ Database migration completed')
+                else:
+                    print('⚠️ Database migration failed, continuing anyway')
+            except Exception as migrate_error:
+                print(f'⚠️ Migration error (continuing): {migrate_error}')
+            
             # Try to create tables if they don't exist
             db.create_all()
             print('✅ Database tables created successfully')
