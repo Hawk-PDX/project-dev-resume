@@ -10,7 +10,7 @@ app = create_app()
 if os.environ.get('FLASK_ENV') == 'production':
     with app.app_context():
         try:
-            print('🚀 Starting production database initialization...')
+            print('🚀 Starting production database initialization (v1.1)...')
             
             # Run database migration first
             print('🔄 Running database migration...')
