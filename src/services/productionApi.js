@@ -260,6 +260,58 @@ export const skillsService = {
       console.error('❌ Failed to fetch skills insights:', error.message);
       throw error;
     }
+  },
+
+  // Get a specific skill by ID
+  getSkill: async (id) => {
+    try {
+      console.log('🔍 Fetching skill:', id);
+      const response = await api.get(`/skills/${id}`);
+      console.log('✅ Skill loaded');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to fetch skill:', error.message);
+      throw error;
+    }
+  },
+
+  // Update an existing skill
+  updateSkill: async (id, data) => {
+    try {
+      console.log('✏️ Updating skill:', id);
+      const response = await api.put(`/skills/${id}`, data);
+      console.log('✅ Skill updated successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to update skill:', error.message);
+      throw error;
+    }
+  },
+
+  // Delete a skill
+  deleteSkill: async (id) => {
+    try {
+      console.log('🗑️ Deleting skill:', id);
+      const response = await api.delete(`/skills/${id}`);
+      console.log('✅ Skill deleted successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to delete skill:', error.message);
+      throw error;
+    }
+  },
+
+  // Add a new skill manually
+  addSkill: async (data) => {
+    try {
+      console.log('➕ Adding new skill:', data.name);
+      const response = await api.post('/skills/add', data);
+      console.log('✅ Skill added successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to add skill:', error.message);
+      throw error;
+    }
   }
 };
 
