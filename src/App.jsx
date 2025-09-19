@@ -7,7 +7,6 @@ import Projects from './components/Projects';
 import AllProjects from './components/AllProjects';
 import AddProject from './components/AddProject';
 import Skills from './components/Skills';
-import SkillsAdmin from './components/SkillsAdmin';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
 import { skillsService } from './services/productionApi';
@@ -105,8 +104,7 @@ function App() {
                   onCancelEdit={handleCancelEdit}
                 />
               </div>
-              <Skills ref={skillsRefreshRef} />
-              <SkillsAdmin onSkillsUpdated={handleSkillsUpdated} />
+              <Skills ref={skillsRefreshRef} onSkillsUpdated={handleSkillsUpdated} />
               <Certificates />
             </main>
           } />
