@@ -3,7 +3,7 @@ import { useSkills } from '../hooks/useData';
 import { skillsService } from '../services/productionApi';
 
 const Skills = forwardRef((props, ref) => {
-  const { data: skills, loading, refresh } = useSkills();
+  const { data: skills, loading, refresh, isWarmingUp } = useSkills();
   const [showAdmin, setShowAdmin] = useState(false);
   const [message, setMessage] = useState('');
   const [insights, setInsights] = useState(null);
@@ -143,7 +143,25 @@ const Skills = forwardRef((props, ref) => {
     }
   };
 
-  if (loading) return <div className="py-20 text-center">Loading skills...</div>;
+  if (loading) {
+    return (
+      <section id="skills" className="section" style={{ backgroundColor: 'var(--background-color)' }}>
+        <div className="container">
+          <div className="py-20 text-center">
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+            <div style={{ fontSize: '1.125rem', color: 'var(--text-color)', marginBottom: '0.5rem' }}>
+              {isWarmingUp ? 'Warming up server...' : 'Loading skills...'}
+            </div>
+            {isWarmingUp && (
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>
+                This may take up to 30 seconds on first visit
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const skillCategories = Object.keys(skills);
   const categories = ['frontend', 'backend', 'database', 'tools', 'mobile', 'data'];

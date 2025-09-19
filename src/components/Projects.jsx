@@ -8,7 +8,7 @@ import ConfirmationModal from './ConfirmationModal';
 import { projectsService } from '../services/productionApi';
 
 const Projects = forwardRef((props, ref) => {
-  const { data: projects, loading, refresh } = useProjects();
+  const { data: projects, loading, refresh, isWarmingUp } = useProjects();
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     project: null
@@ -65,7 +65,21 @@ const Projects = forwardRef((props, ref) => {
   
   // console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
 
-  if (loading) return <div className="py-20 text-center">Loading projects...</div>;
+  if (loading) {
+    return (
+      <div className="py-20 text-center">
+        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+        <div style={{ fontSize: '1.125rem', color: 'var(--text-color)', marginBottom: '0.5rem' }}>
+          {isWarmingUp ? 'Warming up server...' : 'Loading projects...'}
+        </div>
+        {isWarmingUp && (
+          <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>
+            This may take up to 30 seconds on first visit
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <section id="projects" className="section" style={{ backgroundColor: 'var(--card-bg)' }}>

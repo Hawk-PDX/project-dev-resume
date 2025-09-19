@@ -10,6 +10,7 @@ import Skills from './components/Skills';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
 import { skillsService } from './services/productionApi';
+import { initializeWarmup } from './services/warmup';
 import './styles.css';
 
 /**
@@ -31,6 +32,9 @@ function App() {
 
   useEffect(() => {
     document.title = 'FS Dev Portfolio';
+    
+    // Initialize backend warmup to reduce cold start delays
+    initializeWarmup();
   }, []);
 
   /**
