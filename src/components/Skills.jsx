@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { useSkills } from '../hooks/useData';
-import { skillsService } from '../services/api';
+import { skillsService } from '../services/productionApi';
 
 const Skills = forwardRef((props, ref) => {
   const { data: skills, loading, refresh } = useSkills();

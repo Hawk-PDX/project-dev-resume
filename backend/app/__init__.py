@@ -52,8 +52,11 @@ def create_app():
         CORS(app, 
              origins="*",
              methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-             allow_headers="*",
-             supports_credentials=False
+             allow_headers=["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
+             expose_headers=["Content-Type", "Authorization"],
+             supports_credentials=False,
+             send_wildcard=True,
+             vary_header=False
         )
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
