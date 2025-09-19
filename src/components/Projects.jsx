@@ -6,6 +6,7 @@ import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import { projectsService } from '../services/productionApi';
+import { canEditProjects, canDeleteProjects } from '../config/adminMode';
 
 const Projects = forwardRef((props, ref) => {
   const { data: projects, loading, refresh, isWarmingUp } = useProjects();
@@ -237,45 +238,51 @@ const Projects = forwardRef((props, ref) => {
                     )}
                   </div>
                   
-                  <div style={{ display: 'flex', gap: '0.5rem' }} className="project-admin-buttons">
-                    <button
-                      onClick={() => handleEdit(project)}
-                      className="icon-button"
-                      style={{
-                        padding: '0.5rem',
-                        border: '1px solid #d1d5db',
-                        backgroundColor: 'transparent',
-                        color: 'var(--text-color)',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                      title="Edit Project"
-                    >
-                      <PencilIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                    
-                    <button
-                      onClick={() => handleDeleteClick(project)}
-                      className="icon-button"
-                      style={{
-                        padding: '0.5rem',
-                        border: '1px solid #fecaca',
-                        backgroundColor: '#fef2f2',
-                        color: '#dc2626',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                      title="Delete Project"
-                    >
-                      <TrashIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                  </div>
+                  {(canEditProjects() || canDeleteProjects()) && (
+                    <div style={{ display: 'flex', gap: '0.5rem' }} className="project-admin-buttons">
+                      {canEditProjects() && (
+                        <button
+                          onClick={() => handleEdit(project)}
+                          className="icon-button"
+                          style={{
+                            padding: '0.5rem',
+                            border: '1px solid #d1d5db',
+                            backgroundColor: 'transparent',
+                            color: 'var(--text-color)',
+                            borderRadius: '0.375rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          title="Edit Project"
+                        >
+                          <PencilIcon style={{ height: '1rem', width: '1rem' }} />
+                        </button>
+                      )}
+                      
+                      {canDeleteProjects() && (
+                        <button
+                          onClick={() => handleDeleteClick(project)}
+                          className="icon-button"
+                          style={{
+                            padding: '0.5rem',
+                            border: '1px solid #fecaca',
+                            backgroundColor: '#fef2f2',
+                            color: '#dc2626',
+                            borderRadius: '0.375rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          title="Delete Project"
+                        >
+                          <TrashIcon style={{ height: '1rem', width: '1rem' }} />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

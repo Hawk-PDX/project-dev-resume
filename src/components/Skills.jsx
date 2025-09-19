@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { useSkills } from '../hooks/useData';
 import { skillsService } from '../services/productionApi';
+import { isAdminEnabled, canEditSkills, canDeleteSkills, canAddSkills, canAutoCalculateSkills } from '../config/adminMode';
 
 const Skills = forwardRef((props, ref) => {
   const { data: skills, loading, refresh, isWarmingUp } = useSkills();
@@ -176,26 +177,28 @@ const Skills = forwardRef((props, ref) => {
           </p>
           
           {/* Admin Toggle Button */}
-          <button
-            onClick={() => setShowAdmin(!showAdmin)}
-            style={{
-              marginTop: '1rem',
-              padding: '0.5rem 1rem',
-              backgroundColor: showAdmin ? 'var(--primary-color)' : 'transparent',
-              color: showAdmin ? 'white' : 'var(--primary-color)',
-              border: '2px solid var(--primary-color)',
-              borderRadius: '0.375rem',
-              cursor: 'pointer',
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}
-          >
-            {showAdmin ? 'Hide Admin Panel' : 'Show Admin Panel'}
-          </button>
+          {isAdminEnabled() && (
+            <button
+              onClick={() => setShowAdmin(!showAdmin)}
+              style={{
+                marginTop: '1rem',
+                padding: '0.5rem 1rem',
+                backgroundColor: showAdmin ? 'var(--primary-color)' : 'transparent',
+                color: showAdmin ? 'white' : 'var(--primary-color)',
+                border: '2px solid var(--primary-color)',
+                borderRadius: '0.375rem',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500'
+              }}
+            >
+              {showAdmin ? 'Hide Admin Panel' : 'Show Admin Panel'}
+            </button>
+          )}
         </div>
 
         {/* Admin Panel */}
-        {showAdmin && (
+        {isAdminEnabled() && showAdmin && (
           <div style={{ marginBottom: '3rem' }}>
             {message && (
               <div style={{
@@ -211,49 +214,50 @@ const Skills = forwardRef((props, ref) => {
             )}
 
             {/* Auto-Calculation Controls */}
-            <div className="card" style={{ marginBottom: '2rem' }}>
-              <div style={{ padding: '1.5rem' }}>
-                <h3 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)' }}>Auto-Calculate Skills from Projects</h3>
-                <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>
-                  Automatically generate skills based on technologies used in your projects.
-                </p>
-                
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '1rem', 
-                  marginBottom: '1rem',
-                  flexWrap: 'wrap'
-                }}>
-                  <button
-                    onClick={handleAutoCalculate}
-                    disabled={adminLoading}
-                    style={{
-                      padding: '0.75rem 1.5rem',
-                      backgroundColor: adminLoading ? '#9ca3af' : 'var(--primary-color)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '0.375rem',
-                      cursor: adminLoading ? 'not-allowed' : 'pointer'
-                    }}
-                  >
-                    {adminLoading ? 'Calculating...' : 'Smart Update (Preserve Manual)'}
-                  </button>
+            {canAutoCalculateSkills() && (
+              <div className="card" style={{ marginBottom: '2rem' }}>
+                <div style={{ padding: '1.5rem' }}>
+                  <h3 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)' }}>Auto-Calculate Skills from Projects</h3>
+                  <p style={{ color: 'var(--text-light)', marginBottom: '1rem' }}>
+                    Automatically generate skills based on technologies used in your projects.
+                  </p>
                   
-                  <button
-                    onClick={handleForceRecalculate}
-                    disabled={adminLoading}
-                    style={{
-                      padding: '0.75rem 1.5rem',
-                      backgroundColor: adminLoading ? '#9ca3af' : '#dc2626',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '0.375rem',
-                      cursor: adminLoading ? 'not-allowed' : 'pointer'
-                    }}
-                  >
-                    Force Recalculate All
-                  </button>
-                </div>
+                  <div style={{ 
+                    display: 'flex', 
+                    gap: '1rem', 
+                    marginBottom: '1rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    <button
+                      onClick={handleAutoCalculate}
+                      disabled={adminLoading}
+                      style={{
+                        padding: '0.75rem 1.5rem',
+                        backgroundColor: adminLoading ? '#9ca3af' : 'var(--primary-color)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '0.375rem',
+                        cursor: adminLoading ? 'not-allowed' : 'pointer'
+                      }}
+                    >
+                      {adminLoading ? 'Calculating...' : 'Smart Update (Preserve Manual)'}
+                    </button>
+                    
+                    <button
+                      onClick={handleForceRecalculate}
+                      disabled={adminLoading}
+                      style={{
+                        padding: '0.75rem 1.5rem',
+                        backgroundColor: adminLoading ? '#9ca3af' : '#dc2626',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '0.375rem',
+                        cursor: adminLoading ? 'not-allowed' : 'pointer'
+                      }}
+                    >
+                      Force Recalculate All
+                    </button>
+                  </div>
 
                 {insights && (
                   <div style={{ fontSize: '0.875rem', color: 'var(--text-light)' }}>
@@ -266,8 +270,11 @@ const Skills = forwardRef((props, ref) => {
               </div>
             </div>
 
+            )}
+
             {/* Add New Skill */}
-            <div className="card" style={{ marginBottom: '2rem' }}>
+            {canAddSkills() && (
+              <div className="card" style={{ marginBottom: '2rem' }}>
               <div style={{ padding: '1.5rem' }}>
                 <h3 style={{ marginBottom: '1rem', fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)' }}>Add New Skill</h3>
                 <div style={{ 
@@ -345,7 +352,8 @@ const Skills = forwardRef((props, ref) => {
                   </button>
                 </div>
               </div>
-            </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -379,22 +387,24 @@ const Skills = forwardRef((props, ref) => {
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span style={{ color: 'var(--text-light)' }}>{skill.level}/5</span>
-                            {showAdmin && (
+                            {isAdminEnabled() && showAdmin && (
                               <div style={{ display: 'flex', gap: '0.25rem' }}>
-                                <button 
-                                  onClick={() => handleEditSkill(skill)}
-                                  style={{
-                                    padding: '0.25rem',
-                                    border: '1px solid var(--border-color)',
-                                    backgroundColor: 'transparent',
-                                    borderRadius: '0.25rem',
-                                    cursor: 'pointer',
-                                    fontSize: '0.75rem'
-                                  }}
-                                >
-                                  ✏️
-                                </button>
-                                {skill.id && (
+                                {canEditSkills() && (
+                                  <button 
+                                    onClick={() => handleEditSkill(skill)}
+                                    style={{
+                                      padding: '0.25rem',
+                                      border: '1px solid var(--border-color)',
+                                      backgroundColor: 'transparent',
+                                      borderRadius: '0.25rem',
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    ✏️
+                                  </button>
+                                )}
+                                {canDeleteSkills() && skill.id && (
                                   <button 
                                     onClick={() => handleDeleteSkill(skill.id)}
                                     style={{
