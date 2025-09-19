@@ -11,6 +11,7 @@ import Certificates from './components/Certificates';
 import Footer from './components/Footer';
 import { skillsService } from './services/productionApi';
 import { initializeWarmup } from './services/warmup';
+import { isAdminEnabled } from './config/adminMode';
 import './styles.css';
 
 /**
@@ -101,13 +102,15 @@ function App() {
               <Hero />
               <About />
               <Projects ref={projectsRefreshRef} onEditProject={handleEditProject} />
-              <div id="add-project">
-                <AddProject 
-                  onProjectAdded={handleProjectAdded} 
-                  editProject={editProject}
-                  onCancelEdit={handleCancelEdit}
-                />
-              </div>
+              {isAdminEnabled() && (
+                <div id="add-project">
+                  <AddProject 
+                    onProjectAdded={handleProjectAdded} 
+                    editProject={editProject}
+                    onCancelEdit={handleCancelEdit}
+                  />
+                </div>
+              )}
               <Skills ref={skillsRefreshRef} onSkillsUpdated={handleSkillsUpdated} />
               <Certificates />
             </main>
@@ -117,13 +120,15 @@ function App() {
           <Route path="/projects" element={
             <main style={{ paddingTop: '4rem' }}>
               <AllProjects ref={allProjectsRefreshRef} onEditProject={handleEditProject} />
-              <div id="add-project">
-                <AddProject 
-                  onProjectAdded={handleProjectAdded} 
-                  editProject={editProject}
-                  onCancelEdit={handleCancelEdit}
-                />
-              </div>
+              {isAdminEnabled() && (
+                <div id="add-project">
+                  <AddProject 
+                    onProjectAdded={handleProjectAdded} 
+                    editProject={editProject}
+                    onCancelEdit={handleCancelEdit}
+                  />
+                </div>
+              )}
             </main>
           } />
         </Routes>
