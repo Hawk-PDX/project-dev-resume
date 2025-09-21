@@ -4,6 +4,12 @@ A production-ready portfolio application showcasing modern web development pract
 
 🌟 **[Live Portfolio](https://portfolio-frontend-zhcd.onrender.com)** | 🔗 **[API Endpoint](https://portfolio-backend-skva.onrender.com/api)**
 
+## 🎬 Live Demo
+
+![Portfolio Demo](./public/images/dev-portfolio-SR.gif)
+
+*Experience the full interactive portfolio with real-time GitHub integration, dynamic skills calculation, and responsive design in action.*
+
 ## 🎯 Project Highlights
 
 This portfolio goes beyond a simple website—it's a comprehensive full-stack application that demonstrates production-level development skills:
