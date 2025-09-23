@@ -60,7 +60,7 @@ This portfolio goes beyond a simple website—it's a comprehensive full-stack ap
 
 **1. Clone and Install**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Hawk-PDX/project-dev-resume.git
 cd project-dev-resume
 
 # Frontend dependencies
@@ -268,6 +268,36 @@ pytest tests/test_api.py   # Specific test file
 - Performance optimization for production environments
 - User interface design with accessibility considerations
 - Integration challenges with external APIs (GitHub)
+
+## 🤝 Contributing
+
+We welcome contributions to this project! Whether you're interested in:
+
+- 🐛 **Bug fixes** - Help identify and resolve issues
+- ✨ **Feature enhancements** - Improve existing functionality  
+- 📚 **Documentation** - Make the project more accessible
+- 🚀 **Performance** - Enhance speed and efficiency
+- 🔒 **Security** - Strengthen the application
+- 🧪 **Testing** - Improve test coverage
+
+Please read our [Contributing Guidelines](CONTRIBUTING.md) to get started.
+
+### Quick Contribution Steps
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Code of Conduct
+
+This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ---
 
