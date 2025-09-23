@@ -45,7 +45,9 @@ def create_app():
             "http://localhost:5001",
             "http://localhost:5173",
             "http://localhost:5175",
-            "https://portfolio-frontend-zhcd.onrender.com"
+            "https://portfolio-frontend-zhcd.onrender.com",
+            "https://rosecitydev.tech",
+            "https://www.rosecitydev.tech"
         ]
         
         # EMERGENCY CORS FIX - Completely open CORS to restore functionality
