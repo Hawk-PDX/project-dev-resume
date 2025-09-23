@@ -9,7 +9,7 @@ export const fallbackPersonalInfo = {
     location: 'Portland, Oregon',
     linkedin: 'https://linkedin.com/in/hawkpdx',
     github: 'https://github.com/HawkPDX',
-    website: 'https://github.com/HawkPDX',
+    website: 'https://rosecitydev.tech',
     summary: 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
 };
 

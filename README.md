@@ -2,7 +2,7 @@
 
 A production-ready portfolio application showcasing modern web development practices, full-stack architecture, and professional deployment strategies. This project demonstrates advanced React patterns, backend API design, and thoughtful user experience implementation.
 
-🌟 **[Live Portfolio](https://portfolio-frontend-zhcd.onrender.com)** | 🔗 **[API Endpoint](https://portfolio-backend-skva.onrender.com/api)**
+🌟 **[Live Portfolio](https://rosecitydev.tech)** | 🚀 **Professional Portfolio Website**
 
 ## 🎬 Live Demo
 

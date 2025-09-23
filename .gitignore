@@ -110,3 +110,6 @@ migrate_github_account.py
 *migrate*github*
 *ai*debug*
 *assistant*test*
+# History files from VS Code History extension
+.history/
+*.history
