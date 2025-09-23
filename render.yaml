@@ -1,6 +1,7 @@
 # Render deployment configuration for Full-Stack Portfolio
-# Frontend service deployed at: https://portfolio-frontend-zhcd.onrender.com
-# Backend service deployed at: https://portfolio-backend-skva.onrender.com
+# Custom Domain: https://rosecitydev.tech
+# Frontend service: https://portfolio-frontend-zhcd.onrender.com (with custom domain)
+# Backend service: https://portfolio-backend-skva.onrender.com
 
 services:
   # Frontend - React application
@@ -35,6 +36,9 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+    domains:
+      - rosecitydev.tech
+      - www.rosecitydev.tech
 
   # Backend - Flask API
   - type: web
