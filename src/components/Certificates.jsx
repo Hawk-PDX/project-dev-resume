@@ -57,11 +57,11 @@ const Certificates = () => {
     return (
       <div className="py-20 text-center">
         <div style={{ fontSize: '1.125rem', color: 'var(--text-light)', marginBottom: '1rem' }}>
-          {isWarmingUp ? '☕ Warming up the server...' : 'Loading certificates...'}
+          {isWarmingUp ? 'Starting up server...' : 'Loading certificates...'}
         </div>
         {isWarmingUp && (
           <div style={{ fontSize: '0.875rem', color: 'var(--text-light)', opacity: 0.8 }}>
-            This may take a few seconds on the first visit
+            First visit may take a moment
           </div>
         )}
       </div>
