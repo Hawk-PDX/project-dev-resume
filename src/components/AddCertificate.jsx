@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { resumeService } from '../services/api';
+import { resumeService } from '../services/productionApi';
 import { validateCertificateForm } from '../utils/validation';
 
 const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
@@ -38,6 +38,22 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       resetForm();
     }
   }, [editCertificate]);
+
+  const resetForm = () => {
+    setFormData({
+      entity: '',
+      course: '',
+      topics: '',
+      description: '',
+      credit_hrs: '',
+      issue_date: '',
+      expiry_date: '',
+      credential_id: '',
+      credential_url: ''
+    });
+    setErrors({});
+    setIsExpanded(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

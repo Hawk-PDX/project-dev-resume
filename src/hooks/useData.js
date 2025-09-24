@@ -183,18 +183,48 @@ export const useCertificates = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isWarmingUp, setIsWarmingUp] = useState(false);
 
-    const fetchData = async () => {
+    const fetchData = async (retryCount = 0) => {
+        const maxRetries = 2;
         setLoading(true);
+        
+        // Show warming up message after first retry
+        if (retryCount > 0) {
+            setIsWarmingUp(true);
+        }
+        
         try {
+            console.log(`📜 Fetching certificates from API... (attempt ${retryCount + 1})`);
             const response = await resumeService.getCertificates();
+            console.log('✅ Certificates fetched:', response.data.length, 'certificates');
             setData(response.data);
+            setError(null); // Clear any previous errors
+            setIsWarmingUp(false);
         } catch (err) {
-            console.warn('API failed, using fallback certificates:', err.message);
+            console.warn(`❌ Certificates API failed (attempt ${retryCount + 1}):`, err.message);
+            
+            // Retry on network errors or 50x errors (Render cold start)
+            if (retryCount < maxRetries && (err.code === 'NETWORK_ERROR' || err.response?.status >= 500)) {
+                console.log(`⏳ Retrying certificates in 3 seconds... (${retryCount + 1}/${maxRetries})`);
+                setTimeout(() => {
+                    fetchData(retryCount + 1);
+                }, 3000);
+                return; // Don't set loading to false yet
+            }
+            
+            // Final fallback after all retries
+            console.warn('❌ Using fallback certificates after retries failed');
             setData(fallbackCertificates);
             setError(err.message);
+            setIsWarmingUp(false);
         } finally {
-            setLoading(false);
+            // Only set loading to false if we're not retrying
+            if (retryCount >= maxRetries) {
+                setLoading(false);
+            } else {
+                setTimeout(() => setLoading(false), 100);
+            }
         }
     };
 
@@ -202,5 +232,5 @@ export const useCertificates = () => {
         fetchData();
     }, []);
 
-    return { data, loading, error, refresh: fetchData };
+    return { data, loading, error, refresh: () => fetchData(0), isWarmingUp };
 };

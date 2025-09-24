@@ -222,6 +222,60 @@ export const resumeService = {
       console.error('❌ Failed to fetch certificates:', error.message);
       throw error;
     }
+  },
+
+  getCertificate: async (id) => {
+    try {
+      console.log('🔍 Fetching certificate:', id);
+      const response = await api.get(`/resume/certificates/${id}`);
+      console.log('✅ Certificate loaded');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to fetch certificate:', error.message);
+      throw error;
+    }
+  },
+
+  createCertificate: async (data) => {
+    try {
+      console.log('➕ Creating certificate:', data.course);
+      const response = await api.post('/resume/certificates', data);
+      console.log('✅ Certificate created successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to create certificate:', error.message);
+      throw error;
+    }
+  },
+
+  updateCertificate: async (id, data) => {
+    if (!id || id <= 0) {
+      return Promise.reject(new Error('Invalid certificate ID for update'));
+    }
+    try {
+      console.log('✏️ Updating certificate:', id);
+      const response = await api.put(`/resume/certificates/${id}`, data);
+      console.log('✅ Certificate updated successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to update certificate:', error.message);
+      throw error;
+    }
+  },
+
+  deleteCertificate: async (id) => {
+    if (!id || id <= 0) {
+      return Promise.reject(new Error('Invalid certificate ID for deletion'));
+    }
+    try {
+      console.log('🗑️ Deleting certificate:', id);
+      const response = await api.delete(`/resume/certificates/${id}`);
+      console.log('✅ Certificate deleted successfully');
+      return response;
+    } catch (error) {
+      console.error('❌ Failed to delete certificate:', error.message);
+      throw error;
+    }
   }
 };
 
