@@ -3,10 +3,10 @@ import { useCertificates } from '../hooks/useData';
 import CertificateCard from './CertificateCard';
 import AddCertificate from './AddCertificate';
 import ConfirmationModal from './ConfirmationModal';
-import { resumeService } from '../services/api';
+import { resumeService } from '../services/productionApi';
 
 const Certificates = () => {
-  const { data: certificates, loading, refresh } = useCertificates();
+  const { data: certificates, loading, refresh, isWarmingUp } = useCertificates();
   const [editCertificate, setEditCertificate] = useState(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, certificate: null });
   const [message, setMessage] = useState('');
@@ -53,7 +53,20 @@ const Certificates = () => {
     setDeleteModal({ isOpen: false, certificate: null });
   };
 
-  if (loading) return <div className="py-20 text-center">Loading certificates...</div>;
+  if (loading) {
+    return (
+      <div className="py-20 text-center">
+        <div style={{ fontSize: '1.125rem', color: 'var(--text-light)', marginBottom: '1rem' }}>
+          {isWarmingUp ? '☕ Warming up the server...' : 'Loading certificates...'}
+        </div>
+        {isWarmingUp && (
+          <div style={{ fontSize: '0.875rem', color: 'var(--text-light)', opacity: 0.8 }}>
+            This may take a few seconds on the first visit
+          </div>
+        )}
+      </div>
+    );
+  }
 
 
   return (
