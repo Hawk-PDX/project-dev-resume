@@ -53,12 +53,12 @@ const Skills = forwardRef((props, ref) => {
       });
       
       if (response.data.status === 'success') {
-        setMessage(`✅ Skills updated! Added: ${response.data.added}, Updated: ${response.data.updated}, Preserved: ${response.data.preserved}`);
+        setMessage(`Skills updated! Added: ${response.data.added}, Updated: ${response.data.updated}, Preserved: ${response.data.preserved}`);
         refresh();
         loadInsights();
         if (props.onSkillsUpdated) props.onSkillsUpdated();
       } else {
-        setMessage(`❌ ${response.data.message}`);
+        setMessage(`Error: ${response.data.message}`);
       }
     } catch (error) {
       setMessage('Error calculating skills: ' + error.message);
@@ -80,7 +80,7 @@ const Skills = forwardRef((props, ref) => {
       });
       
       if (response.data.status === 'success') {
-        setMessage(`✅ All skills recalculated! Added: ${response.data.added}, Updated: ${response.data.updated}`);
+        setMessage(`All skills recalculated! Added: ${response.data.added}, Updated: ${response.data.updated}`);
         refresh();
         loadInsights();
         if (props.onSkillsUpdated) props.onSkillsUpdated();
@@ -108,7 +108,7 @@ const Skills = forwardRef((props, ref) => {
         order: parseInt(skillData.order || 0)
       });
       
-      setMessage('✅ Skill updated successfully!');
+      setMessage('Skill updated successfully!');
       setEditingSkill(null);
       refresh();
       if (props.onSkillsUpdated) props.onSkillsUpdated();
@@ -124,7 +124,7 @@ const Skills = forwardRef((props, ref) => {
     
     try {
       await skillsService.deleteSkill(skillId);
-      setMessage('✅ Skill deleted successfully!');
+      setMessage('Skill deleted successfully!');
       refresh();
       if (props.onSkillsUpdated) props.onSkillsUpdated();
     } catch (error) {
@@ -135,7 +135,7 @@ const Skills = forwardRef((props, ref) => {
   const handleAddSkill = async () => {
     try {
       await skillsService.addSkill(newSkill);
-      setMessage('✅ Skill added successfully!');
+      setMessage('Skill added successfully!');
       setNewSkill({ name: '', category: 'frontend', level: 3 });
       refresh();
       if (props.onSkillsUpdated) props.onSkillsUpdated();
