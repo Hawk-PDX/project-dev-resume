@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_socketio import SocketIO
 from dotenv import load_dotenv
 from sqlalchemy import text
 import os
@@ -10,6 +11,7 @@ load_dotenv()
 
 db = SQLAlchemy()
 migrate = Migrate()
+socketio = SocketIO()
 
 def create_app():
     app = Flask(__name__)
@@ -32,11 +34,19 @@ def create_app():
         # Initialize extensions
         db.init_app(app)
         migrate.init_app(app, db)
-        app.logger.info("Database and migrate initialized successfully")
+        
+        # Initialize SocketIO with CORS support
+        socketio.init_app(app, 
+                         cors_allowed_origins="*",
+                         async_mode='eventlet',
+                         logger=True,
+                         engineio_logger=True)
+        
+        app.logger.info("Database, migrate, and SocketIO initialized successfully")
     except Exception as e:
-        app.logger.error(f"Error initializing database: {e}")
+        app.logger.error(f"Error initializing extensions: {e}")
         # Don't raise - let the app continue without database for now
-        app.logger.warning("Continuing without database initialization - some features may not work")
+        app.logger.warning("Continuing without full extension initialization - some features may not work")
 
     try:
         # CORS Configuration for local development and production
@@ -70,12 +80,16 @@ def create_app():
     def api_root():
         return jsonify({
             "message": "Portfolio API",
-            "version": "1.0",
+            "version": "2.0",
             "endpoints": {
                 "health": "/api/health",
                 "resume": "/api/resume",
                 "projects": "/api/projects",
-                "skills": "/api/skills"
+                "skills": "/api/skills",
+                "analytics": "/api/analytics"
+            },
+            "websockets": {
+                "analytics_namespace": "/analytics"
             }
         })
 
@@ -95,11 +109,13 @@ def create_app():
         from app.routes.resume import resume_bp
         from app.routes.projects import projects_bp
         from app.routes.skills import skills_bp
+        from app.routes.analytics import analytics_bp
 
         app.register_blueprint(resume_bp, url_prefix='/api/resume')
         app.register_blueprint(projects_bp, url_prefix='/api/projects')
         app.register_blueprint(skills_bp, url_prefix='/api/skills')
-        app.logger.info("Blueprints registered successfully")
+        app.register_blueprint(analytics_bp)  # Analytics blueprint has its own url_prefix
+        app.logger.info("All blueprints registered successfully")
     except Exception as e:
         app.logger.error(f"Error registering blueprints: {e}")
         # Don't raise - create a basic error response blueprint instead
