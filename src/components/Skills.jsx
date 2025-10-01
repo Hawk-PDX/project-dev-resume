@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'rea
 import { useSkills } from '../hooks/useData';
 import { skillsService } from '../services/productionApi';
 import { isAdminEnabled, canEditSkills, canDeleteSkills, canAddSkills, canAutoCalculateSkills } from '../config/adminMode';
+import analyticsService from '../services/analyticsService';
 
 const Skills = forwardRef((props, ref) => {
   const { data: skills, loading, refresh, isWarmingUp } = useSkills();
@@ -378,7 +379,12 @@ const Skills = forwardRef((props, ref) => {
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.25rem', alignItems: 'center' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ color: 'var(--text-color)' }}>{skill.name}</span>
+                            <span 
+                              style={{ color: 'var(--text-color)' }}
+                              onMouseEnter={() => analyticsService.trackSkillInteraction(skill.name, 'hover')}
+                            >
+                              {skill.name}
+                            </span>
                             {skill.manual_override && (
                               <span style={{ fontSize: '0.7rem', color: '#d97706', backgroundColor: '#fef3c7', padding: '0.125rem 0.375rem', borderRadius: '0.25rem' }}>
                                 Manual

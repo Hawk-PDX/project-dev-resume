@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
 import { projectsService } from '../services/productionApi';
 import { canEditProjects, canDeleteProjects } from '../config/adminMode';
+import analyticsService from '../services/analyticsService';
 
 const Projects = forwardRef((props, ref) => {
   const { data: projects, loading, refresh, isWarmingUp } = useProjects();
@@ -221,6 +222,7 @@ const Projects = forwardRef((props, ref) => {
                         style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => analyticsService.trackGitHubClick(project.title, project.github_url)}
                       >
                         <CodeBracketIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
                       </a>
@@ -231,6 +233,7 @@ const Projects = forwardRef((props, ref) => {
                         style={{ display: 'flex', alignItems: 'center', color: 'var(--text-light)' }}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => analyticsService.trackProjectClick(project.title, project.live_url)}
                       >
                         <ArrowTopRightOnSquareIcon style={{ height: '1.25rem', width: '1.25rem', marginRight: '0.25rem' }} />
                         Live Demo

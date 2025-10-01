@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { isAdminEnabled } from '../config/adminMode';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +11,11 @@ const Navbar = () => {
     { name: 'Projects', href: '#projects' },
     { name: 'Skills', href: '#skills' },
     { name: 'Certificates', href: '#certificates' },
+  ];
+  
+  const routeNavigation = [
+    { name: 'All Projects', href: '/projects' },
+    ...(isAdminEnabled() ? [{ name: 'Analytics', href: '/analytics' }] : []),
   ];
 
   useEffect(() => {
@@ -68,7 +75,7 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     style={{
-                      color: 'var(--primary-color)', // Updated for better visibility
+                      color: 'var(--primary-color)',
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
                       textDecoration: 'none',
@@ -79,6 +86,23 @@ const Navbar = () => {
                   >
                     {item.name}
                   </a>
+                ))}
+                {routeNavigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    style={{
+                      color: 'var(--primary-color)',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.375rem',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
+                    onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+                  >
+                    {item.name}
+                  </Link>
                 ))}
               </div>
             </div>
@@ -115,7 +139,7 @@ const Navbar = () => {
                 key={item.name}
                 href={item.href}
                 style={{
-                  color: 'var(--primary-color)', // Updated for better visibility
+                  color: 'var(--primary-color)',
                   display: 'block',
                   padding: '0.75rem 1rem',
                   textDecoration: 'none',
@@ -127,6 +151,24 @@ const Navbar = () => {
               >
                 {item.name}
               </a>
+            ))}
+            {routeNavigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                style={{
+                  color: 'var(--primary-color)',
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease'
+                }}
+                onClick={handleLinkClick}
+                onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
+                onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+              >
+                {item.name}
+              </Link>
             ))}
           </div>
         </div>

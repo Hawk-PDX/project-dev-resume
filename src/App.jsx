@@ -9,9 +9,11 @@ import AddProject from './components/AddProject';
 import Skills from './components/Skills';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
+import AnalyticsDashboard from './components/Analytics/AnalyticsDashboard';
 import { skillsService } from './services/productionApi';
 import { initializeWarmup } from './services/warmup';
 import { isAdminEnabled } from './config/adminMode';
+import analyticsService from './services/analyticsService';
 import './styles.css';
 
 /**
@@ -30,12 +32,22 @@ function App() {
   
   // State to track which project is being edited (if any)
   const [editProject, setEditProject] = useState(null);
+  // State to control analytics dashboard visibility
+  const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
 
   useEffect(() => {
     document.title = 'FS Dev Portfolio';
     
     // Initialize backend warmup to reduce cold start delays
     initializeWarmup();
+    
+    // Initialize analytics tracking
+    console.log('🎯 Initializing analytics service...');
+    
+    // Track initial page view
+    setTimeout(() => {
+      analyticsService.trackPageView('/');
+    }, 100);
   }, []);
 
   /**
@@ -131,6 +143,15 @@ function App() {
               )}
             </main>
           } />
+          
+          {/* Analytics Dashboard - Admin Only */}
+          {isAdminEnabled() && (
+            <Route path="/analytics" element={
+              <main style={{ paddingTop: '4rem' }}>
+                <AnalyticsDashboard isVisible={true} />
+              </main>
+            } />
+          )}
         </Routes>
         <Footer />
       </div>

@@ -113,3 +113,4 @@ migrate_github_account.py
 # History files from VS Code History extension
 .history/
 *.history
+backend/venv/
