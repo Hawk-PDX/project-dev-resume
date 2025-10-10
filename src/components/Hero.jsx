@@ -4,8 +4,6 @@ const Hero = () => {
   return (
     <section 
       id="hero" 
-      role="banner"
-      aria-label="Hero section with portfolio introduction"
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -20,7 +18,6 @@ const Hero = () => {
         backgroundAttachment: 'fixed'
       }}
     >
-      {/* Accessibility: Dark overlay for text contrast */}
       <div 
         style={{
           position: 'absolute',
@@ -31,10 +28,8 @@ const Hero = () => {
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           zIndex: 1
         }}
-        aria-hidden="true"
       />
       
-      {/* Content overlay */}
       <div 
         style={{
           position: 'relative',
@@ -119,7 +114,6 @@ const Hero = () => {
               href="https://github.com/HawkPDX" 
               target="_blank" 
               rel="noopener noreferrer"
-              aria-label="Visit my GitHub profile"
               style={{
                 color: '#ffffff',
                 transition: 'color 0.2s ease, transform 0.2s ease',
@@ -142,7 +136,6 @@ const Hero = () => {
               href="https://linkedin.com/in/hawkpdx" 
               target="_blank" 
               rel="noopener noreferrer"
-              aria-label="Visit my LinkedIn profile"
               style={{
                 color: '#ffffff',
                 transition: 'color 0.2s ease, transform 0.2s ease',

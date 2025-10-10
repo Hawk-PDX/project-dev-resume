@@ -1,10 +1,4 @@
-"""
-Skill calculation service that implements a hybrid approach:
-- Auto-calculates base skill levels from project data
-- Allows manual overrides for professional control
-- Categorizes skills intelligently
-- Provides skill synchronization capabilities
-"""
+# Skills auto-calculation from project data
 
 from app.models import Project, Skill
 from app import db
@@ -13,11 +7,7 @@ import re
 from datetime import datetime, timedelta
 
 class SkillCalculator:
-    """
-    Hybrid skill calculation system that combines project analysis with manual control
-    """
     
-    # Technology categorization mapping
     SKILL_CATEGORIES = {
         'frontend': [
             'react', 'vue', 'vue.js', 'angular', 'javascript', 'typescript', 'js', 'ts',
@@ -56,39 +46,30 @@ class SkillCalculator:
     
     @classmethod
     def categorize_technology(cls, tech_name):
-        """
-        Determine the category of a technology based on its name
-        """
         tech_lower = tech_name.lower().strip()
         
         for category, technologies in cls.SKILL_CATEGORIES.items():
             if tech_lower in technologies:
                 return category
         
-        # Default to tools if no specific category found
         return 'tools'
     
     @classmethod
     def extract_technologies_from_projects(cls):
-        """
-        Extract all unique technologies from project data
-        Returns dict with technology counts and metadata
-        """
         projects = Project.query.all()
         tech_data = {}
         
         for project in projects:
             if project.technologies:
-                # Split technologies and clean them
                 techs = [tech.strip() for tech in project.technologies.split(',')]
                 
                 for tech in techs:
-                    if tech:  # Skip empty strings
+                    if tech:
                         tech_clean = tech.lower().strip()
                         
                         if tech_clean not in tech_data:
                             tech_data[tech_clean] = {
-                                'name': tech,  # Keep original casing
+                                'name': tech,
                                 'count': 0,
                                 'projects': [],
                                 'featured_projects': 0,
@@ -109,14 +90,9 @@ class SkillCalculator:
     
     @classmethod
     def calculate_skill_level(cls, tech_data, max_count):
-        """
-        Calculate skill level based on usage data and other factors
-        Uses a 1-5 scale with intelligent weighting
-        """
         count = tech_data['count']
         featured_bonus = tech_data['featured_projects'] * 0.5
         
-        # Base calculation: logarithmic scale for better distribution
         if count == 0:
             base_level = 1
         elif count == 1:
@@ -126,20 +102,14 @@ class SkillCalculator:
         elif count >= 3:
             base_level = 4
         
-        # Featured project bonus (up to 1 additional point)
         bonus = min(1.0, featured_bonus)
         
-        # Calculate final level
         final_level = min(5, base_level + bonus)
         
         return round(final_level)
     
     @classmethod
     def auto_generate_skills(cls):
-        """
-        Auto-generate skills from project data
-        Returns list of calculated skills
-        """
         tech_data = cls.extract_technologies_from_projects()
         
         if not tech_data:
@@ -148,7 +118,6 @@ class SkillCalculator:
         max_count = max(data['count'] for data in tech_data.values())
         calculated_skills = []
         
-        # Sort by count and category for consistent ordering
         sorted_techs = sorted(
             tech_data.items(),
             key=lambda x: (x[1]['category'], -x[1]['count'], x[0])
@@ -176,21 +145,11 @@ class SkillCalculator:
     
     @classmethod
     def sync_skills_with_projects(cls, preserve_manual_overrides=True):
-        """
-        Synchronize skills with current project data
-        
-        Args:
-            preserve_manual_overrides: If True, keeps manually set skill levels
-        
-        Returns:
-            dict: Summary of sync operation
-        """
         calculated_skills = cls.auto_generate_skills()
         
         if not calculated_skills:
             return {'status': 'no_projects', 'message': 'No projects found to calculate skills from'}
         
-        # Get existing skills
         existing_skills = {skill.name.lower(): skill for skill in Skill.query.all()}
         
         added = 0

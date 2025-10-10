@@ -4,24 +4,16 @@ from app import db
 from app.services.github_service import GitHubService
 import os
 
-# Blueprint for project management endpoints
 projects_bp = Blueprint('projects', __name__)
 
 @projects_bp.route('/', methods=['GET', 'POST'])
 def projects():
-    """
-    Main projects endpoint - handles both GET (list projects) and POST (create project)
-    """
     if request.method == 'POST':
         return add_project()
     return get_projects()
 
 @projects_bp.route('/<int:project_id>', methods=['GET', 'PUT', 'DELETE'])
 def project(project_id):
-    """
-    Individual project endpoint - handles GET (get project), PUT (update project), 
-    and DELETE (remove project) operations for a specific project
-    """
     if request.method == 'GET':
         return get_project(project_id)
     elif request.method == 'PUT':
@@ -30,18 +22,12 @@ def project(project_id):
         return delete_project(project_id)
 
 def add_project():
-    """
-    Create a new project with data from the request body.
-    Requires title field, other fields are optional.
-    """
     try:
         data = request.get_json()
         
-        # Validate that title is provided
         if not data.get('title'):
             return jsonify({'error': 'Title is required'}), 400
         
-        # Create new project instance with provided data
         project_data = {
             'title': data['title'],
             'description': data.get('description', ''),
@@ -53,13 +39,10 @@ def add_project():
             'order': data.get('order', 0)
         }
         
-        # Only include github_account if the column exists in database
         try:
-            # Test if github_account column exists by doing a safe query
             db.session.execute("SELECT github_account FROM project LIMIT 1")
             project_data['github_account'] = data.get('github_account', '')
         except Exception:
-            # Column doesn't exist, skip it
             pass
         
         project = Project(**project_data)
@@ -79,7 +62,6 @@ def add_project():
             'order': project.order
         }
         
-        # Add github_account if it exists in the database
         if hasattr(project, 'github_account'):
             response_data['github_account'] = getattr(project, 'github_account', None)
         
@@ -90,15 +72,10 @@ def add_project():
         return jsonify({'error': str(e)}), 500
 
 def get_projects():
-    """
-    Retrieve all projects ordered by custom order and creation date.
-    Returns sample projects if none exist in the database.
-    """
     try:
         projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
         
         if not projects:
-            # Return sample project data when database is empty
             return jsonify([{
                 'id': 1,
                 'title': 'Full Stack Resume Portfolio',
@@ -136,14 +113,12 @@ def get_projects():
                 'featured': project.featured,
                 'order': project.order
             }
-            # Add github_account if it exists in the database
             if hasattr(project, 'github_account'):
                 project_data['github_account'] = getattr(project, 'github_account', None)
             project_list.append(project_data)
     
         return jsonify(project_list)
     except Exception as e:
-        # Log the error and return a 500 response with details
         print(f"Error in get_projects: {str(e)}")
         import traceback
         traceback.print_exc()
@@ -154,12 +129,7 @@ def get_projects():
 
 @projects_bp.route('/fetch-github', methods=['POST'])
 def fetch_github_project():
-    """
-    Fetch project information from GitHub repository.
-    Accepts a GitHub URL and returns structured project data.
-    """
     try:
-        # Check if request has JSON data
         if not request.is_json:
             return jsonify({'error': 'Request must contain JSON data'}), 400
             
@@ -172,15 +142,12 @@ def fetch_github_project():
         if not github_url or not github_url.strip():
             return jsonify({'error': 'GitHub URL is required'}), 400
         
-        # Validate URL format
         if 'github.com' not in github_url.lower():
             return jsonify({'error': 'Please provide a valid GitHub URL'}), 400
         
-        # Initialize GitHub service with optional token from environment
         github_token = os.getenv('GITHUB_TOKEN')
         github_service = GitHubService(github_token)
         
-        # Fetch project information from GitHub
         project_info = github_service.fetch_repository_info(github_url.strip())
         
         return jsonify(project_info), 200
@@ -191,10 +158,6 @@ def fetch_github_project():
         return jsonify({'error': f'Failed to fetch GitHub data: {str(e)}'}), 500
 
 def get_project(project_id):
-    """
-    Retrieve a specific project by its ID.
-    Returns 404 error if project is not found.
-    """
     project = Project.query.get(project_id)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
