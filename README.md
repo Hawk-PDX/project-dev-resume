@@ -2,54 +2,54 @@
 
 A production-ready portfolio application showcasing modern web development practices, full-stack architecture, and professional deployment strategies. This project demonstrates advanced React patterns, backend API design, and thoughtful user experience implementation.
 
-🌟 **[Live Portfolio](https://rosecitydev.tech)** | 🚀 **Professional Portfolio Website**
+**[Live Portfolio](https://rosecitydev.tech)** | Professional Portfolio Website
 
-## 🎬 Live Demo
+## Live Demo
 
 ![Portfolio Demo](./public/images/dev-portfolio-SR.gif)
 
-*Experience the full interactive portfolio with real-time GitHub integration, dynamic skills calculation, and responsive design in action.*
+Experience the full interactive portfolio with real-time GitHub integration, dynamic skills calculation, and responsive design in action.
 
-## 🎯 Project Highlights
+## Project Highlights
 
 This portfolio goes beyond a simple website—it's a comprehensive full-stack application that demonstrates production-level development skills:
 
 ### Technical Innovation
-- **Intelligent Skills System**: Auto-calculates proficiency levels based on project technologies
-- **Multi-Source GitHub Integration**: Bulk import projects from multiple GitHub accounts
-- **Advanced Loading Strategies**: Smart backend warmup and retry mechanisms for optimal performance
-- **Environment-Aware Configuration**: Seamless development-to-production workflow
-- **Real-Time Data Synchronization**: Live updates across all portfolio components
+- Intelligent Skills System: Auto-calculates proficiency levels based on project technologies
+- Multi-Source GitHub Integration: Bulk import projects from multiple GitHub accounts
+- Advanced Loading Strategies: Smart backend warmup and retry mechanisms for optimal performance
+- Environment-Aware Configuration: Seamless development-to-production workflow
+- Real-Time Data Synchronization: Live updates across all portfolio components
 
 ### Architecture Excellence
-- **Component-Driven Design**: Reusable, testable React components with proper separation of concerns
-- **API-First Approach**: RESTful backend services with comprehensive error handling
-- **Database Abstraction**: SQLAlchemy ORM with migration support for schema evolution
-- **Production Optimization**: Cold start mitigation, caching strategies, and performance monitoring
+- Component-Driven Design: Reusable, testable React components with proper separation of concerns
+- API-First Approach: RESTful backend services with comprehensive error handling
+- Database Abstraction: SQLAlchemy ORM with migration support for schema evolution
+- Production Optimization: Cold start mitigation, caching strategies, and performance monitoring
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 **Frontend Development**
-- **React 19** - Latest features including concurrent rendering and improved hooks
-- **Vite** - Modern build tool for fast development and optimized production bundles  
-- **React Router** - Client-side routing with dynamic navigation
-- **Custom Hooks** - Reusable logic for data fetching, state management, and UI interactions
-- **Responsive CSS** - Mobile-first design with CSS Grid and Flexbox
+- React 19 - Latest features including concurrent rendering and improved hooks
+- Vite - Modern build tool for fast development and optimized production bundles
+- React Router - Client-side routing with dynamic navigation
+- Custom Hooks - Reusable logic for data fetching, state management, and UI interactions
+- Responsive CSS - Mobile-first design with CSS Grid and Flexbox
 
 **Backend Engineering**
-- **Flask** - Lightweight, extensible Python web framework
-- **SQLAlchemy** - Database ORM with relationship modeling and query optimization
-- **PostgreSQL** - Production database with robust data integrity
-- **Flask-CORS** - Cross-origin resource sharing with security considerations
-- **Environment Management** - Configuration-driven deployment strategies
+- Flask - Lightweight, extensible Python web framework
+- SQLAlchemy - Database ORM with relationship modeling and query optimization
+- PostgreSQL - Production database with robust data integrity
+- Flask-CORS - Cross-origin resource sharing with security considerations
+- Environment Management - Configuration-driven deployment strategies
 
 **Development & Deployment**
-- **Jest & React Testing Library** - Comprehensive frontend test coverage
-- **pytest** - Backend unit testing with fixtures and mocking
-- **Render** - Cloud deployment with automatic scaling and SSL
-- **GitHub Actions** - Continuous integration and deployment automation
+- Jest & React Testing Library - Comprehensive frontend test coverage
+- pytest - Backend unit testing with fixtures and mocking
+- Render - Cloud deployment with automatic scaling and SSL
+- GitHub Actions - Continuous integration and deployment automation
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 - Node.js 18+ and npm
@@ -105,7 +105,7 @@ npm run dev
 
 Visit `http://localhost:5173` to see your portfolio in action!
 
-## 🎨 Advanced Features
+## Advanced Features
 
 ### GitHub Integration System
 The portfolio includes sophisticated GitHub integration for streamlined project management:
@@ -148,7 +148,7 @@ The portfolio includes sophisticated GitHub integration for streamlined project 
 - Component-level visibility controls
 - Safe data protection without authentication complexity
 
-## 🏗️ Architecture Deep Dive
+## Architecture Deep Dive
 
 ### Frontend Architecture
 ```
@@ -172,43 +172,43 @@ backend/
 ```
 
 ### Data Flow Pattern
-1. **React Components** trigger user interactions
-2. **Custom Hooks** manage state and API communication
-3. **Service Layer** handles HTTP requests with retry logic
-4. **Flask Routes** process requests and validate data
-5. **SQLAlchemy Models** interact with PostgreSQL database
-6. **Real-time Updates** refresh UI components automatically
+1. React Components trigger user interactions
+2. Custom Hooks manage state and API communication
+3. Service Layer handles HTTP requests with retry logic
+4. Flask Routes process requests and validate data
+5. SQLAlchemy Models interact with PostgreSQL database
+6. Real-time Updates refresh UI components automatically
 
-## 🚀 Deployment Strategy
+## Deployment Strategy
 
 ### Production Environment
-- **Frontend**: Served via static hosting with optimized bundles
-- **Backend**: Python WSGI server with gunicorn
-- **Database**: PostgreSQL with connection pooling
-- **SSL/HTTPS**: Automatic certificate management
-- **CDN**: Asset delivery optimization
+- Frontend: Served via static hosting with optimized bundles
+- Backend: Python WSGI server with gunicorn
+- Database: PostgreSQL with connection pooling
+- SSL/HTTPS: Automatic certificate management
+- CDN: Asset delivery optimization
 
 ### Environment Management
-- **Development**: SQLite database, debug mode enabled
-- **Production**: PostgreSQL, optimized logging, health monitoring
-- **Configuration**: Environment variables for sensitive data
-- **Secrets**: Secure handling of API keys and database credentials
+- Development: SQLite database, debug mode enabled
+- Production: PostgreSQL, optimized logging, health monitoring
+- Configuration: Environment variables for sensitive data
+- Secrets: Secure handling of API keys and database credentials
 
-## 📊 Performance Optimizations
+## Performance Optimizations
 
 ### Frontend Performance
-- **Code Splitting**: Lazy loading of route components
-- **Bundle Optimization**: Tree shaking and minification
-- **Caching Strategy**: Service worker for offline capability
-- **Image Optimization**: Responsive images with lazy loading
+- Code Splitting: Lazy loading of route components
+- Bundle Optimization: Tree shaking and minification
+- Caching Strategy: Service worker for offline capability
+- Image Optimization: Responsive images with lazy loading
 
 ### Backend Performance
-- **Database Queries**: Optimized with proper indexing
-- **API Response Time**: Sub-200ms average response times
-- **Connection Pooling**: Efficient database connection management
-- **Health Monitoring**: Endpoint uptime and performance tracking
+- Database Queries: Optimized with proper indexing
+- API Response Time: Sub-200ms average response times
+- Connection Pooling: Efficient database connection management
+- Health Monitoring: Endpoint uptime and performance tracking
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### Frontend Testing
 ```bash
@@ -230,7 +230,7 @@ pytest -v                 # Verbose output
 pytest tests/test_api.py   # Specific test file
 ```
 
-## 🎯 Customization Guide
+## Customization Guide
 
 ### Personal Branding
 1. Update personal information in `backend/app/routes/resume.py`
@@ -249,7 +249,7 @@ pytest tests/test_api.py   # Specific test file
 - Production: Clean, professional presentation
 - Demo Mode: URL parameter activation for showcasing capabilities
 
-## 📈 What This Demonstrates
+## What This Demonstrates
 
 **Technical Skills**
 - Modern React development with hooks and concurrent features
@@ -269,16 +269,16 @@ pytest tests/test_api.py   # Specific test file
 - User interface design with accessibility considerations
 - Integration challenges with external APIs (GitHub)
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions to this project! Whether you're interested in:
 
-- 🐛 **Bug fixes** - Help identify and resolve issues
-- ✨ **Feature enhancements** - Improve existing functionality  
-- 📚 **Documentation** - Make the project more accessible
-- 🚀 **Performance** - Enhance speed and efficiency
-- 🔒 **Security** - Strengthen the application
-- 🧪 **Testing** - Improve test coverage
+- Bug fixes - Help identify and resolve issues
+- Feature enhancements - Improve existing functionality
+- Documentation - Make the project more accessible
+- Performance - Enhance speed and efficiency
+- Security - Strengthen the application
+- Testing - Improve test coverage
 
 Please read our [Contributing Guidelines](CONTRIBUTING.md) to get started.
 
@@ -291,13 +291,13 @@ Please read our [Contributing Guidelines](CONTRIBUTING.md) to get started.
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🤝 Code of Conduct
+## Code of Conduct
 
-This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+This project adheres to the Contributor Covenant Code of Conduct. By participating, you are expected to uphold this code.
 
 ---
 
