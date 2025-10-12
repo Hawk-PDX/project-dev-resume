@@ -64,6 +64,17 @@ def seed_database():
                     'order': 1
                 },
                 {
+                    'title': 'HuntSafe',
+                    'description': 'A React Native hunting safety app with real-time location sharing and emergency alerts for hunting groups in remote areas.',
+                    'technologies': 'React Native + Expo, Node.js + Express, Socket.IO, PostgreSQL',
+                    'github_url': 'https://github.com/Hawk-PDX/hunting-comm-app',
+                    'github_account': 'Hawk-PDX',
+                    'live_url': '',
+                    'image_url': '',
+                    'featured': True,
+                    'order': 2
+                },
+                {
                     'title': 'PDX Underground',
                     'description': 'Python CLI-based RPG',
                     'technologies': 'Python',
@@ -72,7 +83,7 @@ def seed_database():
                     'live_url': '',
                     'image_url': '',
                     'featured': True,
-                    'order': 2
+                    'order': 3
                 }
             ]
             
