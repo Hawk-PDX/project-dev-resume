@@ -59,11 +59,10 @@ const Projects = forwardRef((props, ref) => {
     index === self.findIndex((p) => p.id === project.id)
   ); // Ensure unique projects
   
-  // Filter and sort featured projects, then take top 6
-  const featuredProjects = uniqueProjects
-    .filter(project => project.featured)
-    .sort((a, b) => b.order - a.order) // Sort by order descending
-    .slice(0, 6); // Take top 6
+  // Sort all projects by order and created date, then take top 8
+  const displayedProjects = uniqueProjects
+    .sort((a, b) => b.order - a.order || new Date(b.created_at) - new Date(a.created_at)) // Sort by order descending, then by created_at descending
+    .slice(0, 8); // Take top 8
   
   // console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
 
