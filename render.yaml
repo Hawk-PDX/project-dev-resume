@@ -47,7 +47,7 @@ services:
     repo: https://github.com/Hawk-PDX/project-dev-resume
     plan: free
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
+    startCommand: cd backend && python run_migrations.py && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
     envVars:
       - key: FLASK_ENV
         value: production
