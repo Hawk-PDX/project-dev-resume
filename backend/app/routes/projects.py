@@ -24,9 +24,30 @@ def project(project_id):
 def add_project():
     try:
         data = request.get_json()
-        
+
         if not data.get('title'):
             return jsonify({'error': 'Title is required'}), 400
+
+        # Basic validation to prevent spam
+        title = data.get('title', '').strip()
+        if len(title) < 3:
+            return jsonify({'error': 'Title must be at least 3 characters long'}), 400
+        if len(title) > 100:
+            return jsonify({'error': 'Title must be less than 100 characters'}), 400
+
+        description = data.get('description', '').strip()
+        if len(description) > 500:
+            return jsonify({'error': 'Description must be less than 500 characters'}), 400
+
+        technologies = data.get('technologies', '').strip()
+        if len(technologies) > 200:
+            return jsonify({'error': 'Technologies must be less than 200 characters'}), 400
+
+        # Check for excessive URLs (potential spam)
+        url_fields = [data.get('github_url', ''), data.get('live_url', ''), data.get('image_url', '')]
+        url_count = sum(1 for url in url_fields if url and url.strip())
+        if url_count > 2:
+            return jsonify({'error': 'Too many URLs provided'}), 400
         
         project_data = {
             'title': data['title'],
@@ -36,7 +57,8 @@ def add_project():
             'live_url': data.get('live_url', ''),
             'image_url': data.get('image_url', ''),
             'featured': data.get('featured', False),
-            'order': data.get('order', 0)
+            'order': data.get('order', 0),
+            'demo': not data.get('is_admin', False)  # Mark as demo if not admin
         }
         
         try:
@@ -59,7 +81,8 @@ def add_project():
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
-            'order': project.order
+            'order': project.order,
+            'demo': getattr(project, 'demo', False)
         }
         
         if hasattr(project, 'github_account'):
@@ -73,7 +96,11 @@ def add_project():
 
 def get_projects():
     try:
-        projects = Project.query.order_by(Project.order.desc(), Project.created_at.desc()).all()
+        # Filter out demo projects in production
+        query = Project.query
+        if os.getenv('FLASK_ENV') == 'production':
+            query = query.filter_by(demo=False)
+        projects = query.order_by(Project.order.desc(), Project.created_at.desc()).all()
         
         if not projects:
             return jsonify([{
@@ -111,7 +138,8 @@ def get_projects():
                 'live_url': project.live_url,
                 'image_url': project.image_url,
                 'featured': project.featured,
-                'order': project.order
+                'order': project.order,
+                'demo': getattr(project, 'demo', False)
             }
             if hasattr(project, 'github_account'):
                 project_data['github_account'] = getattr(project, 'github_account', None)
@@ -173,6 +201,7 @@ def get_project(project_id):
         'image_url': project.image_url,
         'featured': project.featured,
         'order': project.order,
+        'demo': getattr(project, 'demo', False),
         'created_at': project.created_at.isoformat() if project.created_at else None
     })
 
@@ -207,6 +236,8 @@ def update_project(project_id):
             project.featured = data.get('featured', False)
         if 'order' in data:
             project.order = data.get('order', 0)
+        if 'demo' in data and hasattr(project, 'demo'):
+            project.demo = data.get('demo', False)
         
         db.session.commit()
         
@@ -220,7 +251,8 @@ def update_project(project_id):
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
-            'order': project.order
+            'order': project.order,
+            'demo': getattr(project, 'demo', False)
         })
         
     except Exception as e:
@@ -297,8 +329,11 @@ def get_featured_projects():
     Retrieve only featured projects, ordered by custom order.
     Used to showcase highlighted projects on the portfolio.
     """
-    projects = Project.query.filter_by(featured=True).order_by(Project.order.desc()).all()
-    
+    query = Project.query.filter_by(featured=True)
+    if os.getenv('FLASK_ENV') == 'production':
+        query = query.filter_by(demo=False)
+    projects = query.order_by(Project.order.desc()).all()
+
     return jsonify([{
         'id': project.id,
         'title': project.title,
@@ -309,7 +344,8 @@ def get_featured_projects():
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,
-        'order': project.order
+        'order': project.order,
+        'demo': getattr(project, 'demo', False)
     } for project in projects])
 
 @projects_bp.route('/github-accounts', methods=['GET'])

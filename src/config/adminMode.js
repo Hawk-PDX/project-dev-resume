@@ -16,7 +16,7 @@ export const canEditCertificates = () => isAdminMode();
 export const canDeleteCertificates = () => isAdminMode();
 export const canBulkImport = () => isAdminMode();
 export const canAutoCalculateSkills = () => isAdminEnabled();
-export const canAddProjects = () => isAdminEnabled();
+export const canAddProjects = () => true; // Allow all users to add projects
 
 export const getAdminInfo = () => ({
   enabled: isAdminEnabled(),
