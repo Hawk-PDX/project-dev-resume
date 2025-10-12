@@ -12,14 +12,20 @@ import sys
 def seed_database():
     """Seed database with development data"""
     app = create_app()
-    
+
     with app.app_context():
         try:
+            # Check if data already exists to preserve production data
+            existing_projects = Project.query.count()
+            if existing_projects > 0:
+                print(f"Database already has {existing_projects} projects. Skipping seeding to preserve existing data.")
+                return
+
             # Clear existing data (optional - comment out if you want to preserve existing data)
             print("Clearing existing data...")
             try:
                 db.session.query(PersonalInfo).delete()
-                db.session.query(Experience).delete() 
+                db.session.query(Experience).delete()
                 db.session.query(Education).delete()
                 db.session.query(Project).delete()
                 db.session.query(Skill).delete()
