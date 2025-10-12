@@ -5,7 +5,8 @@ This runs database migrations and populates initial data
 """
 
 from app import create_app, db
-from app.models import Project, Skill
+from app.models import Project, Skill, Certificate
+from datetime import date
 from flask_migrate import upgrade
 import os
 
@@ -43,14 +44,14 @@ def add_missing_columns():
         return False
 
 def populate_sample_data():
-    """Add sample projects to the database"""
+    """Add sample projects and certificates to the database"""
     try:
         # Check if we already have projects
         existing_count = Project.query.count()
         if existing_count > 0:
             print(f"Database already has {existing_count} projects, skipping sample data")
             return True
-        
+
         sample_projects = [
             {
                 'title': 'NEO Tracker',
@@ -73,15 +74,30 @@ def populate_sample_data():
                 'order': 2
             }
         ]
-        
+
         for project_data in sample_projects:
             project = Project(**project_data)
             db.session.add(project)
-        
+
+        # Add sample certificate
+        sample_certificate = Certificate(
+            entity='Udemy',
+            course='React Development',
+            topics='React, JavaScript',
+            description='Advanced React development course covering modern React patterns and best practices.',
+            credit_hrs=None,
+            issue_date=date(2024, 1, 15),
+            expiry_date=None,
+            credential_id='XYZ789',
+            credential_url=None,
+            order=1
+        )
+        db.session.add(sample_certificate)
+
         db.session.commit()
-        print(f"✅ Added {len(sample_projects)} sample projects")
+        print(f"✅ Added {len(sample_projects)} sample projects and 1 sample certificate")
         return True
-        
+
     except Exception as e:
         print(f"❌ Failed to add sample data: {e}")
         db.session.rollback()
@@ -106,10 +122,12 @@ def main():
         print("\n4️⃣ Checking final state...")
         project_count = Project.query.count()
         skill_count = Skill.query.count()
-        
+        certificate_count = Certificate.query.count()
+
         print(f"📊 Final database state:")
         print(f"  Projects: {project_count}")
         print(f"  Skills: {skill_count}")
+        print(f"  Certificates: {certificate_count}")
         
         print("\n🎉 Production setup complete!")
 
