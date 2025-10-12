@@ -1,4 +1,4 @@
-"""Add demo column to Project model
+a"""Add demo column to Project model
 
 Revision ID: 905035d34447
 Revises: c5f8d3e9a1b2
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '905035d34447'
-down_revision = 'c5f8d3e9a1b2'
+down_revision = 'b50556a8e2da'
 branch_labels = None
 depends_on = None
 
