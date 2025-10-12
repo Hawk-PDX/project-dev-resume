@@ -20,21 +20,35 @@ export const fallbackProjects = [
         description: 'Resume template for aspiring full-stack software developers',
         technologies: 'JavaScript, React, Python, Flask, PostgreSQL',
         github_url: 'https://github.com/Hawk-PDX/project-dev-resume.git',
+        github_account: 'Hawk-PDX',
         live_url: '',
         image_url: '',
         featured: true,
         order: 1
     },
     {
-        id: 2,
-        title: 'PDX Underground',
-        description: 'Python CLI-based RPG',
-        technologies: 'Python',
-        github_url: 'https://github.com/Hawk-PDX/python_final_project.git',
+        id: 3,
+        title: 'HuntSafe',
+        description: 'A React Native hunting safety app with real-time location sharing and emergency alerts for hunting groups in remote areas.',
+        technologies: 'React Native + Expo, Node.js + Express, Socket.IO, PostgreSQL',
+        github_url: 'https://github.com/Hawk-PDX/hunting-comm-app',
+        github_account: 'Hawk-PDX',
         live_url: '',
         image_url: '',
         featured: true,
         order: 2
+    },
+    {
+        id: 4,
+        title: 'PDX Underground',
+        description: 'Python CLI-based RPG',
+        technologies: 'Python',
+        github_url: 'https://github.com/Hawk-PDX/python_final_project.git',
+        github_account: 'Hawk-PDX',
+        live_url: '',
+        image_url: '',
+        featured: true,
+        order: 3
     }
 ];
 
