@@ -15,11 +15,6 @@ import { initializeWarmup } from './services/warmup';
 import { isAdminEnabled, canAddProjects } from './config/adminMode';
 import analyticsService from './services/analyticsService';
 import './styles.css';
-
-/**
- * Main application component that orchestrates the portfolio layout
- * and manages state for project editing and refresh functionality
- */
 import { useEffect } from 'react';
 
 function App() {
@@ -35,34 +30,25 @@ function App() {
 
   useEffect(() => {
     document.title = 'FS Dev Portfolio';
-    
-    // Initialize backend warmup to reduce cold start delays
+
     initializeWarmup();
-    
-    // Initialize analytics tracking
+
     console.log('🎯 Initializing analytics service...');
-    
-    // Track initial page view
+
     setTimeout(() => {
       analyticsService.trackPageView('/');
     }, 100);
   }, []);
 
-  /**
-   * Handle project addition success - refresh projects list, sync skills, and clear edit mode
-   */
   const handleProjectAdded = async () => {
-    // Refresh the main Projects component (featured projects on homepage)
     if (projectsRefreshRef.current && projectsRefreshRef.current.refresh) {
       projectsRefreshRef.current.refresh();
     }
-    
-    // Refresh the AllProjects component (all projects page)
+
     if (allProjectsRefreshRef.current && allProjectsRefreshRef.current.refresh) {
       allProjectsRefreshRef.current.refresh();
     }
-    
-    // Auto-sync skills when projects change
+
     try {
       await skillsService.calculateSkills({ preserve_manual_overrides: true });
       if (skillsRefreshRef.current && skillsRefreshRef.current.refresh) {
@@ -71,30 +57,19 @@ function App() {
     } catch (error) {
       console.error('Error syncing skills:', error);
     }
-    
-    setEditProject(null); // Clear edit mode after successful operation
+
+    setEditProject(null);
   };
 
-  /**
-   * Handle project edit initiation - set the project to edit and scroll to form
-   * @param {Object} project - The project object to edit
-   */
   const handleEditProject = (project) => {
     setEditProject(project);
-    // Scroll to the AddProject section for better UX
     document.getElementById('add-project')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  /**
-   * Handle canceling project edit - clear the edit state
-   */
   const handleCancelEdit = () => {
     setEditProject(null);
   };
 
-  /**
-   * Handle skills refresh - used by SkillsAdmin component
-   */
   const handleSkillsUpdated = () => {
     if (skillsRefreshRef.current && skillsRefreshRef.current.refresh) {
       skillsRefreshRef.current.refresh();

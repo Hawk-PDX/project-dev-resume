@@ -206,10 +206,6 @@ def get_project(project_id):
     })
 
 def update_project(project_id):
-    """
-    Update an existing project with new data from the request body.
-    Only updates fields that are provided in the request.
-    """
     try:
         project = Project.query.get(project_id)
         if not project:
@@ -260,10 +256,6 @@ def update_project(project_id):
         return jsonify({'error': str(e)}), 500
 
 def delete_project(project_id):
-    """
-    Delete a project by its ID.
-    Returns success message or error if project not found.
-    """
     try:
         project = Project.query.get(project_id)
         if not project:
@@ -280,10 +272,6 @@ def delete_project(project_id):
 
 @projects_bp.route('/fetch-github-repos', methods=['POST'])
 def fetch_github_repositories():
-    """
-    Fetch repositories from multiple GitHub accounts.
-    Accepts a list of GitHub usernames and returns their public repositories.
-    """
     try:
         if not request.is_json:
             return jsonify({'error': 'Request must contain JSON data'}), 400
@@ -325,10 +313,6 @@ def fetch_github_repositories():
 
 @projects_bp.route('/featured', methods=['GET'])
 def get_featured_projects():
-    """
-    Retrieve only featured projects, ordered by custom order.
-    Used to showcase highlighted projects on the portfolio.
-    """
     query = Project.query.filter_by(featured=True)
     if os.getenv('FLASK_ENV') == 'production':
         query = query.filter_by(demo=False)
@@ -350,10 +334,6 @@ def get_featured_projects():
 
 @projects_bp.route('/github-accounts', methods=['GET'])
 def get_github_accounts():
-    """
-    Get all unique GitHub accounts from projects.
-    Returns list of GitHub usernames/organizations used in projects.
-    """
     try:
         # Get distinct GitHub accounts from projects
         accounts_query = db.session.query(Project.github_account).distinct().filter(
@@ -386,10 +366,6 @@ def get_github_accounts():
 
 @projects_bp.route('/populate-sample', methods=['POST'])
 def populate_sample_projects():
-    """
-    Populate database with sample projects including proper GitHub accounts.
-    Only works if no projects exist.
-    """
     try:
         # Check if projects already exist
         existing_count = Project.query.count()
