@@ -64,7 +64,7 @@ const Projects = forwardRef((props, ref) => {
     .sort((a, b) => b.order - a.order || new Date(b.created_at) - new Date(a.created_at)) // Sort by order descending, then by created_at descending
     .slice(0, 8); // Take top 8
   
-  // console.log("Featured Projects data:", JSON.stringify(featuredProjects, null, 2)); // Log the featured projects data
+  // console.log("Displayed Projects data:", JSON.stringify(displayedProjects, null, 2)); // Log the displayed projects data
 
   if (loading) {
     return (
@@ -133,7 +133,7 @@ const Projects = forwardRef((props, ref) => {
         )}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-          {featuredProjects.map((project) => (
+          {displayedProjects.map((project) => (
             <div key={project.id} className="card" style={{ overflow: 'hidden', position: 'relative' }}>
               {/* Featured Badge */}
               <div style={{
