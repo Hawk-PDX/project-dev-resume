@@ -54,24 +54,34 @@ def populate_sample_data():
 
         sample_projects = [
             {
-                'title': 'NEO Tracker',
-                'description': 'A Next.js application for tracking Near Earth Objects using NASA\'s API with real-time data visualization and hazard detection.',
-                'technologies': 'Next.js, TypeScript, Tailwind CSS, NASA API, Render.com, React Icons',
-                'github_url': 'https://github.com/Hawk-PDX/neo-tracker',
+                'title': 'FS Software Developer Portfolio',
+                'description': 'Resume template for aspiring full-stack software developers',
+                'technologies': 'JavaScript, React, Python, Flask, PostgreSQL',
+                'github_url': 'https://github.com/Hawk-PDX/project-dev-resume.git',
                 'github_account': 'Hawk-PDX',
-                'live_url': 'https://neo-tracker.onrender.com',
+                'live_url': '',
                 'featured': True,
                 'order': 1
             },
             {
-                'title': 'Full-Stack Portfolio Application',
-                'description': 'Modern portfolio website built with React frontend and Flask backend, featuring project management, skill tracking, and GitHub integration.',
-                'technologies': 'React, Flask, Python, PostgreSQL, Docker, Render.com, GitHub API',
-                'github_url': 'https://github.com/Hawk-PDX/project-dev-resume',
+                'title': 'HuntSafe',
+                'description': 'A React Native hunting safety app with real-time location sharing and emergency alerts for hunting groups in remote areas.',
+                'technologies': 'React Native + Expo, Node.js + Express, Socket.IO, PostgreSQL',
+                'github_url': 'https://github.com/Hawk-PDX/hunting-comm-app',
                 'github_account': 'Hawk-PDX',
-                'live_url': 'https://portfolio-frontend-zhcd.onrender.com',
+                'live_url': '',
                 'featured': True,
                 'order': 2
+            },
+            {
+                'title': 'PDX Underground',
+                'description': 'Python CLI-based RPG',
+                'technologies': 'Python',
+                'github_url': 'https://github.com/Hawk-PDX/python_final_project.git',
+                'github_account': 'Hawk-PDX',
+                'live_url': '',
+                'featured': True,
+                'order': 3
             }
         ]
 
