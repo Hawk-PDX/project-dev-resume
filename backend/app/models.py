@@ -48,6 +48,7 @@ class Project(db.Model):
     image_url = db.Column(db.String(200))
     featured = db.Column(db.Boolean, default=False)
     order = db.Column(db.Integer, default=0)
+    demo = db.Column(db.Boolean, default=False)  # True for demo/user-added projects
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Skill(db.Model):

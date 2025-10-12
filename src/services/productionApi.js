@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isAdminEnabled } from '../config/adminMode';
 
 const getApiBaseUrl = () => {
   if (window.location.hostname !== 'localhost') {
@@ -71,7 +72,8 @@ export const projectsService = {
   },
 
   addProject: async (data) => {
-    const response = await api.post('/projects/', data);
+    const requestData = { ...data, is_admin: isAdminEnabled() };
+    const response = await api.post('/projects/', requestData);
     return response;
   },
 

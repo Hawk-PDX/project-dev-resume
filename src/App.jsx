@@ -12,7 +12,7 @@ import Footer from './components/Footer';
 import AnalyticsDashboard from './components/Analytics/AnalyticsDashboard';
 import { skillsService } from './services/productionApi';
 import { initializeWarmup } from './services/warmup';
-import { isAdminEnabled } from './config/adminMode';
+import { isAdminEnabled, canAddProjects } from './config/adminMode';
 import analyticsService from './services/analyticsService';
 import './styles.css';
 
@@ -32,8 +32,6 @@ function App() {
   
   // State to track which project is being edited (if any)
   const [editProject, setEditProject] = useState(null);
-  // State to control analytics dashboard visibility
-  const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
 
   useEffect(() => {
     document.title = 'FS Dev Portfolio';
@@ -114,10 +112,10 @@ function App() {
               <Hero />
               <About />
               <Projects ref={projectsRefreshRef} onEditProject={handleEditProject} />
-              {isAdminEnabled() && (
+              {canAddProjects() && (
                 <div id="add-project">
-                  <AddProject 
-                    onProjectAdded={handleProjectAdded} 
+                  <AddProject
+                    onProjectAdded={handleProjectAdded}
                     editProject={editProject}
                     onCancelEdit={handleCancelEdit}
                   />
@@ -132,10 +130,10 @@ function App() {
           <Route path="/projects" element={
             <main style={{ paddingTop: '4rem' }}>
               <AllProjects ref={allProjectsRefreshRef} onEditProject={handleEditProject} />
-              {isAdminEnabled() && (
+              {canAddProjects() && (
                 <div id="add-project">
-                  <AddProject 
-                    onProjectAdded={handleProjectAdded} 
+                  <AddProject
+                    onProjectAdded={handleProjectAdded}
                     editProject={editProject}
                     onCancelEdit={handleCancelEdit}
                   />
