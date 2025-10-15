@@ -18,7 +18,9 @@ def seed_database():
             # Check if data already exists to preserve production data
             existing_projects = Project.query.count()
             if existing_projects > 0:
-                print(f"Database already has {existing_projects} projects. Skipping seeding to preserve existing data.")
+                print(f"Database already has {existing_projects} projects. Updating missing or incorrect data instead of clearing.")
+                # Update existing projects to ensure HuntSafe is featured
+                update_existing_projects()
                 return
 
             # Clear existing data (optional - comment out if you want to preserve existing data)
@@ -193,6 +195,36 @@ def seed_database():
             print(f"❌ Error seeding database: {e}")
             db.session.rollback()
             sys.exit(1)
+
+def update_existing_projects():
+    """Update existing projects to ensure HuntSafe is featured and properly ordered"""
+    try:
+        # Find HuntSafe project
+        huntsafe = Project.query.filter_by(title='HuntSafe').first()
+        if huntsafe:
+            huntsafe.featured = True
+            huntsafe.order = 2
+            print("✅ Updated HuntSafe to be featured")
+        else:
+            print("⚠️ HuntSafe project not found, will be created on next full seed")
+
+        # Ensure other projects have correct featured status
+        portfolio = Project.query.filter_by(title='FS Software Developer Portfolio').first()
+        if portfolio:
+            portfolio.featured = True
+            portfolio.order = 1
+
+        pdx = Project.query.filter_by(title='PDX Underground').first()
+        if pdx:
+            pdx.featured = True
+            pdx.order = 3
+
+        db.session.commit()
+        print("✅ Existing projects updated successfully")
+
+    except Exception as e:
+        print(f"❌ Error updating existing projects: {e}")
+        db.session.rollback()
 
 if __name__ == '__main__':
     seed_database()
