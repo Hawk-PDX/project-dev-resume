@@ -33,25 +33,68 @@ export const useProjects = () => {
     const [error, setError] = useState(null);
     const [isWarmingUp, setIsWarmingUp] = useState(false);
 
-    const fetchData = async (retryCount = 0) => {
+    const CACHE_KEY = 'projects_cache';
+    const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+
+    const getCachedData = () => {
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const { data: cachedData, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_DURATION) {
+                    return cachedData;
+                }
+            }
+        } catch (e) {
+            console.warn('Error reading projects cache:', e);
+        }
+        return null;
+    };
+
+    const setCachedData = (data) => {
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.warn('Error writing projects cache:', e);
+        }
+    };
+
+    const fetchData = async (retryCount = 0, useCache = true) => {
         const maxRetries = 2;
         setLoading(true);
-        
+
+        // Try cache first if enabled
+        if (useCache && retryCount === 0) {
+            const cachedData = getCachedData();
+            if (cachedData) {
+                setData(cachedData);
+                setLoading(false);
+                setError(null);
+                // Still fetch fresh data in background
+                fetchData(0, false);
+                return;
+            }
+        }
+
         // Show warming up message after first retry
         if (retryCount > 0) {
             setIsWarmingUp(true);
         }
-        
+
         try {
             const response = await projectsService.getProjects();
             setData(response.data);
+            setCachedData(response.data); // Cache the fresh data
             setError(null);
             setIsWarmingUp(false);
         } catch (err) {
-            
+
             if (retryCount < maxRetries && (err.code === 'NETWORK_ERROR' || err.response?.status >= 500)) {
                 setTimeout(() => {
-                    fetchData(retryCount + 1);
+                    fetchData(retryCount + 1, false);
                 }, 3000);
                 return;
             }
@@ -72,7 +115,7 @@ export const useProjects = () => {
         fetchData();
     }, []);
 
-    return { data, loading, error, refresh: () => fetchData(0), isWarmingUp };
+    return { data, loading, error, refresh: () => fetchData(0, false), isWarmingUp };
 };
 
 export const useSkills = () => {
@@ -84,7 +127,7 @@ export const useSkills = () => {
     const fetchData = async (retryCount = 0) => {
         const maxRetries = 2;
         setLoading(true);
-        
+
         if (retryCount > 0) {
             setIsWarmingUp(true);
         }
@@ -95,14 +138,14 @@ export const useSkills = () => {
             setError(null);
             setIsWarmingUp(false);
         } catch (err) {
-            
+
             if (retryCount < maxRetries && (err.code === 'NETWORK_ERROR' || err.response?.status >= 500)) {
                 setTimeout(() => {
                     fetchData(retryCount + 1);
                 }, 3000);
                 return;
             }
-            
+
             setData(fallbackSkills);
             setError(err.message);
             setIsWarmingUp(false);
@@ -151,29 +194,72 @@ export const useCertificates = () => {
     const [error, setError] = useState(null);
     const [isWarmingUp, setIsWarmingUp] = useState(false);
 
-    const fetchData = async (retryCount = 0) => {
+    const CACHE_KEY = 'certificates_cache';
+    const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+
+    const getCachedData = () => {
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const { data: cachedData, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_DURATION) {
+                    return cachedData;
+                }
+            }
+        } catch (e) {
+            console.warn('Error reading certificates cache:', e);
+        }
+        return null;
+    };
+
+    const setCachedData = (data) => {
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.warn('Error writing certificates cache:', e);
+        }
+    };
+
+    const fetchData = async (retryCount = 0, useCache = true) => {
         const maxRetries = 2;
         setLoading(true);
-        
+
+        // Try cache first if enabled
+        if (useCache && retryCount === 0) {
+            const cachedData = getCachedData();
+            if (cachedData) {
+                setData(cachedData);
+                setLoading(false);
+                setError(null);
+                // Still fetch fresh data in background
+                fetchData(0, false);
+                return;
+            }
+        }
+
         // Show warming up message after first retry
         if (retryCount > 0) {
             setIsWarmingUp(true);
         }
-        
+
         try {
             const response = await resumeService.getCertificates();
             setData(response.data);
+            setCachedData(response.data); // Cache the fresh data
             setError(null);
             setIsWarmingUp(false);
         } catch (err) {
-            
+
             if (retryCount < maxRetries && (err.code === 'NETWORK_ERROR' || err.response?.status >= 500)) {
                 setTimeout(() => {
-                    fetchData(retryCount + 1);
+                    fetchData(retryCount + 1, false);
                 }, 3000);
                 return;
             }
-            
+
             setData(fallbackCertificates);
             setError(err.message);
             setIsWarmingUp(false);
@@ -191,5 +277,5 @@ export const useCertificates = () => {
         fetchData();
     }, []);
 
-    return { data, loading, error, refresh: () => fetchData(0), isWarmingUp };
+    return { data, loading, error, refresh: () => fetchData(0, false), isWarmingUp };
 };

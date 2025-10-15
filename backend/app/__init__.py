@@ -60,15 +60,13 @@ def create_app():
             "https://www.rosecitydev.tech"
         ]
         
-        # EMERGENCY CORS FIX - Completely open CORS to restore functionality
-        CORS(app, 
-             origins="*",
+        # CORS Configuration for local development and production
+        CORS(app,
+             origins=origins,
              methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
              allow_headers=["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
              expose_headers=["Content-Type", "Authorization"],
-             supports_credentials=False,
-             send_wildcard=True,
-             vary_header=False
+             supports_credentials=False
         )
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
@@ -83,6 +81,7 @@ def create_app():
             "version": "2.0",
             "endpoints": {
                 "health": "/api/health",
+                "warmup": "/api/warmup",
                 "resume": "/api/resume",
                 "projects": "/api/projects",
                 "skills": "/api/skills",
@@ -92,6 +91,34 @@ def create_app():
                 "analytics_namespace": "/analytics"
             }
         })
+
+    # Warmup endpoint to reduce cold starts
+    @app.route('/api/warmup')
+    def warmup():
+        """
+        Warmup endpoint that pre-loads common queries to reduce cold start delays.
+        Returns a simple success response after warming up the database connection.
+        """
+        try:
+            # Test database connection and preload common data
+            db.session.execute(text('SELECT 1'))
+
+            # Preload common queries to warm up the database
+            from app.models import Certificate, Project
+            Certificate.query.limit(5).all()
+            Project.query.filter_by(featured=True).limit(5).all()
+
+            return jsonify({
+                "status": "warmed_up",
+                "message": "Server warmed up successfully",
+                "timestamp": datetime.utcnow().isoformat()
+            })
+        except Exception as e:
+            app.logger.error(f"Warmup failed: {e}")
+            return jsonify({
+                "status": "warmup_failed",
+                "error": str(e)
+            }), 500
 
     # Health check endpoint
     @app.route('/api/health')
