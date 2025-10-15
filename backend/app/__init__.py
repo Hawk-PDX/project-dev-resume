@@ -99,6 +99,7 @@ def create_app():
         Warmup endpoint that pre-loads common queries to reduce cold start delays.
         Returns a simple success response after warming up the database connection.
         """
+        from datetime import datetime
         try:
             # Test database connection and preload common data
             db.session.execute(text('SELECT 1'))
