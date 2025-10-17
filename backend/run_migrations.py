@@ -37,6 +37,21 @@ def add_missing_columns():
             print("✅ Added github_account column")
         else:
             print("✅ github_account column already exists")
+        
+        # Check if demo column exists
+        result = db.session.execute("""
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name='project' AND column_name='demo'
+        """)
+        
+        if result.fetchone() is None:
+            print("Adding demo column to project table...")
+            db.session.execute("ALTER TABLE project ADD COLUMN demo BOOLEAN DEFAULT FALSE")
+            db.session.commit()
+            print("✅ Added demo column")
+        else:
+            print("✅ demo column already exists")
             
         return True
     except Exception as e:
