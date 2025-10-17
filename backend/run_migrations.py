@@ -91,7 +91,7 @@ def populate_sample_data():
 
         # Add sample certificate
         sample_certificate = Certificate(
-            entity='Udemy',
+            entity='Scrimba',
             course='React Development',
             topics='React, JavaScript',
             description='Advanced React development course covering modern React patterns and best practices.',

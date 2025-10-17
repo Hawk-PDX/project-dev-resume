@@ -88,7 +88,7 @@ export const fallbackSkills = {
 export const fallbackCertificates = [
     {
         id: 1,
-        entity: 'Udemy',
+        entity: 'Scrimba',
         course: 'React Development',
         topics: 'React, JavaScript',
         description: 'Advanced React development course covering modern React patterns and best practices.',

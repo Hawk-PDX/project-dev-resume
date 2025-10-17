@@ -132,7 +132,7 @@ def seed_database():
             print("Seeding certificates...")
             try:
                 certificate = Certificate(
-                    entity='Udemy',
+                    entity='Scrimba',
                     course='React Development',
                     topics='React JavaScript',
                     description='Advanced React development course',
