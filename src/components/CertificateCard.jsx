@@ -4,6 +4,24 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 const CertificateCard = ({ certificate, onEdit, onDelete }) => {
     return (
         <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            {certificate.photo_url && (
+                <div style={{ marginBottom: '1rem' }}>
+                    <img 
+                        src={certificate.photo_url} 
+                        alt={`${certificate.course} certificate`}
+                        style={{
+                            width: '100%',
+                            height: '200px',
+                            objectFit: 'cover',
+                            borderRadius: '0.375rem',
+                            border: '1px solid #e5e7eb'
+                        }}
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                        }}
+                    />
+                </div>
+            )}
             <div style={{ marginBottom: '1rem' }}>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>
                     {certificate.course}

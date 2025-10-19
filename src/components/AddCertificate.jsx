@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { resumeService } from '../services/productionApi';
 import { validateCertificateForm } from '../utils/validation';
+import { canEditCertificates } from '../config/adminMode';
 
 const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
     issue_date: '',
     expiry_date: '',
     credential_id: '',
-    credential_url: ''
+    credential_url: '',
+    photo_url: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +32,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
         issue_date: editCertificate.issue_date || '',
         expiry_date: editCertificate.expiry_date || '',
         credential_id: editCertificate.credential_id || '',
-        credential_url: editCertificate.credential_url || ''
+        credential_url: editCertificate.credential_url || '',
+        photo_url: editCertificate.photo_url || ''
       });
       setIsExpanded(true);
     } else if (!editCertificate && isExpanded) {
@@ -49,7 +52,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       issue_date: '',
       expiry_date: '',
       credential_id: '',
-      credential_url: ''
+      credential_url: '',
+      photo_url: ''
     });
     setErrors({});
     setIsExpanded(false);
@@ -105,7 +109,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
           issue_date: '',
           expiry_date: '',
           credential_id: '',
-          credential_url: ''
+          credential_url: '',
+          photo_url: ''
         });
         setIsExpanded(false);
         onCertificateAdded();
@@ -298,6 +303,28 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
               }}
             />
           </div>
+
+          {canEditCertificates() && (
+            <div style={{ gridColumn: '1 / -1' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Certificate Photo URL
+              </label>
+              <input
+                type="url"
+                name="photo_url"
+                value={formData.photo_url}
+                onChange={handleChange}
+                placeholder="https://example.com/certificate-photo.jpg"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.375rem',
+                  fontSize: '1rem'
+                }}
+              />
+            </div>
+          )}
 
           <div style={{ gridColumn: '1 / -1' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>

@@ -161,6 +161,7 @@ def get_certificates():
                 expiry_date=expiry_date,
                 credential_id=data.get('credential_id'),
                 credential_url=data.get('credential_url'),
+                photo_url=data.get('photo_url'),
                 order=data.get('order', 0)
             )
 
@@ -177,7 +178,8 @@ def get_certificates():
                 'issue_date': new_certificate.issue_date.isoformat() if new_certificate.issue_date else None,
                 'expiry_date': new_certificate.expiry_date.isoformat() if new_certificate.expiry_date else None,
                 'credential_id': new_certificate.credential_id,
-                'credential_url': new_certificate.credential_url
+                'credential_url': new_certificate.credential_url,
+                'photo_url': new_certificate.photo_url
             }), 201
 
         except Exception as e:
@@ -199,7 +201,8 @@ def get_certificates():
             'issue_date': '2023-06-01',
             'expiry_date': None,
             'credential_id': 'ABC123456',
-            'credential_url': 'https://coursera.org/verify/ABC123456'
+            'credential_url': 'https://coursera.org/verify/ABC123456',
+            'photo_url': None
         }])
 
     return jsonify([{
@@ -212,7 +215,8 @@ def get_certificates():
         'issue_date': cert.issue_date.isoformat() if cert.issue_date else None,
         'expiry_date': cert.expiry_date.isoformat() if cert.expiry_date else None,
         'credential_id': cert.credential_id,
-        'credential_url': cert.credential_url
+        'credential_url': cert.credential_url,
+        'photo_url': cert.photo_url
     } for cert in certificates])
 
 @resume_bp.route('/certificates/<int:certificate_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -239,6 +243,7 @@ def certificate_by_id(certificate_id):
             'expiry_date': certificate.expiry_date.isoformat() if certificate.expiry_date else None,
             'credential_id': certificate.credential_id,
             'credential_url': certificate.credential_url,
+            'photo_url': certificate.photo_url,
             'order': certificate.order
         })
     
@@ -267,6 +272,8 @@ def certificate_by_id(certificate_id):
                 certificate.credential_id = data.get('credential_id')
             if 'credential_url' in data:
                 certificate.credential_url = data.get('credential_url')
+            if 'photo_url' in data:
+                certificate.photo_url = data.get('photo_url')
             if 'order' in data:
                 certificate.order = data.get('order', 0)
             
@@ -295,6 +302,7 @@ def certificate_by_id(certificate_id):
                 'expiry_date': certificate.expiry_date.isoformat() if certificate.expiry_date else None,
                 'credential_id': certificate.credential_id,
                 'credential_url': certificate.credential_url,
+                'photo_url': certificate.photo_url,
                 'order': certificate.order
             })
         

@@ -52,6 +52,21 @@ def add_missing_columns():
             print("✅ Added demo column")
         else:
             print("✅ demo column already exists")
+        
+        # Check if photo_url column exists in certificate table
+        result = db.session.execute("""
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name='certificate' AND column_name='photo_url'
+        """)
+        
+        if result.fetchone() is None:
+            print("Adding photo_url column to certificate table...")
+            db.session.execute("ALTER TABLE certificate ADD COLUMN photo_url VARCHAR(500)")
+            db.session.commit()
+            print("✅ Added photo_url column")
+        else:
+            print("✅ photo_url column already exists")
             
         return True
     except Exception as e:
@@ -115,6 +130,7 @@ def populate_sample_data():
             expiry_date=None,
             credential_id='XYZ789',
             credential_url=None,
+            photo_url=None,
             order=1
         )
         db.session.add(sample_certificate)

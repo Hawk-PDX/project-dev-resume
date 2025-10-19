@@ -74,6 +74,7 @@ class Certificate(db.Model):
     expiry_date = db.Column(db.Date)
     credential_id = db.Column(db.String(100))
     credential_url = db.Column(db.String(200))
+    photo_url = db.Column(db.String(500))  # URL/path to certificate photo
     order = db.Column(db.Integer, default=0)
 
 # Analytics Models for Real-Time Tracking
