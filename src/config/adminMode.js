@@ -1,41 +1,72 @@
 // Admin Mode Configuration
-// SECURE: Domain-based admin access + demo mode
+// SECURE: Password-based admin authentication
 
-// SECURE ADMIN DOMAINS - Only these domains get admin access
-const ADMIN_DOMAINS = ['localhost', '127.0.0.1', 'rosecitydev.tech'];
-const ADMIN_PORTS = [3000, 5173, 5174, 5175]; // Local dev ports
+// Admin session management
+const ADMIN_SESSION_KEY = 'portfolio_admin_session';
+const SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
-const isSecureAdminDomain = () => {
-  const hostname = window.location.hostname;
-  const port = parseInt(window.location.port) || (window.location.protocol === 'https:' ? 443 : 80);
+// Check if user is authenticated as admin
+const isAdminAuthenticated = () => {
+  try {
+    const session = localStorage.getItem(ADMIN_SESSION_KEY);
+    if (!session) return false;
+    
+    const { timestamp, authenticated } = JSON.parse(session);
+    const now = Date.now();
+    
+    // Check if session is expired
+    if (now - timestamp > SESSION_DURATION) {
+      localStorage.removeItem(ADMIN_SESSION_KEY);
+      return false;
+    }
+    
+    return authenticated === true;
+  } catch {
+    localStorage.removeItem(ADMIN_SESSION_KEY);
+    return false;
+  }
+};
+
+// Admin authentication function
+export const authenticateAdmin = () => {
+  const password = prompt('Enter admin password:');
   
-  // Check if domain is in admin list
-  const isDomainAllowed = ADMIN_DOMAINS.some(domain => 
-    hostname === domain || hostname.endsWith(domain)
-  );
+  // Simple password check - you can make this more secure
+  const correctPassword = 'rosecity2024!';
   
-  // For localhost, also check port
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return isDomainAllowed && (ADMIN_PORTS.includes(port) || port === 80 || port === 443);
+  if (password === correctPassword) {
+    const session = {
+      timestamp: Date.now(),
+      authenticated: true
+    };
+    localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(session));
+    return true;
   }
   
-  return isDomainAllowed;
+  alert('Incorrect password!');
+  return false;
+};
+
+// Logout function
+export const logoutAdmin = () => {
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+  window.location.reload();
 };
 
 const isDemoMode = () => new URLSearchParams(window.location.search).get('demo') === 'true';
 const isDevEnvironment = () => window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-export const isAdminEnabled = () => isSecureAdminDomain() || isDemoMode();
-export const isDemo = () => isDemoMode() && !isSecureAdminDomain();
+export const isAdminEnabled = () => isAdminAuthenticated() || isDemoMode();
+export const isDemo = () => isDemoMode() && !isAdminAuthenticated();
 
-// Admin permissions (only for secure domains)
-export const canEditProjects = () => isSecureAdminDomain();
-export const canDeleteProjects = () => isSecureAdminDomain();
-export const canEditSkills = () => isSecureAdminDomain();
-export const canDeleteSkills = () => isSecureAdminDomain();
-export const canEditCertificates = () => isSecureAdminDomain();
-export const canDeleteCertificates = () => isSecureAdminDomain();
-export const canBulkImport = () => isSecureAdminDomain();
+// Admin permissions (only for authenticated admins)
+export const canEditProjects = () => isAdminAuthenticated();
+export const canDeleteProjects = () => isAdminAuthenticated();
+export const canEditSkills = () => isAdminAuthenticated();
+export const canDeleteSkills = () => isAdminAuthenticated();
+export const canEditCertificates = () => isAdminAuthenticated();
+export const canDeleteCertificates = () => isAdminAuthenticated();
+export const canBulkImport = () => isAdminAuthenticated();
 
 // Limited permissions (demo users can do these)
 export const canAddSkills = () => isAdminEnabled();
@@ -47,5 +78,6 @@ export const getAdminInfo = () => ({
   isDemo: isDemo(),
   isDev: isDevEnvironment(),
   domain: window.location.hostname,
-  method: isSecureAdminDomain() ? 'Secure Domain' : isDemoMode() ? 'Demo Mode' : 'Public Access'
+  authenticated: isAdminAuthenticated(),
+  method: isAdminAuthenticated() ? 'Password Authenticated' : isDemoMode() ? 'Demo Mode' : 'Public Access'
 });
