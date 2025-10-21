@@ -9,6 +9,7 @@ import AddProject from './components/AddProject';
 import Skills from './components/Skills';
 import Certificates from './components/Certificates';
 import Footer from './components/Footer';
+import AdminLogin from './components/AdminLogin';
 import AnalyticsDashboard from './components/Analytics/AnalyticsDashboard';
 import { skillsService } from './services/productionApi';
 import { initializeWarmup } from './services/warmup';
@@ -127,6 +128,7 @@ function App() {
           )}
         </Routes>
         <Footer />
+        <AdminLogin />
       </div>
     </Router>
   );
