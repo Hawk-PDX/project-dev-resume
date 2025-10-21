@@ -96,11 +96,24 @@ def add_project():
 
 def get_projects():
     try:
-        # Filter out demo projects in production
-        query = Project.query
-        if os.getenv('FLASK_ENV') == 'production':
-            query = query.filter_by(demo=False)
-        projects = query.order_by(Project.order.desc(), Project.created_at.desc()).all()
+        # Add timeout protection and better error handling
+        import signal
+        
+        def timeout_handler(signum, frame):
+            raise TimeoutError("Database query timed out")
+        
+        # Set 10 second timeout for database queries
+        signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(10)
+        
+        try:
+            # Filter out demo projects in production
+            query = Project.query
+            if os.getenv('FLASK_ENV') == 'production':
+                query = query.filter_by(demo=False)
+            projects = query.order_by(Project.order.desc(), Project.created_at.desc()).all()
+        finally:
+            signal.alarm(0)  # Disable alarm
         
         if not projects:
             return jsonify([{
@@ -146,13 +159,31 @@ def get_projects():
             project_list.append(project_data)
     
         return jsonify(project_list)
-    except Exception as e:
+    except (Exception, TimeoutError) as e:
         print(f"Error in get_projects: {str(e)}")
         import traceback
         traceback.print_exc()
+        
+        # If database query times out or fails, return sample data
+        if isinstance(e, TimeoutError) or "database" in str(e).lower():
+            print("Database issue detected, returning sample data")
+            return jsonify([{
+                'id': 1,
+                'title': 'NEO Tracker',
+                'description': 'A Next.js application for tracking Near Earth Objects using NASA\'s API with real-time data visualization.',
+                'technologies': 'Next.js, TypeScript, Tailwind CSS, NASA API',
+                'github_url': 'https://github.com/Hawk-PDX/neo-tracker',
+                'github_account': 'Hawk-PDX',
+                'live_url': 'https://neo-tracker.onrender.com',
+                'featured': True,
+                'order': 1,
+                'demo': False
+            }])
+        
         return jsonify({
             'error': 'Failed to retrieve projects',
-            'details': str(e)
+            'details': str(e),
+            'type': type(e).__name__
         }), 500
 
 @projects_bp.route('/fetch-github', methods=['POST'])

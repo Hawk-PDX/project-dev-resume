@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -66,8 +66,20 @@ def create_app():
              methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
              allow_headers=["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
              expose_headers=["Content-Type", "Authorization"],
-             supports_credentials=False
+             supports_credentials=False,
+             send_wildcard=False,
+             vary_header=True
         )
+        
+        # Add explicit OPTIONS handler for all routes
+        @app.before_request
+        def handle_preflight():
+            if request.method == "OPTIONS":
+                response = jsonify({})
+                response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
+                response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,Accept,Origin,X-Requested-With")
+                response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
+                return response
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
         app.logger.error(f"Error initializing CORS: {e}")
