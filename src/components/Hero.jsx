@@ -111,7 +111,7 @@ const Hero = () => {
             flexWrap: 'wrap'
           }}>
             <a 
-              href="https://github.com/HawkPDX" 
+              href="https://github.com/Hawk-PDX" 
               target="_blank" 
               rel="noopener noreferrer"
               style={{
