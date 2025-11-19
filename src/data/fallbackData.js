@@ -8,7 +8,7 @@ export const fallbackPersonalInfo = {
     phone: null, // No phone number in deployment
     location: 'Portland, Oregon',
     linkedin: 'https://linkedin.com/in/hawkpdx',
-    github: 'https://github.com/HawkPDX',
+    github: 'https://github.com/Hawk-PDX',
     website: 'https://rosecitydev.tech',
     summary: 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
 };
