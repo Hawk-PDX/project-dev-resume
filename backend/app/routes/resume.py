@@ -25,7 +25,7 @@ def get_personal_info():
                 'linkedin': 'https://linkedin.com/in/hawkpdx',
                 'github': 'https://github.com/Hawk-PDX',
                 'website': 'https://rosecitydev.tech',
-                'summary': 'Passionate full-stack developer with expertise in React, Python, and Flask. Experienced in building scalable web applications and passionate about clean code and user experience.'
+                'summary': 'Full-stack developer who enjoys building web apps with React and Python. I like figuring out complex problems and turning them into simple, working solutions.'
             })
     
         return jsonify({
@@ -68,9 +68,9 @@ def get_experience():
                 'start_date': '2023-01-01',
                 'end_date': None,
                 'current': True,
-                'description': 'Developed and maintained full-stack web applications using React and Flask. Led the migration of legacy systems to modern cloud infrastructure.',
+                'description': 'Built and maintained full-stack web applications using React and Flask. Worked on migrating older systems to cloud infrastructure.',
                 'technologies': 'React, Python, Flask, PostgreSQL, Docker',
-                'achievements': '• Increased application performance by 40%\n• Led team of 3 developers\n• Implemented CI/CD pipeline reducing deployment time by 60%'
+                'achievements': '• Improved application performance by 40%\n• Worked with a team of 3 developers\n• Set up CI/CD pipeline that cut deployment time by 60%'
             }])
     
         return jsonify([{

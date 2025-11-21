@@ -12,7 +12,7 @@ const Experience = () => {
         <div className="text-center mb-8">
           <h2 className="section-title">Experience</h2>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
-            My professional journey and key achievements
+            Where I've worked and what I've built
           </p>
         </div>
 
