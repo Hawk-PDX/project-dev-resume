@@ -88,7 +88,7 @@ const Projects = forwardRef((props, ref) => {
         <div className="text-center mb-8">
           <h2 className="section-title">Featured Projects</h2>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto 1.5rem auto' }}>
-            Here are some of my recent projects that showcase my skills and experience:
+            Some recent work I've been building:
           </p>
           
           {/* View All Projects Link */}

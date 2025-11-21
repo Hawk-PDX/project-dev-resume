@@ -15,7 +15,7 @@ const About = () => {
         
         <div style={{ maxWidth: '48rem', margin: '0 auto', textAlign: 'center' }}>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', lineHeight: '1.75' }}>
-            {personalInfo?.summary || 'Full-stack developer passionate about creating innovative solutions while streamlining production, cutting back on "clutter" and maintaining a responsive, well-rounded, product.'}
+            {personalInfo?.summary || 'I build full-stack web applications and enjoy the challenge of turning ideas into working products. Always learning, always tinkering.'}
           </p>
           
           <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', textAlign: 'left' }} className="auto-grid">

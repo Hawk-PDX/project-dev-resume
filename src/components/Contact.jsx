@@ -59,7 +59,7 @@ const Contact = () => {
         <div className="text-center mb-8">
           <h2 className="section-title">Get In Touch</h2>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
-            Have a project in mind or want to collaborate? Let's connect!
+            Got questions or want to work together? Drop me a message.
           </p>
         </div>
 

@@ -174,7 +174,7 @@ const Skills = forwardRef((props, ref) => {
         <div className="text-center mb-8">
           <h2 className="section-title">Technical Skills</h2>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-light)', maxWidth: '42rem', margin: '0 auto' }}>
-            Technologies and tools I work with - with smart auto-calculation from projects
+            The tech stack I'm working with these days
           </p>
           
           {/* Admin Toggle Button */}
