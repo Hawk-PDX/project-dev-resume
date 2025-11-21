@@ -39,7 +39,7 @@ More than just a static site - built this as a full-stack app to actually showca
 **Backend**
 - Flask (Python)
 - SQLAlchemy ORM
-- PostgreSQL in production, SQLite for local dev
+- PostgreSQL for all environments
 - Flask-CORS for API access
 
 **Testing & Deployment**
@@ -53,6 +53,7 @@ More than just a static site - built this as a full-stack app to actually showca
 **What you'll need:**
 - Node.js 18+ and npm
 - Python 3.10+ and pip
+- PostgreSQL 13+ (see `backend/POSTGRESQL_SETUP.md` for install help)
 - Git
 
 ### Setup
@@ -82,18 +83,28 @@ VITE_API_BASE_URL=http://localhost:5001/api
 Create `backend/.env`:
 ```bash
 FLASK_DEBUG=True
-DATABASE_URL=sqlite:///portfolio_local.db
+DATABASE_URL=postgresql://localhost/portfolio_dev
 SECRET_KEY=your-development-secret-key
 GITHUB_TOKEN=your_github_personal_access_token  # Optional but recommended
 ```
 
-**3. Database Initialization**
+**3. PostgreSQL Setup**
+
+Make sure PostgreSQL is installed and running, then create your dev database:
 ```bash
-cd backend
-python -c "from run import app, db; app.app_context().push(); db.create_all(); print('Database initialized successfully!')"
+psql postgres -c "CREATE DATABASE portfolio_dev;"
 ```
 
-**4. Development Servers**
+See `backend/POSTGRESQL_SETUP.md` for detailed setup instructions and troubleshooting.
+
+**4. Database Initialization**
+```bash
+cd backend
+python run_migrations.py
+python seed_db.py
+```
+
+**5. Development Servers**
 ```bash
 # Terminal 1: Backend API (http://localhost:5001)
 cd backend && source venv/bin/activate && python run.py
@@ -179,8 +190,8 @@ backend/
 - SSL/HTTPS: Auto-managed certificates
 
 **Environments:**
-- Dev: SQLite, debug mode on
-- Prod: PostgreSQL, optimized logging, health checks
+- Dev: PostgreSQL (local), debug mode on
+- Prod: PostgreSQL (hosted), optimized logging, health checks
 - Config: Environment variables for secrets
 
 ## Performance
