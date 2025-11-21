@@ -22,47 +22,48 @@ def run_migrations():
 
 def add_missing_columns():
     """Manually add missing columns if migrations fail"""
+    from sqlalchemy import text
     try:
         # Check if github_account column exists (PostgreSQL version)
-        result = db.session.execute("""
+        result = db.session.execute(text("""
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name='project' AND column_name='github_account'
-        """)
+        """))
         
         if result.fetchone() is None:
             print("Adding github_account column to project table...")
-            db.session.execute("ALTER TABLE project ADD COLUMN github_account VARCHAR(100)")
+            db.session.execute(text("ALTER TABLE project ADD COLUMN github_account VARCHAR(100)"))
             db.session.commit()
             print("✅ Added github_account column")
         else:
             print("✅ github_account column already exists")
         
         # Check if demo column exists
-        result = db.session.execute("""
+        result = db.session.execute(text("""
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name='project' AND column_name='demo'
-        """)
+        """))
         
         if result.fetchone() is None:
             print("Adding demo column to project table...")
-            db.session.execute("ALTER TABLE project ADD COLUMN demo BOOLEAN DEFAULT FALSE")
+            db.session.execute(text("ALTER TABLE project ADD COLUMN demo BOOLEAN DEFAULT FALSE"))
             db.session.commit()
             print("✅ Added demo column")
         else:
             print("✅ demo column already exists")
         
         # Check if photo_url column exists in certificate table
-        result = db.session.execute("""
+        result = db.session.execute(text("""
             SELECT column_name 
             FROM information_schema.columns 
             WHERE table_name='certificate' AND column_name='photo_url'
-        """)
+        """))
         
         if result.fetchone() is None:
             print("Adding photo_url column to certificate table...")
-            db.session.execute("ALTER TABLE certificate ADD COLUMN photo_url VARCHAR(500)")
+            db.session.execute(text("ALTER TABLE certificate ADD COLUMN photo_url VARCHAR(500)"))
             db.session.commit()
             print("✅ Added photo_url column")
         else:

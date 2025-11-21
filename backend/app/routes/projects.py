@@ -95,38 +95,26 @@ def add_project():
         return jsonify({'error': str(e)}), 500
 
 def get_projects():
-    # EMERGENCY FIX: Bypass database entirely for now
-    print("WARNING: Using emergency bypass for projects endpoint")
-    
-    # Return working sample data immediately
-    sample_projects = [
-        {
-            'id': 1,
-            'title': 'NEO Tracker',
-            'description': 'A Next.js application for tracking Near Earth Objects using NASA\'s API with real-time data visualization.',
-            'technologies': 'Next.js, TypeScript, Tailwind CSS, NASA API, Render.com',
-            'github_url': 'https://github.com/Hawk-PDX/neo-tracker',
-            'github_account': 'Hawk-PDX',
-            'live_url': 'https://neo-tracker.onrender.com',
-            'featured': True,
-            'order': 1,
-            'demo': False
-        },
-        {
-            'id': 2,
-            'title': 'Portfolio Resume Application',
-            'description': 'Full-stack portfolio website built with React frontend and Flask backend, featuring project management and skill tracking.',
-            'technologies': 'React, Flask, Python, PostgreSQL, Docker, Render.com',
-            'github_url': 'https://github.com/Hawk-PDX/project-dev-resume',
-            'github_account': 'Hawk-PDX',
-            'live_url': 'https://portfolio-frontend-zhcd.onrender.com',
-            'featured': True,
-            'order': 2,
-            'demo': False
-        }
-    ]
-    
-    return jsonify(sample_projects)
+    try:
+        projects = Project.query.order_by(Project.order.desc()).all()
+        
+        return jsonify([{
+            'id': project.id,
+            'title': project.title,
+            'description': project.description,
+            'technologies': project.technologies,
+            'github_url': project.github_url,
+            'github_account': getattr(project, 'github_account', None),
+            'live_url': project.live_url,
+            'image_url': project.image_url,
+            'featured': project.featured,
+            'order': project.order,
+            'demo': getattr(project, 'demo', False),
+            'created_at': project.created_at.isoformat() if project.created_at else None
+        } for project in projects])
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @projects_bp.route('/fetch-github', methods=['POST'])
 def fetch_github_project():
@@ -286,10 +274,15 @@ def fetch_github_repositories():
 
 @projects_bp.route('/featured', methods=['GET'])
 def get_featured_projects():
-    query = Project.query.filter_by(featured=True)
-    if os.getenv('FLASK_ENV') == 'production':
-        query = query.filter_by(demo=False)
-    projects = query.order_by(Project.order.desc()).all()
+    try:
+        query = Project.query.filter_by(featured=True)
+        # Only filter by demo if the column exists
+        if os.getenv('FLASK_ENV') == 'production' and hasattr(Project, 'demo'):
+            query = query.filter_by(demo=False)
+        projects = query.order_by(Project.order.desc()).all()
+    except Exception as e:
+        # If query fails, return empty list with error
+        return jsonify({'error': str(e), 'projects': []}), 500
 
     return jsonify([{
         'id': project.id,
