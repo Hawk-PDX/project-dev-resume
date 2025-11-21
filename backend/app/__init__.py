@@ -80,6 +80,17 @@ def create_app():
                 response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,Accept,Origin,X-Requested-With")
                 response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
                 return response
+        
+        # Add CORS headers to all responses, including errors
+        @app.after_request
+        def add_cors_headers(response):
+            origin = request.headers.get('Origin')
+            if origin in origins:
+                response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Accept,Origin,X-Requested-With'
+            response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+            return response
+        
         app.logger.info(f"CORS initialized with origins: {origins}")
     except Exception as e:
         app.logger.error(f"Error initializing CORS: {e}")
