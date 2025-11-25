@@ -53,11 +53,9 @@ export const logoutAdmin = () => {
   window.location.reload();
 };
 
-const isDemoMode = () => new URLSearchParams(window.location.search).get('demo') === 'true';
 const isDevEnvironment = () => window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-export const isAdminEnabled = () => isAdminAuthenticated() || isDemoMode();
-export const isDemo = () => isDemoMode() && !isAdminAuthenticated();
+export const isAdminEnabled = () => isAdminAuthenticated();
 
 // Admin permissions (only for authenticated admins)
 export const canEditProjects = () => isAdminAuthenticated();
@@ -75,9 +73,8 @@ export const canAddProjects = () => true; // Allow all users to add projects
 
 export const getAdminInfo = () => ({
   enabled: isAdminEnabled(),
-  isDemo: isDemo(),
   isDev: isDevEnvironment(),
   domain: window.location.hostname,
   authenticated: isAdminAuthenticated(),
-  method: isAdminAuthenticated() ? 'Password Authenticated' : isDemoMode() ? 'Demo Mode' : 'Public Access'
+  method: isAdminAuthenticated() ? 'Password Authenticated' : 'Public Access'
 });

@@ -57,8 +57,7 @@ def add_project():
             'live_url': data.get('live_url', ''),
             'image_url': data.get('image_url', ''),
             'featured': data.get('featured', False),
-            'order': data.get('order', 0),
-            'demo': not data.get('is_admin', False)  # Mark as demo if not admin
+            'order': data.get('order', 0)
         }
         
         try:
@@ -81,8 +80,7 @@ def add_project():
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
-            'order': project.order,
-            'demo': getattr(project, 'demo', False)
+            'order': project.order
         }
         
         if hasattr(project, 'github_account'):
@@ -109,7 +107,6 @@ def get_projects():
             'image_url': project.image_url,
             'featured': project.featured,
             'order': project.order,
-            'demo': getattr(project, 'demo', False),
             'created_at': project.created_at.isoformat() if project.created_at else None
         } for project in projects])
         
@@ -162,7 +159,6 @@ def get_project(project_id):
         'image_url': project.image_url,
         'featured': project.featured,
         'order': project.order,
-        'demo': getattr(project, 'demo', False),
         'created_at': project.created_at.isoformat() if project.created_at else None
     })
 
@@ -193,8 +189,6 @@ def update_project(project_id):
             project.featured = data.get('featured', False)
         if 'order' in data:
             project.order = data.get('order', 0)
-        if 'demo' in data and hasattr(project, 'demo'):
-            project.demo = data.get('demo', False)
         
         db.session.commit()
         
@@ -208,8 +202,7 @@ def update_project(project_id):
             'live_url': project.live_url,
             'image_url': project.image_url,
             'featured': project.featured,
-            'order': project.order,
-            'demo': getattr(project, 'demo', False)
+            'order': project.order
         })
         
     except Exception as e:
@@ -275,11 +268,7 @@ def fetch_github_repositories():
 @projects_bp.route('/featured', methods=['GET'])
 def get_featured_projects():
     try:
-        query = Project.query.filter_by(featured=True)
-        # Only filter by demo if the column exists
-        if os.getenv('FLASK_ENV') == 'production' and hasattr(Project, 'demo'):
-            query = query.filter_by(demo=False)
-        projects = query.order_by(Project.order.desc()).all()
+        projects = Project.query.filter_by(featured=True).order_by(Project.order.desc()).all()
     except Exception as e:
         # If query fails, return empty list with error
         return jsonify({'error': str(e), 'projects': []}), 500
@@ -294,8 +283,7 @@ def get_featured_projects():
         'live_url': project.live_url,
         'image_url': project.image_url,
         'featured': project.featured,
-        'order': project.order,
-        'demo': getattr(project, 'demo', False)
+        'order': project.order
     } for project in projects])
 
 @projects_bp.route('/github-accounts', methods=['GET'])

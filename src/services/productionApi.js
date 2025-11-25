@@ -72,8 +72,7 @@ export const projectsService = {
   },
 
   addProject: async (data) => {
-    const requestData = { ...data, is_admin: isAdminEnabled() };
-    const response = await api.post('/projects/', requestData);
+    const response = await api.post('/projects/', data);
     return response;
   },
 

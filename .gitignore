@@ -59,6 +59,13 @@ env/
 coverage/
 *.cover
 .hypothesis/
+test_backend_connection.py
+test_backend_connectivity.py
+test_backend.py
+test_backend.sh
+test_fixes.sh
+test_render_deployment.sh
+production_readiness_test.sh
 
 # Database files
 *.db
@@ -102,6 +109,9 @@ ai-conversation*
 .anthropic/
 .openai/
 .copilot/
+setupTests.js
+DEPLOYMENT_FIX.md
+REMOVE_DEMO_MIGRATION.md
 
 # AI debugging/testing files created during development
 test_github_account.py
