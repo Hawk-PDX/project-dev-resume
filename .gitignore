@@ -127,3 +127,4 @@ migrate_github_account.py
 .history/
 *.history
 backend/venv/
+__tests__
