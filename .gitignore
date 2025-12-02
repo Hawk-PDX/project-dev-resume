@@ -66,6 +66,9 @@ test_backend.sh
 test_fixes.sh
 test_render_deployment.sh
 production_readiness_test.sh
+backend/tests/
+src/utils/__tests__/
+backend/test_no_demo.py
 
 # Database files
 *.db
