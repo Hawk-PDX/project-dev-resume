@@ -67,7 +67,7 @@ const Hero = () => {
             padding: '0 1rem',
             textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)'
           }}>
-            Building web apps with React and Python. I like solving problems and writing clean code.
+            Full-stack engineer building production-ready applications with React, Python, and Flask. I turn ideas into scalable, well-architected web solutions.
           </p>
           
           <div style={{
