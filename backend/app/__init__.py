@@ -55,6 +55,10 @@ def create_app():
             "http://localhost:5001",
             "http://localhost:5173",
             "http://localhost:5175",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+            "http://127.0.0.1:5175",
+            "http://127.0.0.1:5001",
             "https://portfolio-frontend-zhcd.onrender.com",
             "https://rosecitydev.tech",
             "https://www.rosecitydev.tech"
@@ -62,7 +66,7 @@ def create_app():
         
         # CORS Configuration for local development and production
         CORS(app,
-             origins=origins,
+             resources={r"/api/*": {"origins": origins}},
              methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
              allow_headers=["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
              expose_headers=["Content-Type", "Authorization"],
@@ -76,19 +80,25 @@ def create_app():
         def handle_preflight():
             if request.method == "OPTIONS":
                 response = jsonify({})
-                response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
-                response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,Accept,Origin,X-Requested-With")
-                response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
-                return response
+                origin = request.headers.get('Origin', '')
+                # Check if origin is in allowed list or is localhost
+                if origin in origins or origin.startswith('http://localhost:') or origin.startswith('http://127.0.0.1:'):
+                    response.headers['Access-Control-Allow-Origin'] = origin
+                response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Accept,Origin,X-Requested-With'
+                response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+                response.headers['Access-Control-Max-Age'] = '3600'
+                return response, 200
         
         # Add CORS headers to all responses, including errors
         @app.after_request
         def add_cors_headers(response):
-            origin = request.headers.get('Origin')
-            if origin in origins:
+            origin = request.headers.get('Origin', '')
+            # Allow any localhost origin for development, or specific origins for production
+            if origin in origins or origin.startswith('http://localhost:') or origin.startswith('http://127.0.0.1:'):
                 response.headers['Access-Control-Allow-Origin'] = origin
-            response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Accept,Origin,X-Requested-With'
-            response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+                response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization,Accept,Origin,X-Requested-With'
+                response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+                response.headers['Access-Control-Max-Age'] = '3600'
             return response
         
         app.logger.info(f"CORS initialized with origins: {origins}")
