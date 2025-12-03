@@ -156,21 +156,7 @@ const AllProjects = forwardRef((props, ref) => {
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative'
-                }}>
-                  {/* Optional: Add overlay for better text visibility */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
-                    padding: '1rem',
-                    display: 'flex',
-                    alignItems: 'flex-end'
-                  }}>
-                    <span style={{ color: 'white', fontSize: '1.25rem', fontWeight: 'bold' }}>{project.title}</span>
-                  </div>
-                </div>
+                }} />
               ) : (
                 <div style={{ height: '12rem', background: 'linear-gradient(135deg, var(--primary-color), #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <span style={{ color: 'white', fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center', padding: '1rem' }}>{project.title}</span>
