@@ -36,10 +36,7 @@ body {
   min-height: 100vh;
 }
 
-nav a{
-  color: #646cff;
-  background-color: rgba(255, 255, 255, 0.87);
-}
+/* Navbar styles moved to Navbar.jsx component for better control */
 
 
 h1 {

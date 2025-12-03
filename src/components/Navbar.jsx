@@ -43,10 +43,10 @@ const Navbar = () => {
       left: 0,
       right: 0,
       zIndex: 50,
-      backgroundColor: 'rgba(255, 255, 255, 0.98)',
+      backgroundColor: 'rgba(15, 23, 42, 0.95)',
       backdropFilter: 'blur(10px)',
-      borderBottom: '2px solid #d1d5db',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      borderBottom: '2px solid #334155',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
       padding: isMobile ? '1rem 0.5rem' : '1.5rem 1rem',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +60,8 @@ const Navbar = () => {
             <span style={{
               fontSize: '1.5rem',
               fontWeight: 'bold',
-              color: 'var(--primary-color)'
+              color: '#60a5fa',
+              textShadow: '0 0 20px rgba(96, 165, 250, 0.5)'
             }}>Portfolio</span>
           </div>
           
@@ -76,7 +77,7 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     style={{
-                      color: '#1d4ed8',
+                      color: '#93c5fd',
                       fontWeight: '500',
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
@@ -85,10 +86,12 @@ const Navbar = () => {
                       border: '1px solid transparent'
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#eff6ff';
-                      e.target.style.borderColor = '#bfdbfe';
+                      e.target.style.color = '#ffffff';
+                      e.target.style.backgroundColor = 'rgba(59, 130, 246, 0.5)';
+                      e.target.style.borderColor = '#60a5fa';
                     }}
                     onMouseLeave={(e) => {
+                      e.target.style.color = '#93c5fd';
                       e.target.style.backgroundColor = 'transparent';
                       e.target.style.borderColor = 'transparent';
                     }}
@@ -101,7 +104,7 @@ const Navbar = () => {
                     key={item.name}
                     to={item.href}
                     style={{
-                      color: '#1d4ed8',
+                      color: '#93c5fd',
                       fontWeight: '500',
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
@@ -110,10 +113,12 @@ const Navbar = () => {
                       border: '1px solid transparent'
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#eff6ff';
-                      e.target.style.borderColor = '#bfdbfe';
+                      e.target.style.color = '#ffffff';
+                      e.target.style.backgroundColor = 'rgba(59, 130, 246, 0.5)';
+                      e.target.style.borderColor = '#60a5fa';
                     }}
                     onMouseLeave={(e) => {
+                      e.target.style.color = '#93c5fd';
                       e.target.style.backgroundColor = 'transparent';
                       e.target.style.borderColor = 'transparent';
                     }}
@@ -130,12 +135,12 @@ const Navbar = () => {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                  color: 'var(--text-color)',
+                  color: '#93c5fd',
                   padding: '0.5rem',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
-                  fontSize: '1.25rem'
+                  fontSize: '1.5rem'
                 }}
               >
                 {isOpen ? '✕' : '☰'}
@@ -147,9 +152,9 @@ const Navbar = () => {
 
       {isOpen && isMobile && (
         <div style={{
-          backgroundColor: '#ffffff',
-          borderBottom: '2px solid #d1d5db',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          backgroundColor: 'rgba(15, 23, 42, 0.98)',
+          borderBottom: '2px solid #334155',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
         }}>
           <div style={{ padding: '1rem' }}>
             {navigation.map((item) => (
@@ -157,7 +162,7 @@ const Navbar = () => {
                 key={item.name}
                 href={item.href}
                 style={{
-                  color: '#1d4ed8',
+                  color: '#93c5fd',
                   fontWeight: '500',
                   display: 'block',
                   padding: '0.75rem 1rem',
@@ -168,10 +173,12 @@ const Navbar = () => {
                 }}
                 onClick={handleLinkClick}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#eff6ff';
-                  e.target.style.borderColor = '#bfdbfe';
+                  e.target.style.color = '#ffffff';
+                  e.target.style.backgroundColor = 'rgba(59, 130, 246, 0.5)';
+                  e.target.style.borderColor = '#60a5fa';
                 }}
                 onMouseLeave={(e) => {
+                  e.target.style.color = '#93c5fd';
                   e.target.style.backgroundColor = 'transparent';
                   e.target.style.borderColor = 'transparent';
                 }}
@@ -184,7 +191,7 @@ const Navbar = () => {
                 key={item.name}
                 to={item.href}
                 style={{
-                  color: '#1d4ed8',
+                  color: '#93c5fd',
                   fontWeight: '500',
                   display: 'block',
                   padding: '0.75rem 1rem',
@@ -195,10 +202,12 @@ const Navbar = () => {
                 }}
                 onClick={handleLinkClick}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#eff6ff';
-                  e.target.style.borderColor = '#bfdbfe';
+                  e.target.style.color = '#ffffff';
+                  e.target.style.backgroundColor = 'rgba(59, 130, 246, 0.5)';
+                  e.target.style.borderColor = '#60a5fa';
                 }}
                 onMouseLeave={(e) => {
+                  e.target.style.color = '#93c5fd';
                   e.target.style.backgroundColor = 'transparent';
                   e.target.style.borderColor = 'transparent';
                 }}
