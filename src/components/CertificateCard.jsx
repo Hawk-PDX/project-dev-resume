@@ -1,5 +1,6 @@
 import React from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { canEditCertificates, canDeleteCertificates } from '../config/adminMode';
 
 const CertificateCard = ({ certificate, onEdit, onDelete }) => {
     return (
@@ -86,45 +87,51 @@ const CertificateCard = ({ certificate, onEdit, onDelete }) => {
                 </div>
                 
                 {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', borderTop: '1px solid #e5e7eb', paddingTop: '1rem' }}>
-                    <button
-                        onClick={() => onEdit && onEdit(certificate)}
-                        className="icon-button"
-                        style={{
-                            padding: '0.5rem',
-                            border: '1px solid #d1d5db',
-                            backgroundColor: 'transparent',
-                            color: 'var(--text-color)',
-                            borderRadius: '0.375rem',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                        title="Edit Certificate"
-                    >
-                        <PencilIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                    
-                    <button
-                        onClick={() => onDelete && onDelete(certificate)}
-                        className="icon-button"
-                        style={{
-                            padding: '0.5rem',
-                            border: '1px solid #fecaca',
-                            backgroundColor: '#fef2f2',
-                            color: '#dc2626',
-                            borderRadius: '0.375rem',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                        title="Delete Certificate"
-                    >
-                        <TrashIcon style={{ height: '1rem', width: '1rem' }} />
-                    </button>
-                </div>
+                {(canEditCertificates() || canDeleteCertificates()) && (
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', borderTop: '1px solid #e5e7eb', paddingTop: '1rem' }}>
+                        {canEditCertificates() && (
+                            <button
+                                onClick={() => onEdit && onEdit(certificate)}
+                                className="icon-button"
+                                style={{
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    backgroundColor: 'transparent',
+                                    color: 'var(--text-color)',
+                                    borderRadius: '0.375rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Edit Certificate"
+                            >
+                                <PencilIcon style={{ height: '1rem', width: '1rem' }} />
+                            </button>
+                        )}
+                        
+                        {canDeleteCertificates() && (
+                            <button
+                                onClick={() => onDelete && onDelete(certificate)}
+                                className="icon-button"
+                                style={{
+                                    padding: '0.5rem',
+                                    border: '1px solid #fecaca',
+                                    backgroundColor: '#fef2f2',
+                                    color: '#dc2626',
+                                    borderRadius: '0.375rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                title="Delete Certificate"
+                            >
+                                <TrashIcon style={{ height: '1rem', width: '1rem' }} />
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

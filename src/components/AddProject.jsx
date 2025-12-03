@@ -19,6 +19,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
   const [message, setMessage] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [showBulkImport, setShowBulkImport] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (editProject) {
@@ -145,12 +146,57 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
     }
   };
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div className="card" style={{ maxWidth: '700px', margin: '2rem auto' }}>
-      <div style={{ padding: '2rem' }}>
-        <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-          {editProject ? 'Edit Project' : 'Add New Project'}
-        </h3>
+    <div className="card" style={{ maxWidth: '700px', margin: '2rem auto', overflow: 'hidden' }}>
+      {/* Collapsible Header */}
+      <div 
+        onClick={toggleExpanded}
+        style={{
+          padding: '1.25rem 2rem',
+          background: 'linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%)',
+          color: 'white',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          userSelect: 'none',
+          transition: 'all 0.3s ease',
+          borderBottom: isExpanded ? '2px solid rgba(255,255,255,0.2)' : 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, #2563eb 0%, var(--primary-color) 100%)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%)';
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>{editProject ? '✏️' : '➕'}</span>
+          <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
+            {editProject ? 'Edit Project' : 'Add New Project'}
+          </h3>
+        </div>
+        <div style={{
+          fontSize: '1.5rem',
+          transition: 'transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+        }}>
+          ▼
+        </div>
+      </div>
+
+      {/* Form Content */}
+      <div style={{
+        maxHeight: isExpanded ? '2000px' : '0',
+        opacity: isExpanded ? 1 : 0,
+        overflow: 'hidden',
+        transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+      }}>
+        <div style={{ padding: '2rem' }}>
 
         {/* Mode Selection */}
         {!editProject && (
@@ -536,6 +582,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
             </div>
           </form>
         )}
+        </div>
       </div>
       
       {/* Bulk Import Modal */}
