@@ -43,9 +43,10 @@ const Navbar = () => {
       left: 0,
       right: 0,
       zIndex: 50,
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      backgroundColor: 'rgba(255, 255, 255, 0.98)',
       backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid var(--border-color)',
+      borderBottom: '2px solid #d1d5db',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
       padding: isMobile ? '1rem 0.5rem' : '1.5rem 1rem',
     }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,14 +76,22 @@ const Navbar = () => {
                     key={item.name}
                     href={item.href}
                     style={{
-                      color: 'var(--primary-color)',
+                      color: '#1d4ed8',
+                      fontWeight: '500',
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
                       textDecoration: 'none',
-                      transition: 'color 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      border: '1px solid transparent'
                     }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#eff6ff';
+                      e.target.style.borderColor = '#bfdbfe';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.borderColor = 'transparent';
+                    }}
                   >
                     {item.name}
                   </a>
@@ -92,14 +101,22 @@ const Navbar = () => {
                     key={item.name}
                     to={item.href}
                     style={{
-                      color: 'var(--primary-color)',
+                      color: '#1d4ed8',
+                      fontWeight: '500',
                       padding: '0.5rem 1rem',
                       borderRadius: '0.375rem',
                       textDecoration: 'none',
-                      transition: 'color 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      border: '1px solid transparent'
                     }}
-                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
-                    onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#eff6ff';
+                      e.target.style.borderColor = '#bfdbfe';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'transparent';
+                      e.target.style.borderColor = 'transparent';
+                    }}
                   >
                     {item.name}
                   </Link>
@@ -130,8 +147,9 @@ const Navbar = () => {
 
       {isOpen && isMobile && (
         <div style={{
-          backgroundColor: 'var(--background-color)',
-          borderBottom: '1px solid var(--border-color)'
+          backgroundColor: '#ffffff',
+          borderBottom: '2px solid #d1d5db',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
         }}>
           <div style={{ padding: '1rem' }}>
             {navigation.map((item) => (
@@ -139,15 +157,24 @@ const Navbar = () => {
                 key={item.name}
                 href={item.href}
                 style={{
-                  color: 'var(--primary-color)',
+                  color: '#1d4ed8',
+                  fontWeight: '500',
                   display: 'block',
                   padding: '0.75rem 1rem',
                   textDecoration: 'none',
-                  transition: 'color 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  borderRadius: '0.375rem',
+                  border: '1px solid transparent'
                 }}
                 onClick={handleLinkClick}
-                onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
-                onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#eff6ff';
+                  e.target.style.borderColor = '#bfdbfe';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.borderColor = 'transparent';
+                }}
               >
                 {item.name}
               </a>
@@ -157,15 +184,24 @@ const Navbar = () => {
                 key={item.name}
                 to={item.href}
                 style={{
-                  color: 'var(--primary-color)',
+                  color: '#1d4ed8',
+                  fontWeight: '500',
                   display: 'block',
                   padding: '0.75rem 1rem',
                   textDecoration: 'none',
-                  transition: 'color 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  borderRadius: '0.375rem',
+                  border: '1px solid transparent'
                 }}
                 onClick={handleLinkClick}
-                onMouseEnter={(e) => e.target.style.color = 'var(--accent-color)'}
-                onMouseLeave={(e) => e.target.style.color = 'var(--primary-color)'}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#eff6ff';
+                  e.target.style.borderColor = '#bfdbfe';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.borderColor = 'transparent';
+                }}
               >
                 {item.name}
               </Link>
