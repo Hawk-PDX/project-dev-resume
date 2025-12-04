@@ -6,12 +6,50 @@ from datetime import datetime
 # Blueprint for resume-related endpoints
 resume_bp = Blueprint('resume', __name__)
 
-@resume_bp.route('/personal', methods=['GET'])
+@resume_bp.route('/personal', methods=['GET', 'PUT'])
 def get_personal_info():
     """
     Get personal information including name, contact details, and professional summary.
     Returns default data if no database entries exist.
+    PUT: Update personal information.
     """
+    if request.method == 'PUT':
+        data = request.get_json()
+        try:
+            personal_info = PersonalInfo.query.first()
+            if not personal_info:
+                return jsonify({'error': 'No personal info found to update'}), 404
+            
+            # Update fields if provided
+            if 'name' in data:
+                personal_info.name = data['name']
+            if 'title' in data:
+                personal_info.title = data['title']
+            if 'email' in data:
+                personal_info.email = data['email']
+            if 'phone' in data:
+                personal_info.phone = data['phone']
+            if 'location' in data:
+                personal_info.location = data['location']
+            if 'linkedin' in data:
+                personal_info.linkedin = data['linkedin']
+            if 'github' in data:
+                personal_info.github = data['github']
+            if 'website' in data:
+                personal_info.website = data['website']
+            if 'summary' in data:
+                personal_info.summary = data['summary']
+            
+            db.session.commit()
+            
+            return jsonify({
+                'message': 'Personal info updated successfully',
+                'github': personal_info.github
+            })
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Failed to update personal info', 'details': str(e)}), 500
+    
     try:
         personal_info = PersonalInfo.query.first()
         if not personal_info:

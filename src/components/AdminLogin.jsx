@@ -19,7 +19,7 @@ const AdminLogin = () => {
     return (
       <div style={{
         position: 'fixed',
-        top: '1rem',
+        bottom: '1rem',
         right: '1rem',
         zIndex: 9999,
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
