@@ -128,11 +128,11 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       const submitData = {
         entity: formData.entity,
         course: formData.course,
-        topics: formData.topics || null,
-        description: formData.description || null,
-        credential_id: formData.credential_id || null,
-        credential_url: formData.credential_url || null,
-        photo_url: uploadedImageUrl || formData.photo_url || null,
+        topics: formData.topics,
+        description: formData.description,
+        credential_id: formData.credential_id,
+        credential_url: formData.credential_url,
+        photo_url: uploadedImageUrl || formData.photo_url,
         credit_hrs: formData.credit_hrs ? parseInt(formData.credit_hrs) : null,
         issue_date: formData.issue_date || null,
         expiry_date: formData.expiry_date || null

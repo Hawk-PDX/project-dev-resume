@@ -39,7 +39,7 @@
     "globals": "^16.3.0",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
-    "terser": "^5.44.0",
+    "terser": "^5.44.1",
     "vite": "^7.1.2"
   }
 }

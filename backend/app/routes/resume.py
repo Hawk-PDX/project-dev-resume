@@ -151,25 +151,17 @@ def get_certificates():
             if data.get('expiry_date'):
                 expiry_date = datetime.strptime(data['expiry_date'], '%Y-%m-%d').date()
 
-            # Convert empty strings to None for optional fields
-            topics = data.get('topics') or None
-            description = data.get('description') or None
-            credential_id = data.get('credential_id') or None
-            credential_url = data.get('credential_url') or None
-            photo_url = data.get('photo_url') or None
-            credit_hrs = data.get('credit_hrs') if data.get('credit_hrs') not in [None, ''] else None
-
             new_certificate = Certificate(
                 entity=data['entity'],
                 course=data['course'],
-                topics=topics,
-                description=description,
-                credit_hrs=credit_hrs,
+                topics=data.get('topics', ''),
+                description=data.get('description', ''),
+                credit_hrs=data.get('credit_hrs'),
                 issue_date=issue_date,
                 expiry_date=expiry_date,
-                credential_id=credential_id,
-                credential_url=credential_url,
-                photo_url=photo_url,
+                credential_id=data.get('credential_id', ''),
+                credential_url=data.get('credential_url', ''),
+                photo_url=data.get('photo_url', ''),
                 order=data.get('order', 0)
             )
 
@@ -303,17 +295,17 @@ def certificate_by_id(certificate_id):
             if 'course' in data:
                 certificate.course = data['course']
             if 'topics' in data:
-                certificate.topics = data.get('topics') or None
+                certificate.topics = data.get('topics', '')
             if 'description' in data:
-                certificate.description = data.get('description') or None
+                certificate.description = data.get('description', '')
             if 'credit_hrs' in data:
-                certificate.credit_hrs = data.get('credit_hrs') if data.get('credit_hrs') not in [None, ''] else None
+                certificate.credit_hrs = data.get('credit_hrs')
             if 'credential_id' in data:
-                certificate.credential_id = data.get('credential_id') or None
+                certificate.credential_id = data.get('credential_id', '')
             if 'credential_url' in data:
-                certificate.credential_url = data.get('credential_url') or None
+                certificate.credential_url = data.get('credential_url', '')
             if 'photo_url' in data:
-                certificate.photo_url = data.get('photo_url') or None
+                certificate.photo_url = data.get('photo_url', '')
             if 'order' in data:
                 certificate.order = data.get('order', 0)
             

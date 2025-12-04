@@ -78,6 +78,10 @@ pip install -r requirements.txt
 Create `.env` in project root:
 ```bash
 VITE_API_BASE_URL=http://localhost:5001/api
+
+# Cloudinary Configuration (Required for certificate image uploads)
+VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name_here
+VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset_here
 ```
 
 Create `backend/.env`:
@@ -87,6 +91,19 @@ DATABASE_URL=postgresql://localhost/portfolio_dev
 SECRET_KEY=your-development-secret-key
 GITHUB_TOKEN=your_github_personal_access_token  # Optional but recommended
 ```
+
+**Setting up Cloudinary for Image Uploads:**
+
+Certificate images are uploaded to Cloudinary (free tier: 25GB storage):
+
+1. Create a free account at [cloudinary.com](https://cloudinary.com/users/register/free)
+2. Go to Settings > Upload > Upload presets
+3. Click "Add upload preset"
+4. Set **Signing Mode** to "Unsigned"
+5. Optionally set a folder name (e.g., "certificates")
+6. Save and copy the preset name
+7. Copy your Cloud name from the dashboard
+8. Add both values to your `.env` file
 
 **3. PostgreSQL Setup**
 
