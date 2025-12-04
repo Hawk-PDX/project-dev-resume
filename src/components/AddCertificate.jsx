@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { resumeService } from '../services/productionApi';
 import { validateCertificateForm } from '../utils/validation';
-import { canEditCertificates } from '../config/adminMode';
-import { 
-  uploadImageToCloudinary, 
-  validateImageFile, 
-  createImagePreview, 
+import {
+  uploadImageToCloudinary,
+  validateImageFile,
+  createImagePreview,
   revokeImagePreview,
-  isCloudinaryConfigured 
+  isCloudinaryConfigured
 } from '../utils/imageUpload';
 
 const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
@@ -128,11 +127,11 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       const submitData = {
         entity: formData.entity,
         course: formData.course,
-        topics: formData.topics,
-        description: formData.description,
-        credential_id: formData.credential_id,
-        credential_url: formData.credential_url,
-        photo_url: uploadedImageUrl || formData.photo_url,
+        topics: formData.topics || '',
+        description: formData.description || '',
+        credential_id: formData.credential_id || '',
+        credential_url: formData.credential_url || '',
+        photo_url: uploadedImageUrl || formData.photo_url || '',
         credit_hrs: formData.credit_hrs ? parseInt(formData.credit_hrs) : null,
         issue_date: formData.issue_date || null,
         expiry_date: formData.expiry_date || null
@@ -233,155 +232,206 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
     }
   };
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div className="card" style={{ marginBottom: '2rem', maxWidth: '800px', margin: '2rem auto' }}>
-      <div style={{ padding: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', margin: 0 }}>
-            {editCertificate ? 'Edit Certificate' : 'Add New Certificate'}
+    <div className="card" style={{ maxWidth: '800px', margin: '2rem auto', overflow: 'hidden' }}>
+      {/* Collapsible Header */}
+      <div
+        onClick={toggleExpanded}
+        style={{
+          padding: '1.25rem 2rem',
+          background: 'linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%)',
+          color: 'white',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          userSelect: 'none',
+          transition: 'all 0.3s ease',
+          borderBottom: isExpanded ? '2px solid rgba(255,255,255,0.2)' : 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, #2563eb 0%, var(--primary-color) 100%)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%)';
+        }}
+      >
+        <div>
+          <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
+            {editCertificate ? 'Edit Certificate' : 'Add Certificate'}
           </h3>
-          {!editCertificate && (
-            <button
-              type="button"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="btn btn-primary"
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem',
-                fontWeight: '500'
-              }}
-            >
-              {isExpanded ? 'Cancel' : 'Add Certificate'}
-            </button>
-          )}
         </div>
+        <div style={{
+          fontSize: '1.25rem',
+          transition: 'transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+        }}>
+          ▼
+        </div>
+      </div>
 
-        {(isExpanded || editCertificate) && (
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Issuing Entity *
-            </label>
-            <input
-              type="text"
-              name="entity"
-              required
-              value={formData.entity}
-              onChange={handleChange}
-              placeholder="e.g., Coursera, Google, AWS"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
-            {errors.entity && <p style={{ color: 'var(--error-color)', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.entity}</p>}
+      {/* Form Content */}
+      <div style={{
+        maxHeight: isExpanded ? '2000px' : '0',
+        opacity: isExpanded ? 1 : 0,
+        overflow: 'hidden',
+        transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+      }}>
+        <div style={{ padding: '2rem' }}>
+
+        <form onSubmit={handleSubmit}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Issuing Entity *
+              </label>
+              <input
+                type="text"
+                name="entity"
+                required
+                value={formData.entity}
+                onChange={handleChange}
+                placeholder="e.g., Coursera, Google, AWS"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+              {errors.entity && <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.entity}</p>}
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Course Name *
+              </label>
+              <input
+                type="text"
+                name="course"
+                required
+                value={formData.course}
+                onChange={handleChange}
+                placeholder="e.g., Google Data Analytics Professional Certificate"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+              {errors.course && <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.course}</p>}
+            </div>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Course/Certificate Name *
-            </label>
-            <input
-              type="text"
-              name="course"
-              required
-              value={formData.course}
-              onChange={handleChange}
-              placeholder="e.g., Google Data Analytics Professional Certificate"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
-            {errors.course && <p style={{ color: 'var(--error-color)', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.course}</p>}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Credential ID
+              </label>
+              <input
+                type="text"
+                name="credential_id"
+                value={formData.credential_id}
+                onChange={handleChange}
+                placeholder="e.g., ABC123456"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Credit Hours
+              </label>
+              <input
+                type="number"
+                name="credit_hrs"
+                value={formData.credit_hrs}
+                onChange={handleChange}
+                placeholder="e.g., 160"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+            </div>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Credential ID
-            </label>
-            <input
-              type="text"
-              name="credential_id"
-              value={formData.credential_id}
-              onChange={handleChange}
-              placeholder="e.g., ABC123456"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Issue Date
+              </label>
+              <input
+                type="date"
+                name="issue_date"
+                value={formData.issue_date}
+                onChange={handleChange}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+                Expiry Date
+              </label>
+              <input
+                type="date"
+                name="expiry_date"
+                value={formData.expiry_date}
+                onChange={handleChange}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+            </div>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Credit Hours
-            </label>
-            <input
-              type="number"
-              name="credit_hrs"
-              value={formData.credit_hrs}
-              onChange={handleChange}
-              placeholder="e.g., 160"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Issue Date
-            </label>
-            <input
-              type="date"
-              name="issue_date"
-              value={formData.issue_date}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-              Expiry Date
-            </label>
-            <input
-              type="date"
-              name="expiry_date"
-              value={formData.expiry_date}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
-              }}
-            />
-          </div>
-
-          <div style={{ gridColumn: '1 / -1' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
               Credential URL
             </label>
             <input
@@ -393,36 +443,39 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
+                border: '2px solid #e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '0.875rem',
+                transition: 'border-color 0.2s'
               }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
 
-          {/* Certificate Image Upload Section */}
-          <div style={{ gridColumn: '1 / -1' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
               Certificate Image
             </label>
-            
+
             {/* Toggle between Upload and URL */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'inline-flex', backgroundColor: '#f3f4f6', borderRadius: '0.5rem', padding: '0.25rem', marginBottom: '0.75rem' }}>
               <button
                 type="button"
                 onClick={() => setImageInputMode('upload')}
                 style={{
                   padding: '0.5rem 1rem',
                   fontSize: '0.875rem',
-                  backgroundColor: imageInputMode === 'upload' ? 'var(--primary-color)' : '#f3f4f6',
+                  backgroundColor: imageInputMode === 'upload' ? 'var(--primary-color)' : 'transparent',
                   color: imageInputMode === 'upload' ? 'white' : 'var(--text-color)',
                   border: 'none',
                   borderRadius: '0.375rem',
                   cursor: 'pointer',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  transition: 'all 0.2s'
                 }}
               >
-                📤 Upload Image
+                Upload File
               </button>
               <button
                 type="button"
@@ -430,33 +483,35 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                 style={{
                   padding: '0.5rem 1rem',
                   fontSize: '0.875rem',
-                  backgroundColor: imageInputMode === 'url' ? 'var(--primary-color)' : '#f3f4f6',
+                  backgroundColor: imageInputMode === 'url' ? 'var(--primary-color)' : 'transparent',
                   color: imageInputMode === 'url' ? 'white' : 'var(--text-color)',
                   border: 'none',
                   borderRadius: '0.375rem',
                   cursor: 'pointer',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  transition: 'all 0.2s'
                 }}
               >
-                🔗 Use URL
+                Image URL
               </button>
             </div>
 
             {imageInputMode === 'upload' ? (
               <div>
                 {!isCloudinaryConfigured() && (
-                  <div style={{ 
-                    padding: '0.75rem', 
-                    marginBottom: '0.75rem', 
-                    backgroundColor: '#fef3c7', 
+                  <div style={{
+                    padding: '1rem',
+                    marginBottom: '0.75rem',
+                    backgroundColor: '#fef3c7',
                     color: '#92400e',
-                    borderRadius: '0.375rem',
+                    borderRadius: '0.5rem',
+                    borderLeft: '4px solid #f59e0b',
                     fontSize: '0.875rem'
                   }}>
                     ⚠️ Image upload requires Cloudinary configuration. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env file.
                   </div>
                 )}
-                
+
                 <input
                   id="certificate-image-upload"
                   type="file"
@@ -466,14 +521,14 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                   style={{
                     width: '100%',
                     padding: '0.75rem',
-                    border: '2px dashed #d1d5db',
-                    borderRadius: '0.375rem',
+                    border: '2px dashed #cbd5e1',
+                    borderRadius: '0.5rem',
                     fontSize: '0.875rem',
                     cursor: isCloudinaryConfigured() ? 'pointer' : 'not-allowed',
-                    backgroundColor: isCloudinaryConfigured() ? 'white' : '#f9fafb'
+                    backgroundColor: isCloudinaryConfigured() ? '#f8fafc' : '#f9fafb'
                   }}
                 />
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
                   Supported formats: JPG, PNG, WEBP, GIF (max 5MB)
                 </p>
               </div>
@@ -487,10 +542,13 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.375rem',
-                  fontSize: '1rem'
+                  border: '2px solid #e2e8f0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                  transition: 'border-color 0.2s'
                 }}
+                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
               />
             )}
 
@@ -536,12 +594,13 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
             {/* Image Upload Error */}
             {imageUploadError && (
-              <div style={{ 
+              <div style={{
                 marginTop: '0.5rem',
-                padding: '0.75rem', 
-                backgroundColor: '#fee2e2', 
+                padding: '1rem',
+                backgroundColor: '#fee2e2',
                 color: '#dc2626',
-                borderRadius: '0.375rem',
+                borderRadius: '0.5rem',
+                borderLeft: '4px solid #dc2626',
                 fontSize: '0.875rem'
               }}>
                 {imageUploadError}
@@ -549,8 +608,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
             )}
           </div>
 
-          <div style={{ gridColumn: '1 / -1' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
               Topics Covered
             </label>
             <input
@@ -562,15 +621,18 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem'
+                border: '2px solid #e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '0.875rem',
+                transition: 'border-color 0.2s'
               }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
 
-          <div style={{ gridColumn: '1 / -1' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
               Description
             </label>
             <textarea
@@ -582,63 +644,91 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                borderRadius: '0.375rem',
-                fontSize: '1rem',
-                resize: 'vertical'
+                border: '2px solid #e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '0.875rem',
+                resize: 'vertical',
+                transition: 'border-color 0.2s'
               }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
 
-          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-            <button
-              type="button"
-              onClick={() => {
-                if (editCertificate && onCancelEdit) {
-                  onCancelEdit();
-                } else {
-                  setIsExpanded(false);
-                }
-              }}
-              style={{
-                flex: 1,
-                padding: '0.75rem',
-                border: '1px solid #d1d5db',
-                backgroundColor: 'transparent',
-                color: 'var(--text-color)',
-                borderRadius: '0.375rem',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: 'pointer'
-              }}
-            >
-              Cancel
-            </button>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+            {editCertificate && (
+              <button
+                type="button"
+                onClick={onCancelEdit}
+                disabled={isSubmitting || uploadingImage}
+                style={{
+                  padding: '0.875rem 2rem',
+                  border: '2px solid #e2e8f0',
+                  backgroundColor: 'white',
+                  color: '#64748b',
+                  borderRadius: '0.75rem',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s',
+                  minWidth: '140px'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSubmitting && !uploadingImage) {
+                    e.target.style.borderColor = '#64748b';
+                    e.target.style.color = '#334155';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSubmitting && !uploadingImage) {
+                    e.target.style.borderColor = '#e2e8f0';
+                    e.target.style.color = '#64748b';
+                  }
+                }}
+              >
+                Cancel
+              </button>
+            )}
+
             <button
               type="submit"
               disabled={isSubmitting || uploadingImage}
               style={{
-                flex: 1,
-                padding: '0.75rem',
+                padding: '0.875rem 2rem',
                 backgroundColor: (isSubmitting || uploadingImage) ? '#9ca3af' : 'var(--primary-color)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '0.375rem',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer'
+                borderRadius: '0.75rem',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+                minWidth: '180px',
+                boxShadow: (isSubmitting || uploadingImage) ? 'none' : '0 4px 12px rgba(59, 130, 246, 0.3)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isSubmitting && !uploadingImage) {
+                  e.target.style.transform = 'translateY(-1px)';
+                  e.target.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isSubmitting && !uploadingImage) {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                }
               }}
             >
-              {uploadingImage 
-                ? '⏳ Uploading Image...'
-                : isSubmitting 
-                  ? (editCertificate ? 'Updating Certificate...' : 'Adding Certificate...')
+              {uploadingImage
+                ? 'Uploading Image...'
+                : isSubmitting
+                  ? (editCertificate ? 'Updating...' : 'Adding...')
                   : (editCertificate ? 'Update Certificate' : 'Add Certificate')
               }
             </button>
           </div>
-          </form>
-        )}
+        </form>
+        </div>
       </div>
     </div>
   );

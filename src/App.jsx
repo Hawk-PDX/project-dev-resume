@@ -34,8 +34,6 @@ function App() {
 
     initializeWarmup();
 
-    console.log('🎯 Initializing analytics service...');
-
     setTimeout(() => {
       analyticsService.trackPageView('/');
     }, 100);

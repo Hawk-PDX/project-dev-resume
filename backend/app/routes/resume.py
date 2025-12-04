@@ -184,9 +184,9 @@ def get_certificates():
             # Convert date strings to date objects
             issue_date = None
             expiry_date = None
-            if data.get('issue_date'):
+            if data.get('issue_date') and data['issue_date'].strip():
                 issue_date = datetime.strptime(data['issue_date'], '%Y-%m-%d').date()
-            if data.get('expiry_date'):
+            if data.get('expiry_date') and data['expiry_date'].strip():
                 expiry_date = datetime.strptime(data['expiry_date'], '%Y-%m-%d').date()
 
             new_certificate = Certificate(
@@ -349,12 +349,12 @@ def certificate_by_id(certificate_id):
             
             # Handle date fields
             if 'issue_date' in data:
-                if data['issue_date']:
+                if data['issue_date'] and data['issue_date'].strip():
                     certificate.issue_date = datetime.strptime(data['issue_date'], '%Y-%m-%d').date()
                 else:
                     certificate.issue_date = None
             if 'expiry_date' in data:
-                if data['expiry_date']:
+                if data['expiry_date'] and data['expiry_date'].strip():
                     certificate.expiry_date = datetime.strptime(data['expiry_date'], '%Y-%m-%d').date()
                 else:
                     certificate.expiry_date = None

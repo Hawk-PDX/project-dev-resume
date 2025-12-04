@@ -34,21 +34,15 @@ class AnalyticsService {
             this.setupEventListeners();
             this.startPerformanceMonitoring();
             this.isInitialized = true;
-            
-            console.log('🎯 Analytics service initialized successfully');
         } catch (error) {
             console.error('Analytics initialization failed:', error);
         }
     }
 
-    /**
-     * Create or resume analytics session
-     */
     async createSession() {
         try {
-            // Check if we have an existing session in localStorage
             const existingSessionId = localStorage.getItem('analytics_session_id');
-            
+
             const sessionData = {
                 session_id: existingSessionId,
                 referrer: document.referrer,
@@ -58,20 +52,16 @@ class AnalyticsService {
             };
 
             const response = await axios.post(`${this.apiBaseUrl}/analytics/session`, sessionData);
-            
+
             if (response.data.success) {
                 this.sessionId = response.data.session_id;
                 localStorage.setItem('analytics_session_id', this.sessionId);
-                console.log('📊 Analytics session created:', this.sessionId);
             }
         } catch (error) {
             console.error('Failed to create analytics session:', error);
         }
     }
 
-    /**
-     * Setup WebSocket connection for real-time updates
-     */
     setupWebSocket() {
         try {
             const socketUrl = this.apiBaseUrl.replace('/api', '');
@@ -81,11 +71,11 @@ class AnalyticsService {
             });
 
             this.socket.on('connect', () => {
-                console.log('🔌 Analytics WebSocket connected');
+                console.log('Analytics WebSocket connected');
             });
 
             this.socket.on('disconnect', () => {
-                console.log('🔌 Analytics WebSocket disconnected');
+                console.log('Analytics WebSocket disconnected');
             });
 
             this.socket.on('error', (error) => {
@@ -437,7 +427,6 @@ class AnalyticsService {
             this.socket.disconnect();
         }
         this.isInitialized = false;
-        console.log('📊 Analytics service disconnected');
     }
 }
 

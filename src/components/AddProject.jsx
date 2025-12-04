@@ -174,10 +174,9 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
           e.currentTarget.style.background = 'linear-gradient(135deg, var(--primary-color) 0%, #2563eb 100%)';
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>{editProject ? '✏️' : '➕'}</span>
+        <div>
           <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '600' }}>
-            {editProject ? 'Edit Project' : 'Add New Project'}
+            {editProject ? 'Edit Project' : 'Add Project'}
           </h3>
         </div>
         <div style={{
@@ -217,7 +216,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   transition: 'all 0.2s'
                 }}
               >
-                🚀 Single Import
+                GitHub Import
               </button>
               <button
                 type="button"
@@ -234,7 +233,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   transition: 'all 0.2s'
                 }}
               >
-                📦 Bulk Import
+                Bulk Import
               </button>
               <button
                 type="button"
@@ -251,29 +250,18 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   transition: 'all 0.2s'
                 }}
               >
-                ✏️ Manual Entry
+                Manual Entry
               </button>
             </div>
             
-            {/* Description for bulk import */}
-            <p style={{ 
-              fontSize: '0.75rem', 
-              color: 'var(--text-light)', 
-              marginTop: '0.75rem',
-              maxWidth: '600px',
-              margin: '0.75rem auto 0'
-            }}>
-              📦 <strong>Bulk Import:</strong> Import multiple repositories from your GitHub accounts at once - perfect for showcasing projects from multiple profiles!
-            </p>
           </div>
         )}
 
-        {/* GitHub Quick Add Section */}
         {mode === 'github' && !editProject && (
           <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: '#f8fafc', borderRadius: '0.75rem', border: '2px dashed #cbd5e1' }}>
-            <h4 style={{ marginBottom: '1rem', color: 'var(--primary-color)', fontSize: '1.1rem' }}>🔗 Import from GitHub</h4>
+            <h4 style={{ marginBottom: '1rem', color: 'var(--primary-color)', fontSize: '1.1rem' }}>Import from GitHub</h4>
             <p style={{ marginBottom: '1rem', color: '#64748b', fontSize: '0.875rem' }}>
-              Paste your GitHub repository URL and we'll automatically extract the project details, cover image, and technologies!
+              Enter a GitHub repository URL to automatically import project details.
             </p>
             
             <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
@@ -311,7 +299,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   minWidth: '120px'
                 }}
               >
-                {fetchingGithub ? '⏳ Fetching...' : '🚀 Import'}
+                {fetchingGithub ? 'Fetching...' : 'Import'}
               </button>
             </div>
           </div>
@@ -337,7 +325,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                  🏷️ Title *
+                  Title *
                 </label>
                 <input
                   type="text"
@@ -345,7 +333,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  placeholder="My Awesome Project"
+                  placeholder="Project Title"
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -361,7 +349,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
               
               <div>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                  ⭐ Featured
+                  Featured
                   <input
                     type="checkbox"
                     name="featured"
@@ -372,7 +360,7 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                 </label>
                 <div style={{ marginTop: '0.25rem' }}>
                   <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                    🎯 Order
+                    Display Order
                   </label>
                   <input
                     type="number"
@@ -398,14 +386,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
 
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                📝 Description
+                Description
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 rows="3"
-                placeholder="Brief description of your project..."
+                placeholder="Project description"
                 style={{
                   width: '100%',
                   padding: '0.75rem',
@@ -422,14 +410,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
 
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                🪄 Technologies
+                Technologies
               </label>
               <input
                 type="text"
                 name="technologies"
                 value={formData.technologies}
                 onChange={handleChange}
-                placeholder="React, Flask, Python, PostgreSQL"
+                placeholder="React, Node.js, PostgreSQL"
                 style={{
                   width: '100%',
                   padding: '0.75rem',
@@ -446,14 +434,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                  🔗 GitHub URL
+                  GitHub URL
                 </label>
                 <input
                   type="url"
                   name="github_url"
                   value={formData.github_url}
                   onChange={handleChange}
-                  placeholder="https://github.com/..."
+                  placeholder="https://github.com/username/repo"
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -469,14 +457,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
 
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                  🌐 Live Demo URL
+                  Live Demo URL
                 </label>
                 <input
                   type="url"
                   name="live_url"
                   value={formData.live_url}
                   onChange={handleChange}
-                  placeholder="https://demo.com"
+                  placeholder="https://example.com"
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -492,14 +480,14 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
 
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                  🖼️ Cover Image URL
+                  Cover Image URL
                 </label>
                 <input
                   type="url"
                   name="image_url"
                   value={formData.image_url}
                   onChange={handleChange}
-                  placeholder="https://image.com/cover.jpg"
+                  placeholder="https://example.com/image.jpg"
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -541,10 +529,10 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                     e.target.style.color = '#64748b';
                   }}
                 >
-                  ❌ Cancel
+                  Cancel
                 </button>
               )}
-              
+
               <button
                 type="submit"
                 disabled={loading}
@@ -574,9 +562,9 @@ const AddProject = ({ onProjectAdded, editProject, onCancelEdit }) => {
                   }
                 }}
               >
-                {loading 
-                  ? (editProject ? '⏳ Updating...' : '⏳ Adding...')
-                  : (editProject ? '✨ Update Project' : '🎉 Add Project')
+                {loading
+                  ? (editProject ? 'Updating...' : 'Adding...')
+                  : (editProject ? 'Update Project' : 'Add Project')
                 }
               </button>
             </div>
