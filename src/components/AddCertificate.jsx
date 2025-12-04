@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { resumeService } from '../services/productionApi';
 import { validateCertificateForm } from '../utils/validation';
 import { canEditCertificates } from '../config/adminMode';
+import { 
+  uploadImageToCloudinary, 
+  validateImageFile, 
+  createImagePreview, 
+  revokeImagePreview,
+  isCloudinaryConfigured 
+} from '../utils/imageUpload';
 
 const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
   const [formData, setFormData] = useState({
@@ -19,6 +26,11 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [imageInputMode, setImageInputMode] = useState('upload'); // 'upload' or 'url'
 
   // Auto-expand when editing
   React.useEffect(() => {
@@ -35,12 +47,22 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
         credential_url: editCertificate.credential_url || '',
         photo_url: editCertificate.photo_url || ''
       });
+      setImagePreview(editCertificate.photo_url || null);
       setIsExpanded(true);
     } else if (!editCertificate && isExpanded) {
       // Reset form when not editing
       resetForm();
     }
   }, [editCertificate]);
+
+  // Cleanup image preview on unmount
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        revokeImagePreview(imagePreview);
+      }
+    };
+  }, [imagePreview]);
 
   const resetForm = () => {
     setFormData({
@@ -57,6 +79,13 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
     });
     setErrors({});
     setIsExpanded(false);
+    setSelectedFile(null);
+    if (imagePreview) {
+      revokeImagePreview(imagePreview);
+    }
+    setImagePreview(null);
+    setImageUploadError(null);
+    setImageInputMode('upload');
   };
 
   const handleSubmit = async (e) => {
@@ -77,10 +106,33 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
     setIsSubmitting(true);
     setErrors({});
+    setImageUploadError(null);
+
+    // Upload image if a file is selected
+    let uploadedImageUrl = formData.photo_url;
+    if (selectedFile && imageInputMode === 'upload') {
+      try {
+        setUploadingImage(true);
+        uploadedImageUrl = await uploadImageToCloudinary(selectedFile);
+      } catch (error) {
+        setImageUploadError(error.message);
+        setIsSubmitting(false);
+        setUploadingImage(false);
+        return;
+      } finally {
+        setUploadingImage(false);
+      }
+    }
 
     try {
       const submitData = {
-        ...formData,
+        entity: formData.entity,
+        course: formData.course,
+        topics: formData.topics || null,
+        description: formData.description || null,
+        credential_id: formData.credential_id || null,
+        credential_url: formData.credential_url || null,
+        photo_url: uploadedImageUrl || formData.photo_url || null,
         credit_hrs: formData.credit_hrs ? parseInt(formData.credit_hrs) : null,
         issue_date: formData.issue_date || null,
         expiry_date: formData.expiry_date || null
@@ -135,6 +187,50 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleImageFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate the file
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
+      setImageUploadError(validation.error);
+      setSelectedFile(null);
+      setImagePreview(null);
+      return;
+    }
+
+    // Clear any previous errors
+    setImageUploadError(null);
+    
+    // Set the file and create preview
+    setSelectedFile(file);
+    const preview = createImagePreview(file);
+    
+    // Revoke old preview if it exists
+    if (imagePreview && imagePreview.startsWith('blob:')) {
+      revokeImagePreview(imagePreview);
+    }
+    
+    setImagePreview(preview);
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    if (imagePreview) {
+      revokeImagePreview(imagePreview);
+    }
+    setImagePreview(null);
+    setFormData({ ...formData, photo_url: '' });
+    setImageUploadError(null);
+    
+    // Reset file input
+    const fileInput = document.getElementById('certificate-image-upload');
+    if (fileInput) {
+      fileInput.value = '';
+    }
   };
 
   return (
@@ -304,11 +400,84 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
             />
           </div>
 
-          {canEditCertificates() && (
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-                Certificate Photo URL
-              </label>
+          {/* Certificate Image Upload Section */}
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+              Certificate Image
+            </label>
+            
+            {/* Toggle between Upload and URL */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={() => setImageInputMode('upload')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.875rem',
+                  backgroundColor: imageInputMode === 'upload' ? 'var(--primary-color)' : '#f3f4f6',
+                  color: imageInputMode === 'upload' ? 'white' : 'var(--text-color)',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  cursor: 'pointer',
+                  fontWeight: '500'
+                }}
+              >
+                📤 Upload Image
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageInputMode('url')}
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.875rem',
+                  backgroundColor: imageInputMode === 'url' ? 'var(--primary-color)' : '#f3f4f6',
+                  color: imageInputMode === 'url' ? 'white' : 'var(--text-color)',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  cursor: 'pointer',
+                  fontWeight: '500'
+                }}
+              >
+                🔗 Use URL
+              </button>
+            </div>
+
+            {imageInputMode === 'upload' ? (
+              <div>
+                {!isCloudinaryConfigured() && (
+                  <div style={{ 
+                    padding: '0.75rem', 
+                    marginBottom: '0.75rem', 
+                    backgroundColor: '#fef3c7', 
+                    color: '#92400e',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem'
+                  }}>
+                    ⚠️ Image upload requires Cloudinary configuration. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env file.
+                  </div>
+                )}
+                
+                <input
+                  id="certificate-image-upload"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                  onChange={handleImageFileSelect}
+                  disabled={!isCloudinaryConfigured()}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px dashed #d1d5db',
+                    borderRadius: '0.375rem',
+                    fontSize: '0.875rem',
+                    cursor: isCloudinaryConfigured() ? 'pointer' : 'not-allowed',
+                    backgroundColor: isCloudinaryConfigured() ? 'white' : '#f9fafb'
+                  }}
+                />
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                  Supported formats: JPG, PNG, WEBP, GIF (max 5MB)
+                </p>
+              </div>
+            ) : (
               <input
                 type="url"
                 name="photo_url"
@@ -323,8 +492,62 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                   fontSize: '1rem'
                 }}
               />
-            </div>
-          )}
+            )}
+
+            {/* Image Preview */}
+            {(imagePreview || formData.photo_url) && (
+              <div style={{ marginTop: '1rem', position: 'relative' }}>
+                <img
+                  src={imagePreview || formData.photo_url}
+                  alt="Certificate preview"
+                  style={{
+                    width: '100%',
+                    maxHeight: '300px',
+                    objectFit: 'contain',
+                    borderRadius: '0.375rem',
+                    border: '1px solid #e5e7eb'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    setImageUploadError('Failed to load image preview');
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  style={{
+                    position: 'absolute',
+                    top: '0.5rem',
+                    right: '0.5rem',
+                    padding: '0.5rem',
+                    backgroundColor: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '0.375rem',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: '500'
+                  }}
+                >
+                  ✕ Remove
+                </button>
+              </div>
+            )}
+
+            {/* Image Upload Error */}
+            {imageUploadError && (
+              <div style={{ 
+                marginTop: '0.5rem',
+                padding: '0.75rem', 
+                backgroundColor: '#fee2e2', 
+                color: '#dc2626',
+                borderRadius: '0.375rem',
+                fontSize: '0.875rem'
+              }}>
+                {imageUploadError}
+              </div>
+            )}
+          </div>
 
           <div style={{ gridColumn: '1 / -1' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
@@ -393,22 +616,24 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || uploadingImage}
               style={{
                 flex: 1,
                 padding: '0.75rem',
-                backgroundColor: isSubmitting ? '#9ca3af' : 'var(--primary-color)',
+                backgroundColor: (isSubmitting || uploadingImage) ? '#9ca3af' : 'var(--primary-color)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '0.375rem',
                 fontSize: '1rem',
                 fontWeight: '500',
-                cursor: isSubmitting ? 'not-allowed' : 'pointer'
+                cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer'
               }}
             >
-              {isSubmitting 
-                ? (editCertificate ? 'Updating Certificate...' : 'Adding Certificate...')
-                : (editCertificate ? 'Update Certificate' : 'Add Certificate')
+              {uploadingImage 
+                ? '⏳ Uploading Image...'
+                : isSubmitting 
+                  ? (editCertificate ? 'Updating Certificate...' : 'Adding Certificate...')
+                  : (editCertificate ? 'Update Certificate' : 'Add Certificate')
               }
             </button>
           </div>

@@ -192,6 +192,10 @@ def get_certificates():
 
         except Exception as e:
             db.session.rollback()
+            print(f"Error creating certificate: {str(e)}")
+            print(f"Data received: {data}")
+            import traceback
+            traceback.print_exc()
             return jsonify({'error': 'Failed to create certificate', 'details': str(e)}), 500
 
     # GET request with timeout protection
