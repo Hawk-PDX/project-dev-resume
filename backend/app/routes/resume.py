@@ -57,7 +57,7 @@ def get_personal_info():
             return jsonify({
                 'name': 'Garrett Hawkins',
                 'title': 'Full Stack Developer',
-                'email': 'hawkpdx@icloud.com',
+                'email': 'garrett@rosecitydev.tech',
                 'phone': None,
                 'location': 'Portland, Oregon',
                 'linkedin': 'https://linkedin.com/in/hawkpdx',

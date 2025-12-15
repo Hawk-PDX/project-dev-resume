@@ -22,7 +22,7 @@ const About = () => {
             <div>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'var(--text-color)', marginBottom: '0.5rem' }}>Contact Information</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-light)' }}>
-                <p><strong>Email:</strong> {personalInfo?.email || 'hawkpdx@icloud.com'}</p>
+                <p><strong>Email:</strong> {personalInfo?.email || 'garrett@rosecitydev.tech'}</p>
                 <p><strong>Location:</strong> {personalInfo?.location || 'Portland, Oregon'}</p>
                 {personalInfo?.phone && <p><strong>Phone:</strong> {personalInfo.phone}</p>}
               </div>

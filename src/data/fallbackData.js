@@ -4,7 +4,7 @@
 export const fallbackPersonalInfo = {
     name: 'Garrett Hawkins',
     title: 'Full Stack Developer',
-    email: 'hawkpdx@icloud.com',
+    email: 'garrett@rosecitydev.tech',
     phone: null, // No phone number in deployment
     location: 'Portland, Oregon',
     linkedin: 'https://linkedin.com/in/hawkpdx',

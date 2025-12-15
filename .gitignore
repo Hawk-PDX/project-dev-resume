@@ -115,6 +115,7 @@ ai-conversation*
 setupTests.js
 DEPLOYMENT_FIX.md
 REMOVE_DEMO_MIGRATION.md
+followup-email-byob-sports.md
 
 # AI debugging/testing files created during development
 test_github_account.py
@@ -128,3 +129,4 @@ migrate_github_account.py
 *.history
 backend/venv/
 __tests__
+__mocks__
