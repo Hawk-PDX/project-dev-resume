@@ -53,7 +53,7 @@ More than just a static site - built this as a full-stack app to actually showca
 **What you'll need:**
 - Node.js 18+ and npm
 - Python 3.10+ and pip
-- PostgreSQL 13+ (see `backend/POSTGRESQL_SETUP.md` for install help)
+- PostgreSQL 13+
 - Git
 
 ### Setup

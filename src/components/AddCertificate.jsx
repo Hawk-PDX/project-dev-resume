@@ -1,35 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { resumeService } from '../services/productionApi';
 import { validateCertificateForm } from '../utils/validation';
-import {
-  uploadImageToCloudinary,
-  validateImageFile,
-  createImagePreview,
-  revokeImagePreview,
-  isCloudinaryConfigured
-} from '../utils/imageUpload';
 
 const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) => {
   const [formData, setFormData] = useState({
     entity: '',
     course: '',
-    topics: '',
-    description: '',
-    credit_hrs: '',
     issue_date: '',
-    expiry_date: '',
-    credential_id: '',
     credential_url: '',
     photo_url: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [imageUploadError, setImageUploadError] = useState(null);
-  const [imageInputMode, setImageInputMode] = useState('upload'); // 'upload' or 'url'
 
   // Auto-expand when editing
   React.useEffect(() => {
@@ -37,16 +20,10 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       setFormData({
         entity: editCertificate.entity || '',
         course: editCertificate.course || '',
-        topics: editCertificate.topics || '',
-        description: editCertificate.description || '',
-        credit_hrs: editCertificate.credit_hrs || '',
         issue_date: editCertificate.issue_date || '',
-        expiry_date: editCertificate.expiry_date || '',
-        credential_id: editCertificate.credential_id || '',
         credential_url: editCertificate.credential_url || '',
         photo_url: editCertificate.photo_url || ''
       });
-      setImagePreview(editCertificate.photo_url || null);
       setIsExpanded(true);
     } else if (!editCertificate && isExpanded) {
       // Reset form when not editing
@@ -54,37 +31,17 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
     }
   }, [editCertificate]);
 
-  // Cleanup image preview on unmount
-  useEffect(() => {
-    return () => {
-      if (imagePreview) {
-        revokeImagePreview(imagePreview);
-      }
-    };
-  }, [imagePreview]);
 
   const resetForm = () => {
     setFormData({
       entity: '',
       course: '',
-      topics: '',
-      description: '',
-      credit_hrs: '',
       issue_date: '',
-      expiry_date: '',
-      credential_id: '',
       credential_url: '',
       photo_url: ''
     });
     setErrors({});
     setIsExpanded(false);
-    setSelectedFile(null);
-    if (imagePreview) {
-      revokeImagePreview(imagePreview);
-    }
-    setImagePreview(null);
-    setImageUploadError(null);
-    setImageInputMode('upload');
   };
 
   const handleSubmit = async (e) => {
@@ -92,10 +49,7 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
     const validation = validateCertificateForm({
       entity: formData.entity,
-      course: formData.course,
-      credential_url: formData.credential_url,
-      issue_date: formData.issue_date,
-      expiry_date: formData.expiry_date
+      course: formData.course
     });
 
     if (!validation.isValid) {
@@ -105,36 +59,14 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
     setIsSubmitting(true);
     setErrors({});
-    setImageUploadError(null);
-
-    // Upload image if a file is selected
-    let uploadedImageUrl = formData.photo_url;
-    if (selectedFile && imageInputMode === 'upload') {
-      try {
-        setUploadingImage(true);
-        uploadedImageUrl = await uploadImageToCloudinary(selectedFile);
-      } catch (error) {
-        setImageUploadError(error.message);
-        setIsSubmitting(false);
-        setUploadingImage(false);
-        return;
-      } finally {
-        setUploadingImage(false);
-      }
-    }
 
     try {
       const submitData = {
         entity: formData.entity,
         course: formData.course,
-        topics: formData.topics || '',
-        description: formData.description || '',
-        credential_id: formData.credential_id || '',
-        credential_url: formData.credential_url || '',
-        photo_url: uploadedImageUrl || formData.photo_url || '',
-        credit_hrs: formData.credit_hrs ? parseInt(formData.credit_hrs) : null,
         issue_date: formData.issue_date || null,
-        expiry_date: formData.expiry_date || null
+        credential_url: formData.credential_url || '',
+        photo_url: formData.photo_url || ''
       };
 
       let response;
@@ -150,20 +82,8 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       }
 
       if (response.status === 201 || response.status === 200) {
-        // Reset form
-        setFormData({
-          entity: '',
-          course: '',
-          topics: '',
-          description: '',
-          credit_hrs: '',
-          issue_date: '',
-          expiry_date: '',
-          credential_id: '',
-          credential_url: '',
-          photo_url: ''
-        });
-        setIsExpanded(false);
+        // Reset form using resetForm() to properly clean up all state
+        resetForm();
         onCertificateAdded();
         alert(editCertificate ? 'Certificate updated successfully!' : 'Certificate added successfully!');
         
@@ -188,49 +108,6 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
     });
   };
 
-  const handleImageFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    // Validate the file
-    const validation = validateImageFile(file);
-    if (!validation.isValid) {
-      setImageUploadError(validation.error);
-      setSelectedFile(null);
-      setImagePreview(null);
-      return;
-    }
-
-    // Clear any previous errors
-    setImageUploadError(null);
-    
-    // Set the file and create preview
-    setSelectedFile(file);
-    const preview = createImagePreview(file);
-    
-    // Revoke old preview if it exists
-    if (imagePreview && imagePreview.startsWith('blob:')) {
-      revokeImagePreview(imagePreview);
-    }
-    
-    setImagePreview(preview);
-  };
-
-  const handleRemoveImage = () => {
-    setSelectedFile(null);
-    if (imagePreview) {
-      revokeImagePreview(imagePreview);
-    }
-    setImagePreview(null);
-    setFormData({ ...formData, photo_url: '' });
-    setImageUploadError(null);
-    
-    // Reset file input
-    const fileInput = document.getElementById('certificate-image-upload');
-    if (fileInput) {
-      fileInput.value = '';
-    }
-  };
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
@@ -284,10 +161,35 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
         <div style={{ padding: '2rem' }}>
 
         <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
+              Certificate Name *
+            </label>
+            <input
+              type="text"
+              name="course"
+              required
+              value={formData.course}
+              onChange={handleChange}
+              placeholder="e.g., Google Data Analytics Professional Certificate"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '2px solid #e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '0.875rem',
+                transition: 'border-color 0.2s'
+              }}
+              onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
+              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+            />
+            {errors.course && <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.course}</p>}
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                Issuing Entity *
+                Issuing Organization *
               </label>
               <input
                 type="text"
@@ -312,81 +214,6 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                Course Name *
-              </label>
-              <input
-                type="text"
-                name="course"
-                required
-                value={formData.course}
-                onChange={handleChange}
-                placeholder="e.g., Google Data Analytics Professional Certificate"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-              />
-              {errors.course && <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>{errors.course}</p>}
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                Credential ID
-              </label>
-              <input
-                type="text"
-                name="credential_id"
-                value={formData.credential_id}
-                onChange={handleChange}
-                placeholder="e.g., ABC123456"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                Credit Hours
-              </label>
-              <input
-                type="number"
-                name="credit_hrs"
-                value={formData.credit_hrs}
-                onChange={handleChange}
-                placeholder="e.g., 160"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
                 Issue Date
               </label>
               <input
@@ -406,218 +233,18 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                 onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
               />
             </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-                Expiry Date
-              </label>
-              <input
-                type="date"
-                name="expiry_date"
-                value={formData.expiry_date}
-                onChange={handleChange}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-              />
-            </div>
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-              Credential URL
+              Verification URL
             </label>
             <input
               type="url"
               name="credential_url"
               value={formData.credential_url}
               onChange={handleChange}
-              placeholder="https://example.com/verify/ABC123456"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e2e8f0',
-                borderRadius: '0.5rem',
-                fontSize: '0.875rem',
-                transition: 'border-color 0.2s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-              Certificate Image
-            </label>
-
-            {/* Toggle between Upload and URL */}
-            <div style={{ display: 'inline-flex', backgroundColor: '#f3f4f6', borderRadius: '0.5rem', padding: '0.25rem', marginBottom: '0.75rem' }}>
-              <button
-                type="button"
-                onClick={() => setImageInputMode('upload')}
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.875rem',
-                  backgroundColor: imageInputMode === 'upload' ? 'var(--primary-color)' : 'transparent',
-                  color: imageInputMode === 'upload' ? 'white' : 'var(--text-color)',
-                  border: 'none',
-                  borderRadius: '0.375rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                  transition: 'all 0.2s'
-                }}
-              >
-                Upload File
-              </button>
-              <button
-                type="button"
-                onClick={() => setImageInputMode('url')}
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.875rem',
-                  backgroundColor: imageInputMode === 'url' ? 'var(--primary-color)' : 'transparent',
-                  color: imageInputMode === 'url' ? 'white' : 'var(--text-color)',
-                  border: 'none',
-                  borderRadius: '0.375rem',
-                  cursor: 'pointer',
-                  fontWeight: '500',
-                  transition: 'all 0.2s'
-                }}
-              >
-                Image URL
-              </button>
-            </div>
-
-            {imageInputMode === 'upload' ? (
-              <div>
-                {!isCloudinaryConfigured() && (
-                  <div style={{
-                    padding: '1rem',
-                    marginBottom: '0.75rem',
-                    backgroundColor: '#fef3c7',
-                    color: '#92400e',
-                    borderRadius: '0.5rem',
-                    borderLeft: '4px solid #f59e0b',
-                    fontSize: '0.875rem'
-                  }}>
-                    ⚠️ Image upload requires Cloudinary configuration. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env file.
-                  </div>
-                )}
-
-                <input
-                  id="certificate-image-upload"
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                  onChange={handleImageFileSelect}
-                  disabled={!isCloudinaryConfigured()}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    border: '2px dashed #cbd5e1',
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem',
-                    cursor: isCloudinaryConfigured() ? 'pointer' : 'not-allowed',
-                    backgroundColor: isCloudinaryConfigured() ? '#f8fafc' : '#f9fafb'
-                  }}
-                />
-                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
-                  Supported formats: JPG, PNG, WEBP, GIF (max 5MB)
-                </p>
-              </div>
-            ) : (
-              <input
-                type="url"
-                name="photo_url"
-                value={formData.photo_url}
-                onChange={handleChange}
-                placeholder="https://example.com/certificate-photo.jpg"
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  transition: 'border-color 0.2s'
-                }}
-                onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-              />
-            )}
-
-            {/* Image Preview */}
-            {(imagePreview || formData.photo_url) && (
-              <div style={{ marginTop: '1rem', position: 'relative' }}>
-                <img
-                  src={imagePreview || formData.photo_url}
-                  alt="Certificate preview"
-                  style={{
-                    width: '100%',
-                    maxHeight: '300px',
-                    objectFit: 'contain',
-                    borderRadius: '0.375rem',
-                    border: '1px solid #e5e7eb'
-                  }}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    setImageUploadError('Failed to load image preview');
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  style={{
-                    position: 'absolute',
-                    top: '0.5rem',
-                    right: '0.5rem',
-                    padding: '0.5rem',
-                    backgroundColor: '#ef4444',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '0.375rem',
-                    cursor: 'pointer',
-                    fontSize: '0.875rem',
-                    fontWeight: '500'
-                  }}
-                >
-                  ✕ Remove
-                </button>
-              </div>
-            )}
-
-            {/* Image Upload Error */}
-            {imageUploadError && (
-              <div style={{
-                marginTop: '0.5rem',
-                padding: '1rem',
-                backgroundColor: '#fee2e2',
-                color: '#dc2626',
-                borderRadius: '0.5rem',
-                borderLeft: '4px solid #dc2626',
-                fontSize: '0.875rem'
-              }}>
-                {imageUploadError}
-              </div>
-            )}
-          </div>
-
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-              Topics Covered
-            </label>
-            <input
-              type="text"
-              name="topics"
-              value={formData.topics}
-              onChange={handleChange}
-              placeholder="e.g., Data Analysis, SQL, Tableau, R Programming"
+              placeholder="https://example.com/verify/certificate"
               style={{
                 width: '100%',
                 padding: '0.75rem',
@@ -633,21 +260,20 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.875rem' }}>
-              Description
+              Certificate Image URL
             </label>
-            <textarea
-              name="description"
-              rows={3}
-              value={formData.description}
+            <input
+              type="url"
+              name="photo_url"
+              value={formData.photo_url}
               onChange={handleChange}
-              placeholder="Brief description of the certificate and what you learned..."
+              placeholder="https://example.com/certificate-image.jpg"
               style={{
                 width: '100%',
                 padding: '0.75rem',
                 border: '2px solid #e2e8f0',
                 borderRadius: '0.5rem',
                 fontSize: '0.875rem',
-                resize: 'vertical',
                 transition: 'border-color 0.2s'
               }}
               onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
@@ -660,7 +286,7 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
               <button
                 type="button"
                 onClick={onCancelEdit}
-                disabled={isSubmitting || uploadingImage}
+                disabled={isSubmitting}
                 style={{
                   padding: '0.875rem 2rem',
                   border: '2px solid #e2e8f0',
@@ -669,18 +295,18 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
                   borderRadius: '0.75rem',
                   fontSize: '0.875rem',
                   fontWeight: '600',
-                  cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s',
                   minWidth: '140px'
                 }}
                 onMouseEnter={(e) => {
-                  if (!isSubmitting && !uploadingImage) {
+                  if (!isSubmitting) {
                     e.target.style.borderColor = '#64748b';
                     e.target.style.color = '#334155';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (!isSubmitting && !uploadingImage) {
+                  if (!isSubmitting) {
                     e.target.style.borderColor = '#e2e8f0';
                     e.target.style.color = '#64748b';
                   }
@@ -692,38 +318,36 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
             <button
               type="submit"
-              disabled={isSubmitting || uploadingImage}
+              disabled={isSubmitting}
               style={{
                 padding: '0.875rem 2rem',
-                backgroundColor: (isSubmitting || uploadingImage) ? '#9ca3af' : 'var(--primary-color)',
+                backgroundColor: isSubmitting ? '#9ca3af' : 'var(--primary-color)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '0.75rem',
                 fontSize: '0.875rem',
                 fontWeight: '600',
-                cursor: (isSubmitting || uploadingImage) ? 'not-allowed' : 'pointer',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
                 minWidth: '180px',
-                boxShadow: (isSubmitting || uploadingImage) ? 'none' : '0 4px 12px rgba(59, 130, 246, 0.3)'
+                boxShadow: isSubmitting ? 'none' : '0 4px 12px rgba(59, 130, 246, 0.3)'
               }}
               onMouseEnter={(e) => {
-                if (!isSubmitting && !uploadingImage) {
+                if (!isSubmitting) {
                   e.target.style.transform = 'translateY(-1px)';
                   e.target.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (!isSubmitting && !uploadingImage) {
+                if (!isSubmitting) {
                   e.target.style.transform = 'translateY(0)';
                   e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
                 }
               }}
             >
-              {uploadingImage
-                ? 'Uploading Image...'
-                : isSubmitting
-                  ? (editCertificate ? 'Updating...' : 'Adding...')
-                  : (editCertificate ? 'Update Certificate' : 'Add Certificate')
+              {isSubmitting
+                ? (editCertificate ? 'Updating...' : 'Adding...')
+                : (editCertificate ? 'Update Certificate' : 'Add Certificate')
               }
             </button>
           </div>
