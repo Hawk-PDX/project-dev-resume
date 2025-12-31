@@ -11,6 +11,7 @@ import Certificates from './components/Certificates';
 import Footer from './components/Footer';
 import AdminLogin from './components/AdminLogin';
 import AnalyticsDashboard from './components/Analytics/AnalyticsDashboard';
+import WarmupBanner from './components/WarmupBanner';
 import { skillsService } from './services/productionApi';
 import { initializeWarmup } from './services/warmup';
 import { isAdminEnabled, canAddProjects } from './config/adminMode';
@@ -78,6 +79,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <WarmupBanner />
         <Navbar />
         <Routes>
           {/* Main portfolio page */}

@@ -64,9 +64,9 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       const submitData = {
         entity: formData.entity,
         course: formData.course,
-        issue_date: formData.issue_date || null,
-        credential_url: formData.credential_url || '',
-        photo_url: formData.photo_url || ''
+        issue_date: formData.issue_date?.trim() || null,
+        credential_url: formData.credential_url?.trim() || '',
+        photo_url: formData.photo_url?.trim() || ''
       };
 
       let response;

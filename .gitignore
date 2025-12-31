@@ -130,3 +130,11 @@ migrate_github_account.py
 backend/venv/
 __tests__
 __mocks__
+
+.git.backup
+.github
+
+backend/migrations/versions
+backend/migrations/versions/1ae0a701676b_add_photo_url_to_certificates.py
+backend/migrations/versions/d69802d7dbc5_initial_migration.py
+backend/migrations/alembic.ini
