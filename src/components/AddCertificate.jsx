@@ -13,6 +13,7 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [message, setMessage] = useState('');
 
   // Auto-expand when editing
   React.useEffect(() => {
@@ -41,6 +42,7 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
       photo_url: ''
     });
     setErrors({});
+    setMessage('');
     setIsExpanded(false);
   };
 
@@ -59,6 +61,7 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
 
     setIsSubmitting(true);
     setErrors({});
+    setMessage('');
 
     try {
       const submitData = {
@@ -76,26 +79,35 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
           throw new Error('Invalid certificate: missing ID');
         }
         response = await resumeService.updateCertificate(editCertificate.id, submitData);
+        setMessage('✅ Certificate updated successfully! Changes will be visible immediately.');
       } else {
         // Create new certificate
         response = await resumeService.createCertificate(submitData);
+        setMessage('✅ Certificate added successfully! The page will automatically refresh to show your new certificate.');
+        resetForm();
       }
 
-      if (response.status === 201 || response.status === 200) {
-        // Reset form using resetForm() to properly clean up all state
-        resetForm();
-        onCertificateAdded();
-        alert(editCertificate ? 'Certificate updated successfully!' : 'Certificate added successfully!');
-        
-        // Clear edit mode
-        if (editCertificate && onCancelEdit) {
-          onCancelEdit();
-        }
+      if (onCertificateAdded) {
+        onCertificateAdded(response.data);
       }
+      
+      // Clear edit mode
+      if (editCertificate && onCancelEdit) {
+        onCancelEdit();
+      }
+      
+      // Provide immediate visual feedback that certificate was added
+      setTimeout(() => {
+        // Scroll to certificates section to show the newly added certificate
+        const certificatesSection = document.getElementById('certificates');
+        if (certificatesSection) {
+          certificatesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500); // Small delay to allow refresh to complete
     } catch (error) {
       console.error('Error saving certificate:', error);
       const action = editCertificate ? 'updating' : 'adding';
-      alert(error.response?.data?.error || `Failed to ${action.replace('ing', '')} certificate. Please try again.`);
+      setMessage(`❌ Error ${action} certificate: ` + (error.response?.data?.error || error.message));
     } finally {
       setIsSubmitting(false);
     }
@@ -159,6 +171,20 @@ const AddCertificate = ({ onCertificateAdded, editCertificate, onCancelEdit }) =
         transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
       }}>
         <div style={{ padding: '2rem' }}>
+
+        {message && (
+          <div style={{ 
+            padding: '1rem', 
+            marginBottom: '1.5rem', 
+            backgroundColor: message.includes('❌') ? '#fee2e2' : '#d1fae5',
+            color: message.includes('❌') ? '#dc2626' : '#065f46',
+            borderRadius: '0.5rem',
+            borderLeft: `4px solid ${message.includes('❌') ? '#dc2626' : '#10b981'}`,
+            fontSize: '0.875rem'
+          }}>
+            {message}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
