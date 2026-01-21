@@ -46,8 +46,8 @@ services:
     runtime: python
     repo: https://github.com/Hawk-PDX/project-dev-resume
     plan: free
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && python3 run_migrations.py && gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload
+    buildCommand: cd backend && pip install -r requirements.txt && python3 run_migrations.py
+    startCommand: cd backend && python3 -c "from run import app, socketio; import os; socketio.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 10000)), debug=False)"
     envVars:
       - key: FLASK_ENV
         value: production

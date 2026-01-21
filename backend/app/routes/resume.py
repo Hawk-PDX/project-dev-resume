@@ -230,7 +230,14 @@ def get_certificates():
 
 @resume_bp.route('/certificates/<int:certificate_id>', methods=['GET', 'PUT', 'DELETE'])
 def certificate_by_id(certificate_id):
-    certificate = Certificate.query.get(certificate_id)
+    try:
+        certificate = Certificate.query.get(certificate_id)
+    except Exception as e:
+        print(f"Error fetching certificate {certificate_id}: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': 'Database error', 'details': str(e)}), 500
+    
     if not certificate:
         return jsonify({'error': 'Certificate not found'}), 404
     
